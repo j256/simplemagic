@@ -26,31 +26,28 @@ public class MagicUtil {
 	private final static String INTERNAL_MAGIC_FILE = "/magic.gz";
 	private final static int DEFAULT_READ_SIZE = 100 * 1024;
 
-	private List<MagicEntry> magicEntries;
+	/** internal entries loaded once if the {@link MagicUtil#MagicUtil()} constructor is used. */
+	private static List<MagicEntry> internalMagicEntries;
+
+	private final List<MagicEntry> magicEntries;
 	private int fileReadSize = DEFAULT_READ_SIZE;
 
 	/**
 	 * Construct a magic utility using the internal magic file built into the package.
 	 * 
-	 * @throws IOException
+	 * @throws IllegalStateException
 	 *             If there was a problem reading the magic entries from the internal magic file.
 	 */
-	public MagicUtil() throws IOException {
-		InputStream stream = getClass().getResourceAsStream(INTERNAL_MAGIC_FILE);
-		if (stream == null) {
-			throw new IllegalStateException("Internal magic file not found: " + INTERNAL_MAGIC_FILE);
+	public MagicUtil() {
+		if (internalMagicEntries == null) {
+			try {
+				internalMagicEntries = loadInternalEntries();
+			} catch (IOException e) {
+				throw new IllegalStateException("Could not load entries from internal magic file: "
+						+ INTERNAL_MAGIC_FILE, e);
+			}
 		}
-		Reader reader = null;
-		try {
-			reader = new InputStreamReader(new GZIPInputStream(new BufferedInputStream(stream)));
-			stream = null;
-			List<MagicEntry> entryList = new ArrayList<MagicEntry>();
-			readFile(entryList, reader);
-			magicEntries = entryList;
-		} finally {
-			closeQuietly(reader);
-			closeQuietly(stream);
-		}
+		this.magicEntries = internalMagicEntries;
 	}
 
 	/**
@@ -145,20 +142,28 @@ public class MagicUtil {
 	}
 
 	/**
-	 * Set the default size that will be read if we are getting the content from a file. The default is
-	 * {@link #DEFAULT_READ_SIZE}.
+	 * Set the default size that will be read if we are getting the content from a file. The default is most likely 100k
+	 * -- see {@link #DEFAULT_READ_SIZE}.
 	 */
 	public void setFileReadSize(int fileReadSize) {
 		this.fileReadSize = fileReadSize;
 	}
 
-	private void closeQuietly(Closeable closeable) {
-		if (closeable != null) {
-			try {
-				closeable.close();
-			} catch (IOException e) {
-				// ignored
-			}
+	private List<MagicEntry> loadInternalEntries() throws IOException {
+		InputStream stream = getClass().getResourceAsStream(INTERNAL_MAGIC_FILE);
+		if (stream == null) {
+			throw new IllegalStateException("Internal magic file not found: " + INTERNAL_MAGIC_FILE);
+		}
+		Reader reader = null;
+		try {
+			reader = new InputStreamReader(new GZIPInputStream(new BufferedInputStream(stream)));
+			stream = null;
+			List<MagicEntry> entryList = new ArrayList<MagicEntry>();
+			readFile(entryList, reader);
+			return entryList;
+		} finally {
+			closeQuietly(reader);
+			closeQuietly(stream);
 		}
 	}
 
@@ -189,6 +194,16 @@ public class MagicUtil {
 				entryList.add(entry);
 			}
 			previous = entry;
+		}
+	}
+
+	private void closeQuietly(Closeable closeable) {
+		if (closeable != null) {
+			try {
+				closeable.close();
+			} catch (IOException e) {
+				// ignored
+			}
 		}
 	}
 }
