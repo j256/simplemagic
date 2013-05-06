@@ -9,7 +9,8 @@ LOCAL_DIR="$HOME/svn/local/simplemagic"
 # check for not commited files:
 
 cd $LOCAL_DIR
-if [ "`git status`" != "" ]; then
+git status | grep 'nothing to commit'
+if [ $? -ne 0 ]; then
 	echo "Files not checked-in"
 	git status
 	exit 1
