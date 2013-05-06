@@ -6,7 +6,7 @@
 	<artifactId>simplemagic</artifactId>
 	<version>0.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>Simple JMX</name>
+	<name>Simple Magic</name>
 	<url>http://sourceforge.net/projects/simplemagic/</url>
 	<description>Simple Magic Classes</description>
 	<licenses>
