@@ -1,12 +1,18 @@
 package com.j256.simplemagic;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 import com.j256.simplemagic.entries.MagicEntry;
 
@@ -17,57 +23,67 @@ import com.j256.simplemagic.entries.MagicEntry;
  */
 public class MagicUtil {
 
-	private final static String DEFAULT_MAGIC_FILE = "/usr/share/file/magic";
+	private final static String INTERNAL_MAGIC_FILE = "/magic.gz";
 	private final static int DEFAULT_READ_SIZE = 100 * 1024;
 
 	private List<MagicEntry> magicEntries;
 	private int fileReadSize = DEFAULT_READ_SIZE;
 
 	/**
-	 * Try to automatically find and read in the system's magic files.
-	 */
-	public void loadSystemMagicFiles() throws IOException {
-		File file = new File(DEFAULT_MAGIC_FILE);
-		if (!file.exists()) {
-			throw new IOException("Default magic file/directory does not exist: " + DEFAULT_MAGIC_FILE);
-		} else if (file.isFile()) {
-			loadMagicFile(file);
-		} else if (file.isDirectory()) {
-			loadMagicFileDirectory(file);
-		} else {
-			throw new IOException("Default magic is not a file or a directory: " + DEFAULT_MAGIC_FILE);
-		}
-	}
-
-	/**
-	 * Read magic files from a directory of files.
-	 */
-	public void loadMagicFileDirectory(File directory) {
-		if (!directory.isDirectory()) {
-			throw new IllegalArgumentException("Magic file directory specified is not a directory: " + directory);
-		}
-		List<MagicEntry> entryList = new ArrayList<MagicEntry>();
-		for (File file : directory.listFiles()) {
-			try {
-				readFile(entryList, file);
-			} catch (IOException e) {
-				// ignore the file
-			}
-		}
-		magicEntries = entryList;
-	}
-
-	/**
-	 * Read magic files from a directory of files.
+	 * Construct a magic utility using the internal magic file built into the package.
 	 * 
-	 * @return True if it worked otherwise false on an IO error.
+	 * @throws IOException
+	 *             If there was a problem reading the magic entries from the internal magic file.
 	 */
-	public void loadMagicFile(File file) throws IOException {
-		if (!file.isFile()) {
-			throw new IllegalArgumentException("Magic file specified is not a file: " + file);
+	public MagicUtil() throws IOException {
+		InputStream stream = getClass().getResourceAsStream(INTERNAL_MAGIC_FILE);
+		if (stream == null) {
+			throw new IllegalStateException("Internal magic file not found: " + INTERNAL_MAGIC_FILE);
 		}
+		Reader reader = null;
+		try {
+			reader = new InputStreamReader(new GZIPInputStream(new BufferedInputStream(stream)));
+			stream = null;
+			List<MagicEntry> entryList = new ArrayList<MagicEntry>();
+			readFile(entryList, reader);
+			magicEntries = entryList;
+		} finally {
+			closeQuietly(reader);
+			closeQuietly(stream);
+		}
+	}
+
+	/**
+	 * Construct a magic utility using the magic files from a file or a directory of files.
+	 * 
+	 * @throws IOException
+	 *             If there was a problem reading the magic entries from the internal magic file.
+	 */
+	public MagicUtil(File fileOrDirectory) throws IOException {
 		List<MagicEntry> entryList = new ArrayList<MagicEntry>();
-		readFile(entryList, file);
+		if (fileOrDirectory.isFile()) {
+			FileReader reader = new FileReader(fileOrDirectory);
+			try {
+				readFile(entryList, reader);
+			} finally {
+				closeQuietly(reader);
+			}
+		} else if (fileOrDirectory.isDirectory()) {
+			for (File subFile : fileOrDirectory.listFiles()) {
+				FileReader reader = null;
+				try {
+					reader = new FileReader(subFile);
+					readFile(entryList, reader);
+				} catch (IOException e) {
+					// ignore the file
+				} finally {
+					closeQuietly(reader);
+				}
+			}
+		} else {
+			throw new IllegalArgumentException("Magic file directory specified is not a file or directory: "
+					+ fileOrDirectory);
+		}
 		magicEntries = entryList;
 	}
 
@@ -102,13 +118,7 @@ public class MagicUtil {
 			fis = new FileInputStream(file);
 			fis.read(bytes);
 		} finally {
-			try {
-				if (fis != null) {
-					fis.close();
-				}
-			} catch (IOException e) {
-				// ignored
-			}
+			closeQuietly(fis);
 		}
 		return contentTypeOfBytes(bytes);
 	}
@@ -142,11 +152,21 @@ public class MagicUtil {
 		this.fileReadSize = fileReadSize;
 	}
 
-	private static void readFile(List<MagicEntry> entryList, File file) throws IOException {
-		BufferedReader reader = new BufferedReader(new FileReader(file));
+	private void closeQuietly(Closeable closeable) {
+		if (closeable != null) {
+			try {
+				closeable.close();
+			} catch (IOException e) {
+				// ignored
+			}
+		}
+	}
+
+	private void readFile(List<MagicEntry> entryList, Reader reader) throws IOException {
+		BufferedReader lineReader = new BufferedReader(reader);
 		MagicEntry previous = null;
 		while (true) {
-			String line = reader.readLine();
+			String line = lineReader.readLine();
 			if (line == null) {
 				return;
 			}

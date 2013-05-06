@@ -1,7 +1,0 @@
-#
-# these comment lines are ignored as well as the next blank line
-#
-
-// these are also comments
-
-help

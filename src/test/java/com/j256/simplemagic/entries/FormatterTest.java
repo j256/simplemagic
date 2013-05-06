@@ -6,8 +6,6 @@ import java.util.Date;
 
 import org.junit.Test;
 
-import com.j256.simplemagic.entries.Formatter;
-
 public class FormatterTest {
 
 	@Test

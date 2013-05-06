@@ -7,7 +7,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.j256.simplemagic.entries.Formatter;
-import com.j256.simplemagic.types.StringType;
 
 public class StringTypeTest {
 
