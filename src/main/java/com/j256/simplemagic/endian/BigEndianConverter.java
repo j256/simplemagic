@@ -6,13 +6,12 @@ package com.j256.simplemagic.endian;
  * 
  * @author graywatson
  */
-public class BigEndianConverter extends BaseEndianConverter {
+public class BigEndianConverter implements EndianConverter {
 
 	BigEndianConverter() {
 		// only EndiaType should construct this
 	}
 
-	@Override
 	public Long convertNumber(int offset, byte[] bytes, int size) {
 		if (offset + size > bytes.length) {
 			return null;

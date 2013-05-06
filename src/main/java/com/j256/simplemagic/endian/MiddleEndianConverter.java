@@ -5,13 +5,12 @@ package com.j256.simplemagic.endian;
  * 
  * @author graywatson
  */
-public class MiddleEndianConverter extends BaseEndianConverter {
+public class MiddleEndianConverter implements EndianConverter {
 
 	MiddleEndianConverter() {
 		// only EndiaType should construct this
 	}
 
-	@Override
 	public Long convertNumber(int offset, byte[] bytes, int size) {
 		if (size != 4) {
 			throw new UnsupportedOperationException("Middle-endian only supports 4-byte integers");
