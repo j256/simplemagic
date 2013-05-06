@@ -1,2 +1,3 @@
-0.1: 05/XX/2012
+0.1: 05/06/2013
 	* Initial public release.  Tweaked javadocs and the like.
+	* Most functionality working.  Still not handling extended offset formats and the search type.
