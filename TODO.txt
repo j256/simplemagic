@@ -1,0 +1,17 @@
+===================================================
+Used to maintain requested features or future work.
+===================================================
+
+- Need to handle:
+	macintosh:>0x402          beldate-0x7C25B080      x               created: %s,
+	macintosh:>0x406          beldate-0x7C25B080      >0              last backup: %s,
+    filesystems:>>>>>>>>&0    bedate                  =0              full dump
+    filesystems:>>>>>>>>&0    bedate                  !0              incremental since: %s
+
+- "offset" in the regex type, does it mean lines or bytes?
+
+- implement the search type
+
+- does the ID3 types mean the ID3 audio?   guess so 
+
+- may need to hand process the lines and split by [ \t] but handle "\ " as non-breaking in the test section

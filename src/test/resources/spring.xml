@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- test spring file for optional support for the Spring Framework -->
+
+	<!-- publishes classes that have @JmxResource or implement JmxSelfNaming to jmxServer automagically -->
+	<bean id="beanPublisher" class="com.j256.simplejmx.spring.BeanPublisher">
+		<property name="jmxServer" ref="jmxServer" />
+	</bean>
+
+	<!-- our JmxServer which publishes our beans via JMX -->
+	<bean id="jmxServer" class="com.j256.simplejmx.server.JmxServer" init-method="start" destroy-method="stop">
+		<!-- the port should probably come from a configured property -->
+		<property name="registryPort" value="8000" />
+	</bean>
+
+	<!-- -->
+
+	<!-- our JMX bean for monitoring and shutting down our main application -->
+	<bean id="mainJmx" class="com.j256.simplejmx.spring.MainJmx" />
+
+	<!-- a random JMX class -->
+	<bean id="runtimeCounter" class="com.j256.simplejmx.server.ExampleTestProgram$RuntimeCounter" />
+
+	<!-- our dynamic register/unregister JMX class -->
+	<bean id="dynamicJmx" class="com.j256.simplejmx.spring.DynamicJmx">
+		<!-- we need this to register/unregister dynamic objects -->
+		<property name="jmxServer" ref="jmxServer" />
+	</bean>
+
+</beans>

@@ -1,0 +1,28 @@
+1.1: 02/19/2013 (svn r??)
+	* Added support for Spring framework with a BeanPublisher class which looks for and registers beans to the JmxServer.
+	* Fixed a bug with the handling of objects that have folders in the @JmxResource annotation but are JmxSelfNaming.
+
+1.0: 08/21/2012 (svn r86)
+	* Added the ability to export _any_ object using user defined attribute-field, attribute-method, and operation info.
+	* Deprecated the JmxOperation.action field and replaced it with enumerated JmxOperation.operationAction field.
+	* Added initial documentation.
+
+0.6: 06/7/2012 (svn r78)
+	* Fixed some javadocs around the beanName() change in 0.5.
+	* Added checking to make sure isXxx() method returns boolean or Boolean.
+
+0.5: 04/27/2012 (svn r68)
+	* Removed all external usage of an objectName String which was being confused with the JMX ObjectName.
+	* Deprecated JmxResource.objectName().  Folks should use instead JmxResource.beanName().
+
+0.4: 04/6/2012 (svn r63)
+	* Added set and get multiple attributed to JmxClient.
+	* Revamped the way we build the mbean information structures internally.
+	* Renamed JmxSelfNaming.getObjectName() to be getNameOfObject() to not be confused with ObjectName class.
+
+0.3: 04/3/2012 (svn r52)
+	* Added support for JmxAttributeField that annotates a field instead of a getter/setter.  Thanks Chris.
+	* Renamed JmxAttribute to JmxAttributeMethod which annotates the getXxx() and setXxx() methods.
+
+0.2: 04/3/2012 (svn r43)
+	* Initial public release.  Tweaked javadocs and the like.
