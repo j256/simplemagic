@@ -21,9 +21,9 @@
 		<version>5</version>
 	</parent>
 	<scm>
-		<url>http://svn.code.sf.net/p/simplemagic/code/trunk/</url>
-		<connection>scm:svn:https://svn.code.sf.net/p/simplemagic/code/trunk</connection>
-		<developerConnection>scm:svn:https://svn.code.sf.net/p/simplemagic/code/trunk</developerConnection>
+		<url>https://github.com/j256/simplemagic</url>
+		<connection>scm:git:ssh://git@github.com/j256/simplemagic.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/j256/simplemagic.git</developerConnection>
 	</scm>
 	<developers>
 		<developer>
