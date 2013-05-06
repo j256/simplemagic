@@ -1,7 +1,7 @@
 package com.j256.simplemagic;
 
 /**
- * Returned by the magic matching code in {@link MagicUtil#contentFromFile(java.io.File)} and others.
+ * Returned by the magic matching code in {@link MagicUtil#contentTypeOfFile(java.io.File)} and others.
  * 
  * @author graywatson
  */

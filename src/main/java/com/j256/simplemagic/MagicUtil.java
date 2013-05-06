@@ -72,26 +72,26 @@ public class MagicUtil {
 	}
 
 	/**
-	 * Return the content type for the file or null if none found.
+	 * Return the content type for the file or null if none of the magic entries matched.
 	 * 
 	 * <p>
 	 * <b>NOTE:</b> one of the {@link #loadMagicFile(File)}, {@link #loadMagicFileDirectory(File)}, or
 	 * {@link #loadSystemMagicFiles()} must be called before this method.
 	 * </p>
 	 */
-	public ContentType contentFromFile(String filePath) throws IOException {
-		return contentFromFile(new File(filePath));
+	public ContentType contentTypeOfFile(String filePath) throws IOException {
+		return contentTypeOfFile(new File(filePath));
 	}
 
 	/**
-	 * Return the content type for the file or null if none found.
+	 * Return the content type for the file or null if none of the magic entries matched.
 	 * 
 	 * <p>
 	 * <b>NOTE:</b> one of the {@link #loadMagicFile(File)}, {@link #loadMagicFileDirectory(File)}, or
 	 * {@link #loadSystemMagicFiles()} must be called before this method.
 	 * </p>
 	 */
-	public ContentType contentFromFile(File file) throws IOException {
+	public ContentType contentTypeOfFile(File file) throws IOException {
 		int readSize = fileReadSize;
 		if (file.length() < readSize) {
 			readSize = (int) file.length();
@@ -110,18 +110,18 @@ public class MagicUtil {
 				// ignored
 			}
 		}
-		return contentFromBytes(bytes);
+		return contentTypeOfBytes(bytes);
 	}
 
 	/**
-	 * Return the content type from the associated bytes or null if none found.
+	 * Return the content type from the associated bytes or null if none of the magic entries matched.
 	 * 
 	 * <p>
 	 * <b>NOTE:</b> one of the {@link #loadMagicFile(File)}, {@link #loadMagicFileDirectory(File)}, or
 	 * {@link #loadSystemMagicFiles()} must be called before this method.
 	 * </p>
 	 */
-	public ContentType contentFromBytes(byte[] bytes) {
+	public ContentType contentTypeOfBytes(byte[] bytes) {
 		if (magicEntries == null) {
 			throw new IllegalStateException("Magic files have not been loaded");
 		}
