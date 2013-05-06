@@ -11,7 +11,7 @@ import java.util.List;
 import com.j256.simplemagic.entries.MagicEntry;
 
 /**
- * Class which reads in the magic files.
+ * Class which reads in the magic files and determines the {@link ContentType} for files and byte arrays.
  * 
  * @author graywatson
  */
@@ -21,6 +21,7 @@ public class MagicUtil {
 	private final static int DEFAULT_READ_SIZE = 100 * 1024;
 
 	private List<MagicEntry> magicEntries;
+	private int fileReadSize = DEFAULT_READ_SIZE;
 
 	/**
 	 * Try to automatically find and read in the system's magic files.
@@ -43,7 +44,7 @@ public class MagicUtil {
 	 */
 	public void loadMagicFileDirectory(File directory) {
 		if (!directory.isDirectory()) {
-			throw new IllegalArgumentException("Magic file directory is not a directory: " + directory);
+			throw new IllegalArgumentException("Magic file directory specified is not a directory: " + directory);
 		}
 		List<MagicEntry> entryList = new ArrayList<MagicEntry>();
 		for (File file : directory.listFiles()) {
@@ -62,23 +63,36 @@ public class MagicUtil {
 	 * @return True if it worked otherwise false on an IO error.
 	 */
 	public void loadMagicFile(File file) throws IOException {
+		if (!file.isFile()) {
+			throw new IllegalArgumentException("Magic file specified is not a file: " + file);
+		}
 		List<MagicEntry> entryList = new ArrayList<MagicEntry>();
 		readFile(entryList, file);
 		magicEntries = entryList;
 	}
 
 	/**
-	 * Return the best content type for the file or null if none found.
+	 * Return the content type for the file or null if none found.
+	 * 
+	 * <p>
+	 * <b>NOTE:</b> one of the {@link #loadMagicFile(File)}, {@link #loadMagicFileDirectory(File)}, or
+	 * {@link #loadSystemMagicFiles()} must be called before this method.
+	 * </p>
 	 */
 	public ContentType contentFromFile(String filePath) throws IOException {
 		return contentFromFile(new File(filePath));
 	}
 
 	/**
-	 * Return the best content type for the file or null if none found.
+	 * Return the content type for the file or null if none found.
+	 * 
+	 * <p>
+	 * <b>NOTE:</b> one of the {@link #loadMagicFile(File)}, {@link #loadMagicFileDirectory(File)}, or
+	 * {@link #loadSystemMagicFiles()} must be called before this method.
+	 * </p>
 	 */
 	public ContentType contentFromFile(File file) throws IOException {
-		int readSize = DEFAULT_READ_SIZE;
+		int readSize = fileReadSize;
 		if (file.length() < readSize) {
 			readSize = (int) file.length();
 		}
@@ -100,7 +114,12 @@ public class MagicUtil {
 	}
 
 	/**
-	 * Return the best content type from the associated bytes or null if none found.
+	 * Return the content type from the associated bytes or null if none found.
+	 * 
+	 * <p>
+	 * <b>NOTE:</b> one of the {@link #loadMagicFile(File)}, {@link #loadMagicFileDirectory(File)}, or
+	 * {@link #loadSystemMagicFiles()} must be called before this method.
+	 * </p>
 	 */
 	public ContentType contentFromBytes(byte[] bytes) {
 		if (magicEntries == null) {
@@ -113,6 +132,14 @@ public class MagicUtil {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Set the default size that will be read if we are getting the content from a file. The default is
+	 * {@link #DEFAULT_READ_SIZE}.
+	 */
+	public void setFileReadSize(int fileReadSize) {
+		this.fileReadSize = fileReadSize;
 	}
 
 	private static void readFile(List<MagicEntry> entryList, File file) throws IOException {
