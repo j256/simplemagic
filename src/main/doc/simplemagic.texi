@@ -1,0 +1,184 @@
+\input texinfo @c -*-texinfo-*-
+@c %**start of header
+@setfilename simplemagic.info
+@settitle SimpleMagic Documentation
+@headings double
+@c %**end of header
+
+@c ----------------------------------------------------------------
+@set simplemagic_version 0.1
+@set simplemagic_year 2013
+@set simplemagic_date May @value{simplemagic_year}
+@set package SimpleMagic
+@c ----------------------------------------------------------------
+
+@titlepage
+@headings off
+@title SimpleMagic Package
+@subtitle Version @value{simplemagic_version}
+@subtitle @value{simplemagic_date}
+@author Gray Watson
+
+@page
+This manual is licensed by Gray Watson under the Creative Commons Attribution-Share Alike 3.0 License.
+
+Permission is granted to make and distribute verbatim copies of this manual provided this license
+notice and this permission notice are preserved on all copies.
+@end titlepage
+
+@c ----------------------------------------------------------------
+
+@c In the printed manual, we put the contents at the front.  For the digital manuals it is at the end. 
+@iftex
+@contents
+@end iftex
+
+@c ----------------------------------------------------------------
+@node Top, Quick Start, (dir), (dir)
+@top SimpleMagic
+@everyheading @thischapter @| @thispage @| @today{}
+
+Version @value{simplemagic_version} -- @value{simplemagic_date}
+
+@cindex introduction
+@cindex author
+@cindex simple magic
+@cindex jconsole
+This package provides some simple magic value features that simulate the Unix file(1) command to determine the type of a file
+or of @code{bytes} from the content.  It has an internal set of magic number information or it can process the magic files from
+local ~Unix system configuration
+
+To get started quickly using SimpleMagic, @pxref{Quick Start}.
+@ifhtml
+There is also a @uref{http://256.com/sources/simplemagic/docs/simplemagic.pdf, PDF version of this documentation}.
+@end ifhtml
+@iftex
+There is also a @uref{http://256.com/sources/simplemagic/docs/simplemagic.html, HTML version of this documentation}.
+@end iftex
+
+Gray Watson @uref{http://256.com/gray/}
+
+@menu
+* Quick Start::                Start using SimpleMagic quickly.
+* Using::                      How to use SimpleMagic.
+* License::                    Open Source license for the project.
+* Index of Concepts::          Index of concepts in the manual.
+@end menu
+
+@c ----------------------------------------------------------------
+@node Quick Start, Using, Top, Top
+@chapter Start Using Quickly
+
+@cindex getting started
+@cindex how to get started
+@cindex quick start
+@cindex MagicUtil
+To use SimpleMagic you need to do the following steps.  For more information, @pxref{Using}.
+
+@enumerate
+
+@item Download SimpleMagic from the @uref{http://256.com/sources/simplemagic/releases/, SimpleMagic release page}.  @xref{Downloading}.
+
+@item Load in the magic entries.  By default, if you construct a @code{MagicUtil} instance with the default constructor,
+it will load the internal magic entries file.  @xref{Loading Magic Entries}.
+
+@item Use the @code{MagicUtil} class to get content-types for files or @code{byte[]}:
+
+@example
+MagicUtil magicUtil = new MagicUtil();
+ContentType contentType = magicUtil.contentTypeOfFile("/tmp/upload.tmp");
+System.out.println("Content-type is: " + contentType.getName());
+@end example
+
+@end enumerate
+
+For somewhat more extensive instructions, @pxref{Using}.
+
+@c ----------------------------------------------------------------
+@node Using, Downloading, Quick Start, Top
+@chapter Using SimpleMagic
+
+@cindex how to use
+@cindex using SimpleMagic
+@menu
+* Downloading ::                Downloading the SimpleMagic jar.
+* Loading Magic Entries ::      Loading in the magic entries from files.
+@end menu
+
+@c ----------------------------------------------------------------
+@node Downloading, Loading Magic Entries, Using, Using
+@section Downloading Jar
+
+@cindex how to download the jars
+@cindex downloading the jars
+@cindex where to get new jars
+To get started with SimpleMagic, you will need to download the jar file.  The @uref{http://256.com/sources/simplemagic/releases/, SimpleMagic
+release page} is the default repository but the jars are also available from the @uref{http://repo1.maven.org/maven2/com/j256/simplemagic/,
+central maven repository}.
+
+The code works with Java 5 or later.
+
+@c ----------------------------------------------------------------
+@node Loading Magic Entries, License, Downloading, Using
+@section How To Load Magic Entries
+
+@cindex loading magic entries
+@cindex magic files
+The library uses various magic byte information to be able to find and determine details about random blocks of bytes.
+The magic entries are relatively complex but in general look something like the following.  The configuration line says to
+look at the start of the file for the string @code{"GIF8"}.  If it is there then the file is "GIF image data".
+
+@cindex sample magic definition
+@example
+0       string          GIF8            GIF image data
+@end example
+
+@cindex default magic entries
+@cindex system magic entries
+By default, SimpleMagic has a built in version of a magic file that was copied from a CentOS Linux system.  It contains, 
+~2400 magic file entries describing a number of different file types.  It also has an additional ~6600 lines which provide
+more details about the detected content types.
+
+@cindex alternative magic files
+@cindex /etc/magic
+If you do not want to use the internal magic definitions, you can also construct the @code{MagicUtil} class with a file
+or directory, to parse and use another definition file.
+
+@example
+MagicUtil magicUtil = new MagicUtil("/etc/magic");
+ContentType contentType = magicUtil.contentTypeOfFile(uploadedBytes);
+@end example
+
+@emph{WARNING:} although we've tried to support different types of magic entries, there are local per-OS variations that may
+not be supported.  
+
+@c ----------------------------------------------------------------
+@node License, Index of Concepts, Loading Magic Entries, Top
+@chapter Open Source License
+
+@cindex license
+@cindex open source license
+This document is part of the SimpleMagic project.
+
+Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby
+granted, provided that this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL,
+DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
+USE OR PERFORMANCE OF THIS SOFTWARE.
+
+The author may be contacted via @uref{http://256.com/sources/simplemagic/}
+
+@c ----------------------------------------------------------------
+@node Index of Concepts,, License, Top
+@unnumbered Index of Concepts
+
+@printindex cp
+
+@ifhtml
+@contents
+@end ifhtml
+
+@bye

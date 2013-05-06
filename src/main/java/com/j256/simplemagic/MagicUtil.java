@@ -56,6 +56,16 @@ public class MagicUtil {
 	 * @throws IOException
 	 *             If there was a problem reading the magic entries from the internal magic file.
 	 */
+	public MagicUtil(String fileOrDirectoryPath) throws IOException {
+		this(new File(fileOrDirectoryPath));
+	}
+
+	/**
+	 * Construct a magic utility using the magic files from a file or a directory of files.
+	 * 
+	 * @throws IOException
+	 *             If there was a problem reading the magic entries from the internal magic file.
+	 */
 	public MagicUtil(File fileOrDirectory) throws IOException {
 		List<MagicEntry> entryList = new ArrayList<MagicEntry>();
 		if (fileOrDirectory.isFile()) {

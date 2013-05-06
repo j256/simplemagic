@@ -1,5 +1,5 @@
-PKG = simplejmx
-DOCS = $(PKG).html $(PKG) $(PKG).pdf
+PKG = simplemagic
+DOCS = $(PKG).html $(PKG).pdf
 TEXI = $(PKG).texi
 REMOTE ?= doc-host
 REMOTE_DIR = remote_texi
@@ -7,7 +7,7 @@ REMOTE_DIR = remote_texi
 all : $(DOCS)
 
 install : $(DOCS)
-	cp $(PKG)/* $(PKG).pdf ../javadoc/doc-files
+	cp $(PKG).html $(PKG).pdf ../javadoc/doc-files
 
 clean :
 	rm -rf $(DOCS)
@@ -15,10 +15,6 @@ clean :
 $(PKG).html : $(TEXI)
 	rm -f $@
 	texi2html -number -monolithic $<
-
-$(PKG) : $(TEXI)
-	rm -rf $(PKG)
-	texi2html --number --split=chapter $<
 
 $(PKG).pdf : $(TEXI)
 	scp $< $(REMOTE):$(REMOTE_DIR)
