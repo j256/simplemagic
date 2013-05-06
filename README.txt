@@ -4,7 +4,7 @@ For more information, visit the home page:
 	http://256.com/sources/simplemagic/
 
 The git repository is:
-	https://github.com/graywatson/simplemagic
+	https://github.com/j256/simplemagic
 
 Maven packages are published via the central repo:
 	http://repo1.maven.org/maven2/com/j256/simplemagic/simplemagic/
