@@ -4,11 +4,10 @@ import com.j256.simplemagic.endian.EndianConverter;
 import com.j256.simplemagic.endian.EndianType;
 import com.j256.simplemagic.entries.Formatter;
 import com.j256.simplemagic.entries.MagicMatcher;
-import com.j256.simplemagic.operators.NumberOperatorUtil;
-import com.j256.simplemagic.operators.NumberOperatorUtil.NumberTest;
+import com.j256.simplemagic.entries.NumberOperator;
 
 /**
- * A four-byte value.
+ * A four-byte integer value.
  * 
  * @author graywatson
  */
@@ -21,7 +20,7 @@ public class IntegerType implements MagicMatcher {
 	}
 
 	public Object convertTestString(String test) {
-		return NumberOperatorUtil.convertTestString(test);
+		return new NumberOperator(test);
 	}
 
 	public Long extractValueFromBytes(int offset, byte[] bytes) {
@@ -31,8 +30,7 @@ public class IntegerType implements MagicMatcher {
 
 	public boolean isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue, int offset,
 			byte[] bytes) {
-		return NumberOperatorUtil.isMatch((NumberTest) testValue, andValue, unsignedType, (Long) extractedValue,
-				offset, bytes);
+		return ((NumberOperator) testValue).isMatch(andValue, unsignedType, (Long) extractedValue, offset, bytes);
 	}
 
 	public void renderValue(StringBuilder sb, Object extractedValue, Formatter formatter) {

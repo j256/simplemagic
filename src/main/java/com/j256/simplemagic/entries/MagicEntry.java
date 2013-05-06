@@ -28,7 +28,7 @@ public class MagicEntry {
 	private final MagicMatcher matcher;
 	private final Long andValue;
 	private final boolean unsignedType;
-	// test: can be number or string
+	// the testValue object is defined by the particular matcher
 	private final Object testValue;
 	private final boolean formatSpacePrefix;
 	private final Formatter formatter;
@@ -56,11 +56,9 @@ public class MagicEntry {
 		this.strength = 1;
 	}
 
-	// 0[ ]string[ ]%PDF-[ ]PDF document
-	// !:mime[ ]application/pdf
-	// >5[ ]byte[ ]x[ ]\b, version %c
-	// >7[ ]byte[ ]x[ ]\b.%c
-
+	/**
+	 * Parse a line from the magic configuration file into an entry.
+	 */
 	public static MagicEntry parseString(MagicEntry previous, String line) {
 		if (line.startsWith("!:")) {
 			if (previous != null) {
@@ -69,6 +67,11 @@ public class MagicEntry {
 			}
 			return null;
 		}
+
+		// 0[ ]string[ ]%PDF-[ ]PDF document
+		// !:mime[ ]application/pdf
+		// >5[ ]byte[ ]x[ ]\b, version %c
+		// >7[ ]byte[ ]x[ ]\b.%c
 		String[] parts = line.split("[\\t]+", 4);
 		if (parts.length < 3) {
 			throw new IllegalArgumentException("Invalid magic line: " + line);
@@ -148,7 +151,7 @@ public class MagicEntry {
 				return null;
 			}
 			// use the previous and then go up until the parent is a level lower than ours
-			for (parent = previous; parent.getLevel() >= level; parent = parent.getParent()) {
+			for (parent = previous; parent.level >= level; parent = parent.parent) {
 				// none
 			}
 		}
@@ -177,6 +180,7 @@ public class MagicEntry {
 		}
 		return entry;
 	}
+
 	/**
 	 * Returns the content type associated with the bytes or null if it does not match.
 	 */
@@ -187,6 +191,33 @@ public class MagicEntry {
 		} else {
 			return new ContentType(info.name, info.mimeType, info.sb.toString());
 		}
+	}
+
+	/**
+	 * Return the "level" of the rule. Level-0 rules start the matching process. Level-1 and above rules are processed
+	 * only when the level-0 matches.
+	 */
+	public int getLevel() {
+		return level;
+	}
+
+	/**
+	 * Get the strength of the rule. Not well supported right now.
+	 */
+	public int getStrength() {
+		return strength;
+	}
+
+	@Override
+	public String toString() {
+		return matcher.toString();
+	}
+
+	private void addChild(MagicEntry child) {
+		if (children == null) {
+			children = new ArrayList<MagicEntry>();
+		}
+		children.add(child);
 	}
 
 	private ContentInfo processBytes(byte[] bytes, ContentInfo contentInfo) {
@@ -220,45 +251,6 @@ public class MagicEntry {
 			}
 		}
 		return contentInfo;
-	}
-
-	public MagicEntry getParent() {
-		return parent;
-	}
-
-	public void addChild(MagicEntry child) {
-		if (children == null) {
-			children = new ArrayList<MagicEntry>();
-		}
-		children.add(child);
-	}
-
-	public void setMimeType(String mimeType) {
-		this.mimeType = mimeType;
-	}
-
-	public int getLevel() {
-		return level;
-	}
-
-	public int getStrength() {
-		return strength;
-	}
-
-	public void setStrength(int strength) {
-		this.strength = strength;
-	}
-
-	public void addExtension(String key, String value) {
-		if (extensionMap == null) {
-			extensionMap = new HashMap<String, String>();
-		}
-		extensionMap.put(key, value);
-	}
-
-	@Override
-	public String toString() {
-		return matcher.toString();
 	}
 
 	private static void handleSpecial(MagicEntry parent, String line) {
@@ -305,7 +297,7 @@ public class MagicEntry {
 			throw new IllegalArgumentException("Invalid strength value: " + strengthValue);
 		}
 
-		int strength = parent.getStrength();
+		int strength = parent.strength;
 		switch (operator) {
 			case '+' :
 				strength += value;
@@ -322,7 +314,14 @@ public class MagicEntry {
 			default :
 				throw new IllegalArgumentException("Invalid strength operator: " + strengthValue);
 		}
-		parent.setStrength(strength);
+		parent.strength = strength;
+	}
+
+	private void addExtension(String key, String value) {
+		if (extensionMap == null) {
+			extensionMap = new HashMap<String, String>();
+		}
+		extensionMap.put(key, value);
 	}
 
 	private static class ContentInfo {

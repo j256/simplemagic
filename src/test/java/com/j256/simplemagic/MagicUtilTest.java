@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +12,7 @@ import org.junit.Test;
 
 public class MagicUtilTest {
 
-	private MagicUtil magicUtil = new MagicUtil();
+	private ContentTypeUtil contentTypeUtil = new ContentTypeUtil();
 
 	private FileType[] fileTypes = new FileType[] { //
 					//
@@ -23,7 +22,7 @@ public class MagicUtilTest {
 					new FileType("/files/x.tiff", "TIFF", "TIFF image data, big-endian"),
 					new FileType("/files/x.zip", "Zip", "Zip archive data, at least v1.0 to extract"),
 					new FileType("/files/x.javaserial", "Java", "Java serialization data, version 5"),
-			// new FileType("/files/x.xml", "XML", "XML document text"),
+					new FileType("/files/x.xml", "XML", "XML document text"),
 			//
 			};
 
@@ -35,25 +34,32 @@ public class MagicUtilTest {
 	}
 
 	@Test
+	public void testXml() throws Exception {
+		ContentTypeUtil util = new ContentTypeUtil(new File("/usr/share/file/magic/jpeg"));
+		ContentType type = util.findMatch("/files/x.xml");
+		System.out.println(type);
+	}
+
+	@Test
 	public void testJpeg() throws Exception {
-		MagicUtil magicUtil = new MagicUtil(new File("/usr/share/file/magic/jpeg"));
-		ContentType type = magicUtil.contentTypeOfFile("/Users/graywatson/Downloads/norwichtrip.jpg");
+		ContentTypeUtil util = new ContentTypeUtil(new File("/usr/share/file/magic/jpeg"));
+		ContentType type = util.findMatch("/Users/graywatson/Downloads/norwichtrip.jpg");
 		System.out.println(type);
 	}
 
 	@Test
 	public void testJpegJfif() throws Exception {
-		MagicUtil magicUtil = new MagicUtil(new File("/usr/share/file/magic/jpeg"));
-		ContentType type = magicUtil.contentTypeOfFile("/Users/graywatson/Downloads/CKC_042-XL.jpg");
+		ContentTypeUtil util = new ContentTypeUtil(new File("/usr/share/file/magic/jpeg"));
+		ContentType type = util.findMatch("/Users/graywatson/Downloads/CKC_042-XL.jpg");
 		System.out.println(type);
 	}
 
 	@Test
 	public void testDownloadsDir() throws Exception {
-		MagicUtil magicUtil = new MagicUtil();
+		ContentTypeUtil util = new ContentTypeUtil();
 		for (File file : new File("/Users/graywatson/Downloads").listFiles()) {
 			if (file.isFile()) {
-				ContentType type = magicUtil.contentTypeOfFile(file);
+				ContentType type = util.findMatch(file);
 				System.out.println(file + " = " + type);
 			}
 		}
@@ -62,20 +68,12 @@ public class MagicUtilTest {
 	private void testFile(FileType fileType) throws IOException {
 		InputStream stream = getClass().getResourceAsStream(fileType.fileName);
 		assertNotNull("Could not file resource: " + fileType.fileName, stream);
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ContentType type;
 		try {
-			byte[] bytes = new byte[1024];
-			while (true) {
-				int read = stream.read(bytes);
-				if (read < 0) {
-					break;
-				}
-				bos.write(bytes, 0, read);
-			}
+			type = contentTypeUtil.findMatch(stream);
 		} finally {
 			stream.close();
 		}
-		ContentType type = magicUtil.contentTypeOfBytes(bos.toByteArray());
 		if (fileType.expectedName == null) {
 			assertNull("expecting the content type of " + fileType.fileName + " to be null", type);
 		} else {
@@ -84,6 +82,7 @@ public class MagicUtilTest {
 			assertEquals(fileType.expectedMessage, type.getMessage());
 		}
 	}
+
 	private static class FileType {
 		final String fileName;
 		final String expectedName;

@@ -1,7 +1,7 @@
 package com.j256.simplemagic.endian;
 
 /**
- * A four-byte value in big-endian byte order, interpreted as a Unix date.
+ * Class which converts from a particular machine byte representation into values appropriate for Java.
  * 
  * @author graywatson
  */

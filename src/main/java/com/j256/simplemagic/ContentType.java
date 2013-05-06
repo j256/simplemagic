@@ -1,7 +1,8 @@
 package com.j256.simplemagic;
 
 /**
- * Returned by the magic matching code in {@link MagicUtil#contentTypeOfFile(java.io.File)} and others.
+ * Content-type associated with a file or bytes, returned by the magic matching code in
+ * {@link ContentTypeUtil#findMatch(String)} and other methods.
  * 
  * @author graywatson
  */

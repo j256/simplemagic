@@ -8,13 +8,13 @@ import java.nio.ByteOrder;
  * @author graywatson
  */
 public enum EndianType {
-	// also called network byte order
+	/** big endian, also called network byte order (motorola 68k) */
 	BIG(new BigEndianConverter()),
-	// little endian
+	/** little endian (x86) */
 	LITTLE(new LittleEndianConverter()),
-	// old PDP11 byte order
+	/** old PDP11 byte order */
 	MIDDLE(new MiddleEndianConverter()),
-	// uses the byte order of the current system
+	/** uses the byte order of the current system */
 	NATIVE(ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN ? BIG.getConverter() : LITTLE.getConverter()),
 	// end
 	;

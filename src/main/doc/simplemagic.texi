@@ -6,7 +6,7 @@
 @c %**end of header
 
 @c ----------------------------------------------------------------
-@set simplemagic_version 0.1
+@set simplemagic_version 0.2
 @set simplemagic_year 2013
 @set simplemagic_date May @value{simplemagic_year}
 @set package SimpleMagic
@@ -72,21 +72,21 @@ Gray Watson @uref{http://256.com/gray/}
 @cindex getting started
 @cindex how to get started
 @cindex quick start
-@cindex MagicUtil
+@cindex ContentTypeUtil
 To use SimpleMagic you need to do the following steps.  For more information, @pxref{Using}.
 
 @enumerate
 
 @item Download SimpleMagic from the @uref{http://256.com/sources/simplemagic/releases/, SimpleMagic release page}.  @xref{Downloading}.
 
-@item Load in the magic entries.  By default, if you construct a @code{MagicUtil} instance with the default constructor,
+@item Load in the magic entries.  By default, if you construct a @code{ContentTypeUtil} instance with the default constructor,
 it will load the internal magic entries file.  @xref{Loading Magic Entries}.
 
-@item Use the @code{MagicUtil} class to get content-types for files or @code{byte[]}:
+@item Use the @code{ContentTypeUtil} class to get content-types for files or @code{byte[]}:
 
 @example
-MagicUtil magicUtil = new MagicUtil();
-ContentType contentType = magicUtil.contentTypeOfFile("/tmp/upload.tmp");
+ContentTypeUtil util = new ContentTypeUtil();
+ContentType contentType = util.findMatch("/tmp/upload.tmp");
 System.out.println("Content-type is: " + contentType.getName());
 @end example
 
@@ -141,12 +141,12 @@ more details about the detected content types.
 
 @cindex alternative magic files
 @cindex /etc/magic
-If you do not want to use the internal magic definitions, you can also construct the @code{MagicUtil} class with a file
+If you do not want to use the internal magic definitions, you can also construct the @code{ContentTypeUtil} class with a file
 or directory, to parse and use another definition file.
 
 @example
-MagicUtil magicUtil = new MagicUtil("/etc/magic");
-ContentType contentType = magicUtil.contentTypeOfFile(uploadedBytes);
+ContentTypeUtil util = new ContentTypeUtil("/etc/magic");
+ContentType contentType = util.findMatch(uploadedBytes);
 @end example
 
 @emph{WARNING:} although we've tried to support different types of magic entries, there are local per-OS variations that may

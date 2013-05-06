@@ -11,22 +11,26 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import com.j256.simplemagic.entries.MagicEntry;
 
 /**
- * Class which reads in the magic files and determines the {@link ContentType} for files and byte arrays.
+ * Class which reads in the magic files and determines the {@link ContentType} for files and byte arrays. You use the
+ * default constructor {@link #ContentTypeUtil()} to use the internal rules file or load in a local file from the
+ * file-system using {@link #ContentTypeUtil(String)}. Once the rules are loaded, you use {@link #findMatch(String)} or
+ * other such methods to get the content-type of a file or bytes.
  * 
  * @author graywatson
  */
-public class MagicUtil {
+public class ContentTypeUtil {
 
 	private final static String INTERNAL_MAGIC_FILE = "/magic.gz";
-	private final static int DEFAULT_READ_SIZE = 100 * 1024;
+	private final static int DEFAULT_READ_SIZE = 10 * 1024;
 
-	/** internal entries loaded once if the {@link MagicUtil#MagicUtil()} constructor is used. */
+	/** internal entries loaded once if the {@link ContentTypeUtil#MagicUtil()} constructor is used. */
 	private static List<MagicEntry> internalMagicEntries;
 
 	private final List<MagicEntry> magicEntries;
@@ -38,7 +42,7 @@ public class MagicUtil {
 	 * @throws IllegalStateException
 	 *             If there was a problem reading the magic entries from the internal magic file.
 	 */
-	public MagicUtil() {
+	public ContentTypeUtil() {
 		if (internalMagicEntries == null) {
 			try {
 				internalMagicEntries = loadInternalEntries();
@@ -56,7 +60,7 @@ public class MagicUtil {
 	 * @throws IOException
 	 *             If there was a problem reading the magic entries from the internal magic file.
 	 */
-	public MagicUtil(String fileOrDirectoryPath) throws IOException {
+	public ContentTypeUtil(String fileOrDirectoryPath) throws IOException {
 		this(new File(fileOrDirectoryPath));
 	}
 
@@ -66,7 +70,7 @@ public class MagicUtil {
 	 * @throws IOException
 	 *             If there was a problem reading the magic entries from the internal magic file.
 	 */
-	public MagicUtil(File fileOrDirectory) throws IOException {
+	public ContentTypeUtil(File fileOrDirectory) throws IOException {
 		List<MagicEntry> entryList = new ArrayList<MagicEntry>();
 		if (fileOrDirectory.isFile()) {
 			FileReader reader = new FileReader(fileOrDirectory);
@@ -97,24 +101,20 @@ public class MagicUtil {
 	/**
 	 * Return the content type for the file or null if none of the magic entries matched.
 	 * 
-	 * <p>
-	 * <b>NOTE:</b> one of the {@link #loadMagicFile(File)}, {@link #loadMagicFileDirectory(File)}, or
-	 * {@link #loadSystemMagicFiles()} must be called before this method.
-	 * </p>
+	 * @throws IOException
+	 *             If there was a problem reading from the file.
 	 */
-	public ContentType contentTypeOfFile(String filePath) throws IOException {
-		return contentTypeOfFile(new File(filePath));
+	public ContentType findMatch(String filePath) throws IOException {
+		return findMatch(new File(filePath));
 	}
 
 	/**
 	 * Return the content type for the file or null if none of the magic entries matched.
 	 * 
-	 * <p>
-	 * <b>NOTE:</b> one of the {@link #loadMagicFile(File)}, {@link #loadMagicFileDirectory(File)}, or
-	 * {@link #loadSystemMagicFiles()} must be called before this method.
-	 * </p>
+	 * @throws IOException
+	 *             If there was a problem reading from the file.
 	 */
-	public ContentType contentTypeOfFile(File file) throws IOException {
+	public ContentType findMatch(File file) throws IOException {
 		int readSize = fileReadSize;
 		if (file.length() < readSize) {
 			readSize = (int) file.length();
@@ -127,18 +127,36 @@ public class MagicUtil {
 		} finally {
 			closeQuietly(fis);
 		}
-		return contentTypeOfBytes(bytes);
+		return findMatch(bytes);
+	}
+
+	/**
+	 * Return the content type for the input-stream or null if none of the magic entries matched.
+	 * 
+	 * <p>
+	 * <b>NOTE:</b> The caller is responsible for closing the input-stream.
+	 * </p>
+	 * 
+	 * @throws IOException
+	 *             If there was a problem reading from the input-stream.
+	 */
+	public ContentType findMatch(InputStream inputStream) throws IOException {
+		byte[] bytes = new byte[fileReadSize];
+		int read = inputStream.read(bytes);
+		if (read < 0) {
+			return null;
+		}
+		if (read < bytes.length) {
+			// move the bytes into a smaller array
+			bytes = Arrays.copyOf(bytes, read);
+		}
+		return findMatch(bytes);
 	}
 
 	/**
 	 * Return the content type from the associated bytes or null if none of the magic entries matched.
-	 * 
-	 * <p>
-	 * <b>NOTE:</b> one of the {@link #loadMagicFile(File)}, {@link #loadMagicFileDirectory(File)}, or
-	 * {@link #loadSystemMagicFiles()} must be called before this method.
-	 * </p>
 	 */
-	public ContentType contentTypeOfBytes(byte[] bytes) {
+	public ContentType findMatch(byte[] bytes) {
 		if (magicEntries == null) {
 			throw new IllegalStateException("Magic files have not been loaded");
 		}
@@ -152,7 +170,7 @@ public class MagicUtil {
 	}
 
 	/**
-	 * Set the default size that will be read if we are getting the content from a file. The default is most likely 100k
+	 * Set the default size that will be read if we are getting the content from a file. The default is most likely 10k
 	 * -- see {@link #DEFAULT_READ_SIZE}.
 	 */
 	public void setFileReadSize(int fileReadSize) {
@@ -162,7 +180,7 @@ public class MagicUtil {
 	private List<MagicEntry> loadInternalEntries() throws IOException {
 		InputStream stream = getClass().getResourceAsStream(INTERNAL_MAGIC_FILE);
 		if (stream == null) {
-			throw new IllegalStateException("Internal magic file not found: " + INTERNAL_MAGIC_FILE);
+			throw new IllegalStateException("Internal magic file not found in class-path: " + INTERNAL_MAGIC_FILE);
 		}
 		Reader reader = null;
 		try {

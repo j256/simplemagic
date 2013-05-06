@@ -86,21 +86,3 @@ if [ "$cont" = "" -o "$cont" = "y" ]; then
     echo ""
     echo ""
 fi
-
-#############################################################
-# releasing to sourceforge
-
-echo ""
-echo ""
-echo -n "Should we release to sourceforge [y]: "
-read cont
-if [ "$cont" = "" -o "$cont" = "y" ]; then
-    cd $LOCAL_DIR/target/checkout
-    mvn $GPG_ARGS -P sf deploy
-fi
-
-#############################################################
-# run mvn eclipse/eclipse
-
-cd $LOCAL_DIR
-mvn -DdownloadSources=true -DdownloadJavadocs=true eclipse:eclipse
