@@ -9,9 +9,9 @@ LOCAL_DIR="$HOME/svn/local/simplemagic"
 # check for not commited files:
 
 cd $LOCAL_DIR
-if [ "`svn stat`" != "" ]; then
-	echo "Files not checked-in inside -core"
-	svn stat
+if [ "`git status`" != "" ]; then
+	echo "Files not checked-in"
+	git status
 	exit 1
 fi
 

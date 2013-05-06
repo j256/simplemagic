@@ -23,7 +23,7 @@ public class MagicUtilTest {
 					new FileType("/files/x.tiff", "TIFF", "TIFF image data, big-endian"),
 					new FileType("/files/x.zip", "Zip", "Zip archive data, at least v1.0 to extract"),
 					new FileType("/files/x.javaserial", "Java", "Java serialization data, version 5"),
-					new FileType("/files/x.xml", "XML", "XML document text"),
+			// new FileType("/files/x.xml", "XML", "XML document text"),
 			//
 			};
 
