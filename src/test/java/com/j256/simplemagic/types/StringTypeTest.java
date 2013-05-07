@@ -1,8 +1,8 @@
 package com.j256.simplemagic.types;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
@@ -13,127 +13,128 @@ public class StringTypeTest {
 	@Test
 	public void testBasicMatch() {
 		StringType type = new StringType();
-		Object info = type.convertTestString("hello");
+		Object info = type.convertTestString("hello", 0);
 		byte[] bytes = new byte[] { 'h', 'e', 'l', 'l', 'o', '2' };
-		Object extract = type.extractValueFromBytes(0, bytes);
-		assertTrue(type.isMatch(info, null, false, extract, 0, bytes));
+		Object extract = type.isMatch(info, null, false, null, 0, bytes);
+		assertNotNull(extract);
 		bytes = new byte[] { ' ', 'e', 'l', 'l', 'o', '2' };
-		assertFalse(type.isMatch(info, null, false, extract, 0, bytes));
+		assertNull(type.isMatch(info, null, false, extract, 0, bytes));
 	}
 
 	@Test
 	public void testBasicNoMatch() {
 		StringType type = new StringType();
-		Object info = type.convertTestString("hello");
+		Object info = type.convertTestString("hello", 0);
 		byte[] bytes = new byte[] { 'h', 'e', 'l', 'l' };
 		Object extract = type.extractValueFromBytes(0, bytes);
-		assertFalse(type.isMatch(info, null, false, extract, 0, bytes));
+		assertNull(type.isMatch(info, null, false, extract, 0, bytes));
 		bytes = new byte[] { 'h', 'e', 'l', 'l', 'p' };
-		assertFalse(type.isMatch(info, null, false, extract, 0, bytes));
+		assertNull(type.isMatch(info, null, false, extract, 0, bytes));
 	}
 
 	@Test
 	public void testOffset() {
 		StringType type = new StringType();
-		Object info = type.convertTestString("hello");
+		Object info = type.convertTestString("hello", 0);
 		byte[] bytes = new byte[] { 'w', 'o', 'w', 'h', 'e', 'l', 'l', 'o', '2', '3' };
 		Object extract = type.extractValueFromBytes(0, bytes);
-		assertTrue(type.isMatch(info, null, false, extract, 3, bytes));
+		assertNotNull(type.isMatch(info, null, false, extract, 3, bytes));
 	}
 
 	@Test
 	public void testCaseInsensitive() {
 		StringType type = new StringType();
-		Object info = type.convertTestString("hello/c");
+		Object info = type.convertTestString("hello/c", 0);
 		byte[] bytes = new byte[] { 'h', 'e', 'l', 'l', 'o' };
 		Object extract = type.extractValueFromBytes(0, bytes);
-		assertTrue(type.isMatch(info, null, false, extract, 0, bytes));
+		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
 		bytes = new byte[] { 'h', 'E', 'l', 'l', 'o' };
-		assertTrue(type.isMatch(info, null, false, extract, 0, bytes));
+		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
 
-		info = type.convertTestString("Hello/c");
+		info = type.convertTestString("Hello/c", 0);
 		bytes = new byte[] { 'H', 'e', 'l', 'l', 'o' };
-		assertTrue(type.isMatch(info, null, false, extract, 0, bytes));
+		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
 		bytes = new byte[] { 'H', 'E', 'l', 'l', 'o' };
-		assertTrue(type.isMatch(info, null, false, extract, 0, bytes));
+		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
 	}
 
 	@Test
 	public void testOptionalWhitespace() {
 		StringType type = new StringType();
-		Object info = type.convertTestString("hello/b");
+		Object info = type.convertTestString("hello/b", 0);
 		byte[] bytes = new byte[] { 'h', ' ', 'e', ' ', 'l', ' ', 'l', ' ', 'o' };
 		Object extract = type.extractValueFromBytes(0, bytes);
-		assertTrue(type.isMatch(info, null, false, extract, 0, bytes));
+		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
 		bytes = new byte[] { 'h', 'e', 'l', 'l', 'o' };
-		assertTrue(type.isMatch(info, null, false, extract, 0, bytes));
+		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
 		bytes = new byte[] { 'n', 'e', 'l', 'l', 'o' };
-		assertFalse(type.isMatch(info, null, false, extract, 0, bytes));
+		assertNull(type.isMatch(info, null, false, extract, 0, bytes));
 	}
 
 	@Test
 	public void testCompactWhitespace() {
 		StringType type = new StringType();
-		Object info = type.convertTestString("h ello/B");
+		Object info = type.convertTestString("h ello/B", 0);
 		byte[] bytes = new byte[] { 'h', ' ', 'e', 'l', 'l', 'o' };
 		Object extract = type.extractValueFromBytes(0, bytes);
-		assertTrue(type.isMatch(info, null, false, extract, 0, bytes));
+		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
 		bytes = new byte[] { 'h', ' ', 'e', ' ', 'l', ' ', 'l', ' ', 'o' };
-		assertFalse(type.isMatch(info, null, false, extract, 0, bytes));
+		assertNull(type.isMatch(info, null, false, extract, 0, bytes));
 		bytes = new byte[] { 'h', ' ', ' ', 'e', 'l', 'l', 'o' };
-		assertTrue(type.isMatch(info, null, false, extract, 0, bytes));
-		info = type.convertTestString("h e llo/B");
+		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
+		info = type.convertTestString("h e llo/B", 0);
 		bytes = new byte[] { 'h', ' ', ' ', 'e', ' ', ' ', ' ', 'l', 'l', 'o' };
-		assertTrue(type.isMatch(info, null, false, extract, 0, bytes));
+		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
 		bytes = new byte[] { 'h', ' ', ' ', 'b', ' ', ' ', ' ', 'l', 'l', 'o' };
-		assertFalse(type.isMatch(info, null, false, extract, 0, bytes));
+		assertNull(type.isMatch(info, null, false, extract, 0, bytes));
 	}
 
 	@Test
 	public void testCompactWhitespacePlusCaseInsensitive() {
 		StringType type = new StringType();
-		Object info = type.convertTestString("h ello/Bc");
+		Object info = type.convertTestString("h ello/Bc", 0);
 		byte[] bytes = new byte[] { 'h', ' ', 'e', 'l', 'l', 'o' };
 		Object extract = type.extractValueFromBytes(0, bytes);
-		assertTrue(type.isMatch(info, null, false, extract, 0, bytes));
+		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
 		bytes = new byte[] { 'h', ' ', ' ', 'e', 'l', 'l', 'o' };
-		assertTrue(type.isMatch(info, null, false, extract, 0, bytes));
+		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
 		bytes = new byte[] { 'H', ' ', 'e', 'l', 'l', 'o' };
-		assertTrue(type.isMatch(info, null, false, extract, 0, bytes));
+		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
 		bytes = new byte[] { 'H', ' ', ' ', 'E', 'L', 'L', 'O' };
-		assertTrue(type.isMatch(info, null, false, extract, 0, bytes));
+		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
 	}
 
 	@Test
 	public void testCompactPlusOptionalWhitespace() {
 		StringType type = new StringType();
-		Object info = type.convertTestString("h ello/Bb");
+		Object info = type.convertTestString("h ello/Bb", 0);
 		byte[] bytes = new byte[] { 'h', ' ', 'e', 'l', 'l', 'o' };
 		Object extract = type.extractValueFromBytes(0, bytes);
-		assertTrue(type.isMatch(info, null, false, extract, 0, bytes));
+		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
 		bytes = new byte[] { 'h', ' ', ' ', 'e', 'l', 'l', 'o' };
-		assertTrue(type.isMatch(info, null, false, extract, 0, bytes));
+		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
 		bytes = new byte[] { 'h', ' ', 'e', ' ', 'l', 'l', 'o' };
-		assertTrue(type.isMatch(info, null, false, extract, 0, bytes));
+		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
 		bytes = new byte[] { 'h', 'e', ' ', 'l', 'l', 'o' };
-		assertFalse(type.isMatch(info, null, false, extract, 0, bytes));
+		assertNull(type.isMatch(info, null, false, extract, 0, bytes));
 		bytes = new byte[] { 'h', ' ', ' ', ' ', 'e', ' ', 'l', 'l', 'o' };
-		assertTrue(type.isMatch(info, null, false, extract, 0, bytes));
+		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
 	}
 
 	@Test
 	public void testRenderValue() {
 		StringType type = new StringType();
-		Object info = type.convertTestString("h ello/Bb");
+		Object info = type.convertTestString("h ello/Bb", 0);
 		byte[] bytes = new byte[] { 'h', ' ', 'e', 'l', 'l', 'o' };
-		Object extract = type.extractValueFromBytes(0, bytes);
-		assertTrue(type.isMatch(info, null, false, extract, 0, bytes));
+		Object extract = type.isMatch(info, null, false, null, 0, bytes);
+		assertNotNull(extract);
 		StringBuilder sb = new StringBuilder();
 		type.renderValue(sb, extract, new Formatter("%s"));
 		assertEquals("h ello", sb.toString());
 
 		bytes = new byte[] { 'h', ' ', ' ', ' ', 'e', 'l', 'l', 'o' };
-		assertTrue(type.isMatch(info, null, false, extract, 0, bytes));
+		extract = type.isMatch(info, null, false, null, 0, bytes);
+		assertNotNull(extract);
 		sb.setLength(0);
 		type.renderValue(sb, extract, new Formatter("%s"));
 		assertEquals("h   ello", sb.toString());

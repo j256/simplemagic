@@ -1,5 +1,9 @@
 package com.j256.simplemagic.types;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -7,43 +11,52 @@ import com.j256.simplemagic.entries.Formatter;
 import com.j256.simplemagic.entries.MagicMatcher;
 
 /**
- * A string of bytes. The string type specification can be optionally followed by /[Bbc]*. The ``B'' flag compacts
- * whitespace in the target, which must contain at least one whitespace character. If the magic has n consecutive
- * blanks, the target needs at least n consecutive blanks to match. The ``b'' flag treats every blank in the target as
- * an optional blank. Finally the ``c'' flag, specifies case insensitive matching: lower-case characters in the magic
- * match both lower and upper case characters in the target, whereas upper case characters in the magic only match
- * upper-case characters in the target.
+ * A literal string search starting at the given offset. The same modifier flags can be used as for string patterns. The
+ * modifier flags (if any) must be followed by /number the range, that is, the number of positions at which the match
+ * will be attempted, starting from the start offset. This is suitable for searching larger binary expressions with
+ * variable offsets, using \ escapes for special characters. The offset works as for regex. *
  * 
  * @author graywatson
  */
-public class StringType implements MagicMatcher {
+public class SearchType implements MagicMatcher {
 
-	private final static Pattern TARGET_PATTERN = Pattern.compile("(.*)/([Bbc]*)");
+	private final static Pattern TARGET_PATTERN = Pattern.compile("(.*)(/[Bbc]*)?(/(\\d+))?");
 	private static final String EMPTY = "";
 
 	public Object convertTestString(String test, int offset) {
 		Matcher matcher = TARGET_PATTERN.matcher(test);
 		if (!matcher.matches()) {
-			return new StringTestInfo(preProcessPattern(test), false, false, false);
+			return new SearchTestInfo(preProcessPattern(test), false, false, false, 0);
 		}
 		boolean compactWhiteSpace = false;
 		boolean optionalWhiteSpace = false;
 		boolean caseInsensitive = false;
-		for (char ch : matcher.group(2).toCharArray()) {
-			switch (ch) {
-				case 'B' :
-					compactWhiteSpace = true;
-					break;
-				case 'b' :
-					optionalWhiteSpace = true;
-					break;
-				case 'c' :
-					caseInsensitive = true;
-					break;
+		if (matcher.group(2) != null && matcher.group(2).length() > 0) {
+			for (char ch : matcher.group(2).toCharArray()) {
+				switch (ch) {
+					case 'B' :
+						compactWhiteSpace = true;
+						break;
+					case 'b' :
+						optionalWhiteSpace = true;
+						break;
+					case 'c' :
+						caseInsensitive = true;
+						break;
+				}
 			}
 		}
-		return new StringTestInfo(preProcessPattern(matcher.group(1)), compactWhiteSpace, optionalWhiteSpace,
-				caseInsensitive);
+		int numLines = 1;
+		if (matcher.group(4) != null && matcher.group(4).length() > 0) {
+			try {
+				numLines = Integer.decode(matcher.group(4));
+			} catch (NumberFormatException e) {
+				throw new IllegalArgumentException("Invalid format for search length: " + test);
+			}
+		}
+		// numLines gets added to offset to get max-offset
+		return new SearchTestInfo(preProcessPattern(matcher.group(1)), compactWhiteSpace, optionalWhiteSpace,
+				caseInsensitive, offset + numLines);
 	}
 
 	public Object extractValueFromBytes(int offset, byte[] bytes) {
@@ -52,16 +65,49 @@ public class StringType implements MagicMatcher {
 
 	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue, int offset,
 			byte[] bytes) {
-		StringTestInfo info = (StringTestInfo) testValue;
-		int targetPos = offset;
+		SearchTestInfo info = (SearchTestInfo) testValue;
+		BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes)));
+		try {
+			int lineCount;
+			// if offset is 1 then we need to pre-read 1 line
+			for (lineCount = 0; lineCount < offset; lineCount++) {
+				// if eof then no match
+				if (reader.readLine() == null) {
+					return null;
+				}
+			}
+
+			for (; lineCount < info.maxOffset; lineCount++) {
+				String line = reader.readLine();
+				// if eof then no match
+				if (line == null) {
+					break;
+				}
+				for (int i = 0; i < line.length(); i++) {
+					String match = checkLine(info, line, i);
+					if (match != null) {
+						return match;
+					}
+				}
+			}
+			return null;
+		} catch (IOException e) {
+			// probably won't get here
+			return null;
+		}
+	}
+
+	private String checkLine(SearchTestInfo info, String line, int startOffset) {
+
 		boolean lastMagicCompactWhitespace = false;
+		int targetPos = startOffset;
 		for (int magicPos = 0; magicPos < info.pattern.length(); magicPos++) {
 			char magicCh = info.pattern.charAt(magicPos);
 			// did we reach the end?
-			if (targetPos >= bytes.length) {
+			if (targetPos >= line.length()) {
 				return null;
 			}
-			char targetCh = (char) (bytes[targetPos++] & 0xFF);
+			char targetCh = line.charAt(targetPos++);
 
 			// if it matches, we are done
 			if (magicCh == targetCh) {
@@ -74,7 +120,7 @@ public class StringType implements MagicMatcher {
 			// if it doesn't match, maybe the target is a whitespace
 			if ((lastMagicCompactWhitespace || info.optionalWhiteSpace) && Character.isWhitespace(targetCh)) {
 				do {
-					targetCh = (char) (bytes[targetPos++] & 0xFF);
+					targetCh = line.charAt(targetPos++);
 				} while (Character.isWhitespace(targetCh));
 				// now that we get to the first non-whitespace, it must match
 				if (magicCh == targetCh) {
@@ -98,13 +144,7 @@ public class StringType implements MagicMatcher {
 			return null;
 		}
 
-		char[] chars = new char[targetPos - offset];
-		for (int i = 0; i < chars.length; i++) {
-			chars[i] = (char) (bytes[offset + i] & 0xFF);
-		}
-
-		// now that we've matched, we construct our matching string
-		return new String(chars);
+		return line.substring(startOffset, targetPos);
 	}
 
 	public void renderValue(StringBuilder sb, Object extractedValue, Formatter formatter) {
@@ -204,18 +244,20 @@ public class StringType implements MagicMatcher {
 		return val;
 	}
 
-	private static class StringTestInfo {
+	private static class SearchTestInfo {
 		final String pattern;
 		final boolean compactWhiteSpace;
 		final boolean optionalWhiteSpace;
 		final boolean caseInsensitive;
+		final int maxOffset;
 
-		public StringTestInfo(String pattern, boolean compactWhiteSpace, boolean optionalWhiteSpace,
-				boolean caseInsensitive) {
+		public SearchTestInfo(String pattern, boolean compactWhiteSpace, boolean optionalWhiteSpace,
+				boolean caseInsensitive, int maxOffset) {
 			this.pattern = pattern;
 			this.compactWhiteSpace = compactWhiteSpace;
 			this.optionalWhiteSpace = optionalWhiteSpace;
 			this.caseInsensitive = caseInsensitive;
+			this.maxOffset = maxOffset;
 		}
 
 		@Override

@@ -16,6 +16,7 @@ import com.j256.simplemagic.types.LocalLongDateType;
 import com.j256.simplemagic.types.LongType;
 import com.j256.simplemagic.types.PStringType;
 import com.j256.simplemagic.types.RegexType;
+import com.j256.simplemagic.types.SearchType;
 import com.j256.simplemagic.types.ShortType;
 import com.j256.simplemagic.types.StringType;
 
@@ -68,7 +69,7 @@ public enum MagicType {
 
 	// indirect -- special
 	REGEX("regex", new RegexType()),
-	// search
+	SEARCH("search", new SearchType()),
 
 	// yes this is long in C magic lang (shudder)
 	MIDDLE_ENDIAN_INTEGER("melong", new IntegerType(EndianType.MIDDLE)),

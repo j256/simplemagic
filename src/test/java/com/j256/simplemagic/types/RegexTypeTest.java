@@ -1,7 +1,7 @@
 package com.j256.simplemagic.types;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
@@ -12,20 +12,20 @@ public class RegexTypeTest {
 	@Test
 	public void testBasic() {
 		RegexType type = new RegexType();
-		Object test = type.convertTestString("hello[abc]");
+		Object test = type.convertTestString("hello[abc]", 0);
 		byte[] bytes = "some line with helloa in it".getBytes();
-		Object extracted = type.extractValueFromBytes(0, bytes);
-		assertTrue(type.isMatch(test, null, false, extracted, 0, bytes));
+		Object extracted = type.isMatch(test, null, false, null, 0, bytes);
+		assertNotNull(extracted);
 		assertEquals("helloa", renderValue(extracted, type, new Formatter("%s")));
 	}
 
 	@Test
 	public void testCaseInsensitive() {
 		RegexType type = new RegexType();
-		Object test = type.convertTestString("hello[ABC]/c");
+		Object test = type.convertTestString("hello[ABC]/c", 0);
 		byte[] bytes = "some line with helloa in it".getBytes();
-		Object extracted = type.extractValueFromBytes(0, bytes);
-		assertTrue(type.isMatch(test, null, false, extracted, 0, bytes));
+		Object extracted = type.isMatch(test, null, false, null, 0, bytes);
+		assertNotNull(extracted);
 		assertEquals("helloa", renderValue(extracted, type, new Formatter("%s")));
 	}
 

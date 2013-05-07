@@ -11,21 +11,21 @@ import com.j256.simplemagic.entries.MagicMatcher;
  */
 public class DefaultType implements MagicMatcher {
 
-	private final Object empty = new Object();
+	private static final String EMPTY = "";
 
-	public Object convertTestString(String test) {
+	public Object convertTestString(String test, int offset) {
 		// null is an error so we just return junk
-		return empty;
+		return EMPTY;
 	}
 
 	public Object extractValueFromBytes(int offset, byte[] bytes) {
-		return empty;
+		return EMPTY;
 	}
 
-	public boolean isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue, int offset,
+	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue, int offset,
 			byte[] bytes) {
 		// always matches
-		return true;
+		return EMPTY;
 	}
 
 	public void renderValue(StringBuilder sb, Object extractedValue, Formatter formatter) {

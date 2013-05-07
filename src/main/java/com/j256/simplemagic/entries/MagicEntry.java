@@ -129,7 +129,7 @@ public class MagicEntry {
 		if (valueStr.equals("x")) {
 			testValue = null;
 		} else {
-			testValue = matcher.convertTestString(valueStr);
+			testValue = matcher.convertTestString(valueStr, offset);
 		}
 
 		String format;
@@ -225,8 +225,11 @@ public class MagicEntry {
 		if (val == null) {
 			return null;
 		}
-		if (testValue != null && !matcher.isMatch(testValue, andValue, unsignedType, val, offset, bytes)) {
-			return null;
+		if (testValue != null) {
+			val = matcher.isMatch(testValue, andValue, unsignedType, val, offset, bytes);
+			if (val == null) {
+				return null;
+			}
 		}
 
 		if (contentInfo == null) {
@@ -239,8 +242,10 @@ public class MagicEntry {
 			matcher.renderValue(contentInfo.sb, val, formatter);
 		}
 		if (children != null) {
+			boolean matched = false;
 			for (MagicEntry child : children) {
 				if (child.processBytes(bytes, contentInfo) != null) {
+					matched = true;
 					if (contentInfo.name == UNKNOWN_NAME && child.name != null) {
 						contentInfo.name = child.name;
 					}
@@ -248,6 +253,9 @@ public class MagicEntry {
 						contentInfo.mimeType = child.mimeType;
 					}
 				}
+			}
+			if (!matched) {
+				contentInfo = null;
 			}
 		}
 		return contentInfo;

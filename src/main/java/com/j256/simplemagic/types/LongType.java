@@ -13,13 +13,13 @@ import com.j256.simplemagic.entries.NumberOperator;
  */
 public class LongType implements MagicMatcher {
 
-	private final EndianConverter endianConverter;
+	protected final EndianConverter endianConverter;
 
 	public LongType(EndianType endianType) {
 		this.endianConverter = endianType.getConverter();
 	}
 
-	public Object convertTestString(String test) {
+	public Object convertTestString(String test, int offset) {
 		return new NumberOperator(test);
 	}
 
@@ -27,9 +27,13 @@ public class LongType implements MagicMatcher {
 		return endianConverter.convertNumber(offset, bytes, 8);
 	}
 
-	public boolean isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue, int offset,
+	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue, int offset,
 			byte[] bytes) {
-		return ((NumberOperator) testValue).isMatch(andValue, unsignedType, (Long) extractedValue, offset, bytes);
+		if (((NumberOperator) testValue).isMatch(andValue, unsignedType, (Long) extractedValue, offset, bytes)) {
+			return extractedValue;
+		} else {
+			return null;
+		}
 	}
 
 	public void renderValue(StringBuilder sb, Object extractedValue, Formatter formatter) {

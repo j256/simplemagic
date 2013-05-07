@@ -1,8 +1,10 @@
 0.2: 05/06/2013
-	* Renamed some of the external classes and methods to make more sense.  Hopefully stable now.
-	* Refactored some of the code internals.
+	* Renamed some of the external classes and methods to make more sense.
+	* Refactored a bunch of the code internals.  Passing back data from match and extract now.
+	* Added initial implementation of the search type.
 	* Improved some of the javadocs after walked them.
 	* Fixed some old references to Simple JMX that I copied the docs from.
+	* Added more test files.
 
 0.1: 05/06/2013
 	* Initial public release.  Tweaked javadocs and the like.

@@ -218,7 +218,7 @@ public class Formatter {
 					if (extractedValue instanceof Character) {
 						strValue = Character.toString((Character) extractedValue);
 					} else if (extractedValue instanceof Number) {
-						strValue = Character.toString((char) ((Number) extractedValue).byteValue());
+						strValue = Character.toString((char) ((Number) extractedValue).shortValue());
 					} else if (extractedValue instanceof String) {
 						String str = (String) extractedValue;
 						if (str.length() == 0) {

@@ -1,34 +1,22 @@
 package com.j256.simplemagic.types;
 
-import com.j256.simplemagic.entries.Formatter;
-import com.j256.simplemagic.entries.MagicMatcher;
-import com.j256.simplemagic.entries.NumberOperator;
+import com.j256.simplemagic.endian.EndianType;
 
 /**
  * A one-byte value.
  * 
  * @author graywatson
  */
-public class ByteType implements MagicMatcher {
+public class ByteType extends LongType {
 
-	public Object convertTestString(String test) {
-		return new NumberOperator(test);
+	public ByteType() {
+		// we really don't care about byte order since we only process 1 byte at a time
+		super(EndianType.NATIVE);
 	}
 
-	public Byte extractValueFromBytes(int offset, byte[] bytes) {
-		if (offset >= bytes.length) {
-			return null;
-		} else {
-			return bytes[offset];
-		}
-	}
-
-	public boolean isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue, int offset,
-			byte[] bytes) {
-		return ((NumberOperator) testValue).isMatch(andValue, unsignedType, (Byte) extractedValue, offset, bytes);
-	}
-
-	public void renderValue(StringBuilder sb, Object extractedValue, Formatter formatter) {
-		formatter.format(sb, extractedValue);
+	@Override
+	public Long extractValueFromBytes(int offset, byte[] bytes) {
+		// we use a long here because we don't want to overflow
+		return endianConverter.convertNumber(offset, bytes, 1);
 	}
 }

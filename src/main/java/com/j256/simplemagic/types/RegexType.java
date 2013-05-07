@@ -23,7 +23,9 @@ import com.j256.simplemagic.entries.MagicMatcher;
  */
 public class RegexType implements MagicMatcher {
 
-	public Object convertTestString(String test) {
+	private static final String EMPTY = "";
+
+	public Object convertTestString(String test, int offset) {
 		int index = test.lastIndexOf('/');
 		PatternInfo patternInfo = new PatternInfo();
 		if (index >= 0 && (index == test.length() - 2 || index == test.length() - 3)) {
@@ -41,10 +43,10 @@ public class RegexType implements MagicMatcher {
 	}
 
 	public Object extractValueFromBytes(int offset, byte[] bytes) {
-		return new ExtractedValue();
+		return EMPTY;
 	}
 
-	public boolean isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue, int offset,
+	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue, int offset,
 			byte[] bytes) {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes)));
 		String line = null;
@@ -53,31 +55,28 @@ public class RegexType implements MagicMatcher {
 				line = reader.readLine();
 				// if eof then no match
 				if (line == null) {
-					return false;
+					return null;
 				}
 			} catch (IOException e) {
 				// probably won't get here
-				return false;
+				return null;
 			}
 		}
 		if (line == null) {
 			// may never get here
-			return false;
+			return null;
 		}
 		PatternInfo patternInfo = (PatternInfo) testValue;
 		Matcher matcher = patternInfo.pattern.matcher(line);
 		if (matcher.matches()) {
-			ExtractedValue extracted = (ExtractedValue) extractedValue;
-			extracted.matched = matcher.group(1);
-			return true;
+			return matcher.group(1);
 		} else {
-			return false;
+			return null;
 		}
 	}
 
 	public void renderValue(StringBuilder sb, Object extractedValue, Formatter formatter) {
-		ExtractedValue extracted = (ExtractedValue) extractedValue;
-		sb.append(extracted.matched);
+		formatter.format(sb, extractedValue);
 	}
 
 	private boolean handleFlag(PatternInfo patternInfo, char flag) {
@@ -90,10 +89,6 @@ public class RegexType implements MagicMatcher {
 		} else {
 			return false;
 		}
-	}
-
-	private static class ExtractedValue {
-		String matched;
 	}
 
 	private static class PatternInfo {
