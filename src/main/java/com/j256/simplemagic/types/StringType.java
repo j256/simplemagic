@@ -22,28 +22,7 @@ public class StringType implements MagicMatcher {
 	private static final String EMPTY = "";
 
 	public Object convertTestString(String test, int offset) {
-		Matcher matcher = TARGET_PATTERN.matcher(test);
-		if (!matcher.matches()) {
-			return new StringTestInfo(preProcessPattern(test), false, false, false);
-		}
-		boolean compactWhiteSpace = false;
-		boolean optionalWhiteSpace = false;
-		boolean caseInsensitive = false;
-		for (char ch : matcher.group(2).toCharArray()) {
-			switch (ch) {
-				case 'B' :
-					compactWhiteSpace = true;
-					break;
-				case 'b' :
-					optionalWhiteSpace = true;
-					break;
-				case 'c' :
-					caseInsensitive = true;
-					break;
-			}
-		}
-		return new StringTestInfo(preProcessPattern(matcher.group(1)), compactWhiteSpace, optionalWhiteSpace,
-				caseInsensitive);
+		return convertTestString(TARGET_PATTERN, test, offset);
 	}
 
 	public Object extractValueFromBytes(int offset, byte[] bytes) {
@@ -52,18 +31,38 @@ public class StringType implements MagicMatcher {
 
 	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue, int offset,
 			byte[] bytes) {
-		StringTestInfo info = (StringTestInfo) testValue;
+		// find the match in the array of bytes
+		return findOffsetMatch((StringTestInfo) testValue, offset, bytes, null);
+	}
+
+	public void renderValue(StringBuilder sb, Object extractedValue, Formatter formatter) {
+		formatter.format(sb, extractedValue);
+	}
+
+	protected String findOffsetMatch(StringTestInfo info, int offset, byte[] bytes, String line) {
 		int targetPos = offset;
+		int length;
+		if (bytes == null) {
+			length = line.length();
+		} else {
+			length = bytes.length;
+		}
 		boolean lastMagicCompactWhitespace = false;
 		for (int magicPos = 0; magicPos < info.pattern.length(); magicPos++) {
 			char magicCh = info.pattern.charAt(magicPos);
 			// did we reach the end?
-			if (targetPos >= bytes.length) {
+			if (targetPos >= length) {
 				return null;
 			}
-			char targetCh = (char) (bytes[targetPos++] & 0xFF);
+			char targetCh;
+			if (bytes == null) {
+				targetCh = line.charAt(targetPos);
+			} else {
+				targetCh = (char) (bytes[targetPos] & 0xFF);
+			}
+			targetPos++;
 
-			// if it matches, we are done
+			// if it matches, we can continue
 			if (magicCh == targetCh) {
 				if (info.compactWhiteSpace) {
 					lastMagicCompactWhitespace = Character.isWhitespace(magicCh);
@@ -74,7 +73,12 @@ public class StringType implements MagicMatcher {
 			// if it doesn't match, maybe the target is a whitespace
 			if ((lastMagicCompactWhitespace || info.optionalWhiteSpace) && Character.isWhitespace(targetCh)) {
 				do {
-					targetCh = (char) (bytes[targetPos++] & 0xFF);
+					if (bytes == null) {
+						targetCh = line.charAt(targetPos);
+					} else {
+						targetCh = (char) (bytes[targetPos] & 0xFF);
+					}
+					targetPos++;
 				} while (Character.isWhitespace(targetCh));
 				// now that we get to the first non-whitespace, it must match
 				if (magicCh == targetCh) {
@@ -98,17 +102,62 @@ public class StringType implements MagicMatcher {
 			return null;
 		}
 
-		char[] chars = new char[targetPos - offset];
-		for (int i = 0; i < chars.length; i++) {
-			chars[i] = (char) (bytes[offset + i] & 0xFF);
+		if (bytes == null) {
+			return line.substring(offset, targetPos);
+		} else {
+			char[] chars = new char[targetPos - offset];
+			for (int i = 0; i < chars.length; i++) {
+				chars[i] = (char) (bytes[offset + i] & 0xFF);
+			}
+			return new String(chars);
 		}
-
-		// now that we've matched, we construct our matching string
-		return new String(chars);
 	}
 
-	public void renderValue(StringBuilder sb, Object extractedValue, Formatter formatter) {
-		formatter.format(sb, extractedValue);
+	/**
+	 * Convert our test-string pattern into a StringTestInfo object.
+	 */
+	protected StringTestInfo convertTestString(Pattern pattern, String test, int offset) {
+		Matcher matcher = pattern.matcher(test);
+		if (!matcher.matches()) {
+			// may not be able to get here
+			return new StringTestInfo(preProcessPattern(test), false, false, false, 0);
+		}
+		boolean compactWhiteSpace = false;
+		boolean optionalWhiteSpace = false;
+		boolean caseInsensitive = false;
+		if (matcher.group(2) != null && matcher.group(2).length() > 0) {
+			for (char ch : matcher.group(2).toCharArray()) {
+				switch (ch) {
+					case 'B' :
+						compactWhiteSpace = true;
+						break;
+					case 'b' :
+						optionalWhiteSpace = true;
+						break;
+					case 'c' :
+						caseInsensitive = true;
+						break;
+				}
+			}
+		}
+		// max-offset is ignored by the search type
+		int maxOffset = 0;
+		if (matcher.groupCount() >= 4) {
+			// default is 1 line
+			int numLines = 1;
+			if (matcher.group(4) != null && matcher.group(4).length() > 0) {
+				try {
+					numLines = Integer.decode(matcher.group(4));
+				} catch (NumberFormatException e) {
+					// may not be able to get here
+					throw new IllegalArgumentException("Invalid format for search length: " + test);
+				}
+			}
+			// numLines gets added to offset to get max-offset
+			maxOffset = offset + numLines;
+		}
+		String processedPattern = preProcessPattern(matcher.group(1));
+		return new StringTestInfo(processedPattern, compactWhiteSpace, optionalWhiteSpace, caseInsensitive, maxOffset);
 	}
 
 	private String preProcessPattern(String pattern) {
@@ -204,18 +253,21 @@ public class StringType implements MagicMatcher {
 		return val;
 	}
 
-	private static class StringTestInfo {
+	protected static class StringTestInfo {
 		final String pattern;
 		final boolean compactWhiteSpace;
 		final boolean optionalWhiteSpace;
 		final boolean caseInsensitive;
+		// ignored by the search type
+		final int maxOffset;
 
 		public StringTestInfo(String pattern, boolean compactWhiteSpace, boolean optionalWhiteSpace,
-				boolean caseInsensitive) {
+				boolean caseInsensitive, int maxOffset) {
 			this.pattern = pattern;
 			this.compactWhiteSpace = compactWhiteSpace;
 			this.optionalWhiteSpace = optionalWhiteSpace;
 			this.caseInsensitive = caseInsensitive;
+			this.maxOffset = maxOffset;
 		}
 
 		@Override

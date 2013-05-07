@@ -15,17 +15,17 @@ public class ContentTypeUtilTest {
 	private ContentTypeUtil contentTypeUtil = new ContentTypeUtil();
 
 	private FileType[] fileTypes = new FileType[] { //
-			//
-			// new FileType("/files/x.gif", "GIF", "GIF image data, version 89a, 32 x 32"),
-			// new FileType("/files/x.pdf", "PDF", "PDF document, version 1.3"),
-			// new FileType("/files/x.png", "PNG", "PNG image, 205 x 189, 8-bit/color RGB, non-interlaced"),
-			// new FileType("/files/x.tiff", "TIFF", "TIFF image data, big-endian"),
-			// new FileType("/files/x.zip", "Zip", "Zip archive data, at least v1.0 to extract"),
-			// new FileType("/files/x.javaserial", "Java", "Java serialization data, version 5"),
-			// new FileType("/files/x.doc", "Microsoft", "Microsoft Word Document"),
-			// new FileType("/files/x.rtf", "Rich",
-			// "Rich Text Format data, version 1, unknown character set unknown version"),
-			new FileType("/files/x.xml", "XML", "XML document text"),
+					//
+					new FileType("/files/x.gif", "GIF", "GIF image data, version 89a, 32 x 32"),
+					new FileType("/files/x.pdf", "PDF", "PDF document, version 1.3"),
+					new FileType("/files/x.png", "PNG", "PNG image, 205 x 189, 8-bit/color RGB, non-interlaced"),
+					new FileType("/files/x.tiff", "TIFF", "TIFF image data, big-endian"),
+					new FileType("/files/x.zip", "Zip", "Zip archive data, at least v1.0 to extract"),
+					new FileType("/files/x.javaserial", "Java", "Java serialization data, version 5"),
+					new FileType("/files/x.doc", "Microsoft", "Microsoft Word Document"),
+					new FileType("/files/x.rtf", "Rich",
+							"Rich Text Format data, version 1, unknown character set unknown version"),
+					new FileType("/files/x.xml", "XML", "XML document text"),
 			//
 			};
 
