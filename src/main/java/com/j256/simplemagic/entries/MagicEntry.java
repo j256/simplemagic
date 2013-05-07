@@ -186,7 +186,7 @@ public class MagicEntry {
 	 */
 	public ContentType processBytes(byte[] bytes) {
 		ContentInfo info = processBytes(bytes, null);
-		if (info == null) {
+		if (info == null || info.name == UNKNOWN_NAME) {
 			return null;
 		} else {
 			return new ContentType(info.name, info.mimeType, info.sb.toString());
@@ -236,12 +236,17 @@ public class MagicEntry {
 			contentInfo = new ContentInfo(name, mimeType);
 		}
 		if (formatter != null) {
+			// if we are appending and need a space then preprend one
 			if (formatSpacePrefix && contentInfo.sb.length() > 0) {
 				contentInfo.sb.append(' ');
 			}
 			matcher.renderValue(contentInfo.sb, val, formatter);
 		}
 		if (children != null) {
+			/*
+			 * If there are children then one of them has to match otherwise the whole thing doesn't match. This is
+			 * necessary for formats that are XML but we don't want to dominate plain old XML documents.
+			 */
 			boolean matched = false;
 			for (MagicEntry child : children) {
 				if (child.processBytes(bytes, contentInfo) != null) {

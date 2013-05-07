@@ -39,6 +39,9 @@ public class StringType implements MagicMatcher {
 		formatter.format(sb, extractedValue);
 	}
 
+	/**
+	 * Called from the string and search types to see if a string or byte array matches our pattern.
+	 */
 	protected String findOffsetMatch(StringTestInfo info, int offset, byte[] bytes, String line) {
 		int targetPos = offset;
 		int length;
@@ -160,6 +163,9 @@ public class StringType implements MagicMatcher {
 		return new StringTestInfo(processedPattern, compactWhiteSpace, optionalWhiteSpace, caseInsensitive, maxOffset);
 	}
 
+	/**
+	 * Pre-processes the pattern by handling \007 type of escapes and others.
+	 */
 	private String preProcessPattern(String pattern) {
 		int index = pattern.indexOf('\\');
 		if (index < 0) {

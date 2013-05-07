@@ -79,8 +79,8 @@ To use SimpleMagic you need to do the following steps.  For more information, @p
 
 @item Download SimpleMagic from the @uref{http://256.com/sources/simplemagic/releases/, SimpleMagic release page}.  @xref{Downloading}.
 
-@item Load in the magic entries.  By default, if you construct a @code{ContentTypeUtil} instance with the default constructor,
-it will load the internal magic entries file.  @xref{Loading Magic Entries}.
+@item Optionally load in the magic entries from local file(s).  By default, if you construct a @code{ContentTypeUtil} instance
+with the default constructor, it will load the internal magic entries file.  @xref{Loading Magic Entries}.
 
 @item Use the @code{ContentTypeUtil} class to get content-types for files or @code{byte[]}:
 
@@ -122,9 +122,15 @@ The code works with Java 5 or later.
 @node Loading Magic Entries, License, Downloading, Using
 @section How To Load Magic Entries
 
+@cindex default magic entries
+@cindex system magic entries
+The library uses various magic byte information to be able to find and determine details about random blocks of bytes.
+By default, SimpleMagic has a built in version of a magic file that was copied from a CentOS Linux system.  It contains, 
+~2400 magic file entries describing a number of different file types.  It also has an additional ~6600 lines which provide
+more details about the detected content types.
+
 @cindex loading magic entries
 @cindex magic files
-The library uses various magic byte information to be able to find and determine details about random blocks of bytes.
 The magic entries are relatively complex but in general look something like the following.  The configuration line says to
 look at the start of the file for the string @code{"GIF8"}.  If it is there then the file is "GIF image data".
 
@@ -133,16 +139,10 @@ look at the start of the file for the string @code{"GIF8"}.  If it is there then
 0       string          GIF8            GIF image data
 @end example
 
-@cindex default magic entries
-@cindex system magic entries
-By default, SimpleMagic has a built in version of a magic file that was copied from a CentOS Linux system.  It contains, 
-~2400 magic file entries describing a number of different file types.  It also has an additional ~6600 lines which provide
-more details about the detected content types.
-
 @cindex alternative magic files
 @cindex /etc/magic
 If you do not want to use the internal magic definitions, you can also construct the @code{ContentTypeUtil} class with a file
-or directory, to parse and use another definition file.
+or directory to have it parse and use another definition file.
 
 @example
 ContentTypeUtil util = new ContentTypeUtil("/etc/magic");

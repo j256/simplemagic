@@ -10,7 +10,7 @@ import com.j256.simplemagic.endian.EndianType;
 public class ByteType extends LongType {
 
 	public ByteType() {
-		// we really don't care about byte order since we only process 1 byte at a time
+		// we don't care about byte order since we only process 1 byte at a time
 		super(EndianType.NATIVE);
 	}
 
