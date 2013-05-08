@@ -1,4 +1,7 @@
 0.3: 05/08/2013
+	* Added error callbacks and removed the System.err.println that got checked in by mistake.
+
+0.3: 05/08/2013
 	* Fixed some problems with the date types.  I assume now that the date (bedate, etc.) is in UTC timezone.
 	* Improved some more javadocs.
 
