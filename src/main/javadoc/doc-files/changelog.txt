@@ -1,4 +1,4 @@
-0.3: 05/08/2013
+0.4: 05/08/2013
 	* Added error callbacks and removed the System.err.println that got checked in by mistake.
 
 0.3: 05/08/2013
