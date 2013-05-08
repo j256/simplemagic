@@ -6,7 +6,7 @@ import java.util.Date;
 import com.j256.simplemagic.endian.EndianType;
 
 /**
- * An eight-byte value interpreted as a UNIX-style date, but interpreted as local time rather than UTC.
+ * An 8-byte value interpreted as a UNIX-style date, but interpreted as local time rather than UTC.
  * 
  * @author graywatson
  */

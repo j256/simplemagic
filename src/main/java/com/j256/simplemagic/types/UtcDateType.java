@@ -7,7 +7,7 @@ import java.util.TimeZone;
 import com.j256.simplemagic.endian.EndianType;
 
 /**
- * A four-byte value interpreted as a UNIX date in UTC timezone.
+ * A 4-byte value interpreted as a UNIX date in UTC timezone.
  * 
  * @author graywatson
  */

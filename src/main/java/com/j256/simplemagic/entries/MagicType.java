@@ -6,7 +6,6 @@ import java.util.Map;
 import com.j256.simplemagic.endian.EndianType;
 import com.j256.simplemagic.types.BigEndianString16Type;
 import com.j256.simplemagic.types.ByteType;
-import com.j256.simplemagic.types.DefaultType;
 import com.j256.simplemagic.types.DoubleType;
 import com.j256.simplemagic.types.FloatType;
 import com.j256.simplemagic.types.IntegerType;
@@ -112,7 +111,6 @@ public enum MagicType {
 	/** 4 byte value middle-endian byte order, interpreted as a Unix date using the local time zone. */
 	MIDDLE_ENDIAN_LOCAL_DATE("meldate", new LocalDateType(EndianType.MIDDLE)),
 
-	DEFAULT("default", new DefaultType()),
 	// end
 	;
 
