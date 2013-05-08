@@ -1,4 +1,4 @@
-0.2: 05/06/2013
+0.2: 05/08/2013
 	* Fixed some magic bugs in the search and regex handling code exposed by better tests.  junit++.
 	* Got the date classes working.
 	* Renamed some of the external classes and methods to make more sense.

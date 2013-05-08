@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
 <html>
-<!-- Created on May 6, 2013 by texi2html 1.82
+<!-- Created on May 8, 2013 by texi2html 1.82
 texi2html was written by: 
             Lionel Cons <Lionel.Cons@cern.ch> (original author)
             Karl Berry  <karl@freefriends.org>
@@ -51,7 +51,7 @@ ul.toc {list-style: none}
 <a name="SimpleMagic"></a>
 <h1 class="settitle">SimpleMagic</h1>
 
-<p>Version 0.1 &ndash; May 2013
+<p>Version 0.2 &ndash; May 2013
 </p>
 <a name="index-introduction"></a>
 <a name="index-author"></a>
@@ -101,19 +101,19 @@ There is also a <a href="http://256.com/sources/simplemagic/docs/simplemagic.pdf
 <a name="index-getting-started"></a>
 <a name="index-how-to-get-started"></a>
 <a name="index-quick-start"></a>
-<a name="index-MagicUtil"></a>
+<a name="index-ContentTypeUtil"></a>
 <p>To use SimpleMagic you need to do the following steps.  For more information, see section <a href="#Using">Using SimpleMagic</a>.
 </p>
 <ol>
 <li> Download SimpleMagic from the <a href="http://256.com/sources/simplemagic/releases/">SimpleMagic release page</a>.  See section <a href="#Downloading">Downloading Jar</a>.
 
-</li><li> Load in the magic entries.  By default, if you construct a <code>MagicUtil</code> instance with the default constructor,
-it will load the internal magic entries file.  See section <a href="#Loading-Magic-Entries">How To Load Magic Entries</a>.
+</li><li> Optionally load in the magic entries from local file(s).  By default, if you construct a <code>ContentTypeUtil</code> instance
+with the default constructor, it will load the internal magic entries file.  See section <a href="#Loading-Magic-Entries">How To Load Magic Entries</a>.
 
-</li><li> Use the <code>MagicUtil</code> class to get content-types for files or <code>byte[]</code>:
+</li><li> Use the <code>ContentTypeUtil</code> class to get content-types for files or <code>byte[]</code>:
 
-<table><tr><td>&nbsp;</td><td><pre class="example">MagicUtil magicUtil = new MagicUtil();
-ContentType contentType = magicUtil.contentTypeOfFile(&quot;/tmp/upload.tmp&quot;);
+<table><tr><td>&nbsp;</td><td><pre class="example">ContentTypeUtil util = new ContentTypeUtil();
+ContentType contentType = util.findMatch(&quot;/tmp/upload.tmp&quot;);
 System.out.println(&quot;Content-type is: &quot; + contentType.getName());
 </pre></td></tr></table>
 
@@ -200,29 +200,29 @@ System.out.println(&quot;Content-type is: &quot; + contentType.getName());
 <a name="How-To-Load-Magic-Entries"></a>
 <h2 class="section">2.2 How To Load Magic Entries</h2>
 
+<a name="index-default-magic-entries"></a>
+<a name="index-system-magic-entries"></a>
+<p>The library uses various magic byte information to be able to find and determine details about random blocks of bytes.
+By default, SimpleMagic has a built in version of a magic file that was copied from a CentOS Linux system.  It contains, 
+~2400 magic file entries describing a number of different file types.  It also has an additional ~6600 lines which provide
+more details about the detected content types.
+</p>
 <a name="index-loading-magic-entries"></a>
 <a name="index-magic-files"></a>
-<p>The library uses various magic byte information to be able to find and determine details about random blocks of bytes.
-The magic entries are relatively complex but in general look something like the following.  The configuration line says to
+<p>The magic entries are relatively complex but in general look something like the following.  The configuration line says to
 look at the start of the file for the string <code>&quot;GIF8&quot;</code>.  If it is there then the file is &quot;GIF image data&quot;.
 </p>
 <a name="index-sample-magic-definition"></a>
 <table><tr><td>&nbsp;</td><td><pre class="example">0       string          GIF8            GIF image data
 </pre></td></tr></table>
 
-<a name="index-default-magic-entries"></a>
-<a name="index-system-magic-entries"></a>
-<p>By default, SimpleMagic has a built in version of a magic file that was copied from a CentOS Linux system.  It contains, 
-~2400 magic file entries describing a number of different file types.  It also has an additional ~6600 lines which provide
-more details about the detected content types.
-</p>
 <a name="index-alternative-magic-files"></a>
 <a name="index-_002fetc_002fmagic"></a>
-<p>If you do not want to use the internal magic definitions, you can also construct the <code>MagicUtil</code> class with a file
-or directory, to parse and use another definition file.
+<p>If you do not want to use the internal magic definitions, you can also construct the <code>ContentTypeUtil</code> class with a file
+or directory to have it parse and use another definition file.
 </p>
-<table><tr><td>&nbsp;</td><td><pre class="example">MagicUtil magicUtil = new MagicUtil(&quot;/etc/magic&quot;);
-ContentType contentType = magicUtil.contentTypeOfFile(uploadedBytes);
+<table><tr><td>&nbsp;</td><td><pre class="example">ContentTypeUtil util = new ContentTypeUtil(&quot;/etc/magic&quot;);
+ContentType contentType = util.findMatch(uploadedBytes);
 </pre></td></tr></table>
 
 <p><em>WARNING:</em> although we&rsquo;ve tried to support different types of magic entries, there are local per-OS variations that may
@@ -290,6 +290,8 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
 <br>
 <a href="#Index-of-Concepts-1_cp_letter-A" class="summary-letter"><b>A</b></a>
  &nbsp; 
+<a href="#Index-of-Concepts-1_cp_letter-C" class="summary-letter"><b>C</b></a>
+ &nbsp; 
 <a href="#Index-of-Concepts-1_cp_letter-D" class="summary-letter"><b>D</b></a>
  &nbsp; 
 <a href="#Index-of-Concepts-1_cp_letter-G" class="summary-letter"><b>G</b></a>
@@ -325,6 +327,9 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
 <tr><td></td><td valign="top"><a href="#index-alternative-magic-files">alternative magic files</a></td><td valign="top"><a href="#Loading-Magic-Entries">2.2 How To Load Magic Entries</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-author">author</a></td><td valign="top"><a href="#Top">SimpleMagic</a></td></tr>
 <tr><td colspan="3"> <hr></td></tr>
+<tr><th><a name="Index-of-Concepts-1_cp_letter-C">C</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-ContentTypeUtil">ContentTypeUtil</a></td><td valign="top"><a href="#Quick-Start">1. Start Using Quickly</a></td></tr>
+<tr><td colspan="3"> <hr></td></tr>
 <tr><th><a name="Index-of-Concepts-1_cp_letter-D">D</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-default-magic-entries">default magic entries</a></td><td valign="top"><a href="#Loading-Magic-Entries">2.2 How To Load Magic Entries</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-downloading-the-jars">downloading the jars</a></td><td valign="top"><a href="#Downloading">2.1 Downloading Jar</a></td></tr>
@@ -349,7 +354,6 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
 <tr><td colspan="3"> <hr></td></tr>
 <tr><th><a name="Index-of-Concepts-1_cp_letter-M">M</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-magic-files">magic files</a></td><td valign="top"><a href="#Loading-Magic-Entries">2.2 How To Load Magic Entries</a></td></tr>
-<tr><td></td><td valign="top"><a href="#index-MagicUtil">MagicUtil</a></td><td valign="top"><a href="#Quick-Start">1. Start Using Quickly</a></td></tr>
 <tr><td colspan="3"> <hr></td></tr>
 <tr><th><a name="Index-of-Concepts-1_cp_letter-O">O</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-open-source-license">open source license</a></td><td valign="top"><a href="#License">3. Open Source License</a></td></tr>
@@ -373,6 +377,8 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
  &nbsp; 
 <br>
 <a href="#Index-of-Concepts-1_cp_letter-A" class="summary-letter"><b>A</b></a>
+ &nbsp; 
+<a href="#Index-of-Concepts-1_cp_letter-C" class="summary-letter"><b>C</b></a>
  &nbsp; 
 <a href="#Index-of-Concepts-1_cp_letter-D" class="summary-letter"><b>D</b></a>
  &nbsp; 
@@ -433,7 +439,7 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
 </tr></table>
 <h1>About This Document</h1>
 <p>
-  This document was generated by <em>Gray Watson</em> on <em>May 6, 2013</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.82</em></a>.
+  This document was generated by <em>Gray Watson</em> on <em>May 8, 2013</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.82</em></a>.
 </p>
 <p>
   The buttons in the navigation panels have the following meaning:
@@ -535,7 +541,7 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
 <hr size="1">
 <p>
  <font size="-1">
-  This document was generated by <em>Gray Watson</em> on <em>May 6, 2013</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.82</em></a>.
+  This document was generated by <em>Gray Watson</em> on <em>May 8, 2013</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.82</em></a>.
  </font>
  <br>
 
