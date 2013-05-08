@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.j256.simplemagic</groupId>
 	<artifactId>simplemagic</artifactId>
-	<version>0.2-SNAPSHOT</version>
+	<version>0.2</version>
 	<packaging>jar</packaging>
 	<name>Simple Magic</name>
 	<url>http://sourceforge.net/projects/simplemagic/</url>
