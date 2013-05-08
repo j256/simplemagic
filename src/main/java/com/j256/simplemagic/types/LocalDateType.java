@@ -1,7 +1,6 @@
 package com.j256.simplemagic.types;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import com.j256.simplemagic.endian.EndianType;
@@ -28,14 +27,18 @@ public class LocalDateType extends IntegerType {
 	@Override
 	public void renderValue(StringBuilder sb, Object extractedValue, Formatter formatter) {
 		long val = (Long) extractedValue;
-		formatter.format(sb, dateFormat.get().format(dateFromExtractedValue(val)));
+		Date date = dateFromExtractedValue(val);
+		SimpleDateFormat format = dateFormat.get();
+		assisgnTimeZone(format);
+		formatter.format(sb, format.format(date));
 	}
 
 	protected Date dateFromExtractedValue(long val) {
 		val *= 1000;
-		// local timezone
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(val);
-		return calendar.getTime();
+		return new Date(val);
+	}
+
+	protected void assisgnTimeZone(SimpleDateFormat format) {
+		// noop for local time-zone
 	}
 }

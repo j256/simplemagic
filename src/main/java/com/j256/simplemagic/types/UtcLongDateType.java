@@ -1,6 +1,6 @@
 package com.j256.simplemagic.types;
 
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -23,8 +23,11 @@ public class UtcLongDateType extends LocalLongDateType {
 	protected Date dateFromExtractedValue(long val) {
 		// XXX: is this in millis or seconds?
 		// val *= 1000;
-		Calendar calendar = Calendar.getInstance(UTC_TIME_ZONE);
-		calendar.setTimeInMillis(val);
-		return calendar.getTime();
+		return new Date(val);
+	}
+
+	@Override
+	protected void assisgnTimeZone(SimpleDateFormat format) {
+		format.setTimeZone(UTC_TIME_ZONE);
 	}
 }
