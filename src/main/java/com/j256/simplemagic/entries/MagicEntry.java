@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.j256.simplemagic.ContentType;
+import com.j256.simplemagic.ContentTypeUtil.ErrorCallBack;
 
 /**
  * Representation of a line of information from the magic (5) format.
@@ -59,11 +60,11 @@ public class MagicEntry {
 	/**
 	 * Parse a line from the magic configuration file into an entry.
 	 */
-	public static MagicEntry parseLine(MagicEntry previous, String line) {
+	public static MagicEntry parseLine(MagicEntry previous, String line, ErrorCallBack errorCallBack) {
 		if (line.startsWith("!:")) {
 			if (previous != null) {
 				// we ignore it if there is no previous entry to add it to
-				handleSpecial(previous, line);
+				handleSpecial(previous, line, errorCallBack);
 			}
 			return null;
 		}
@@ -78,7 +79,10 @@ public class MagicEntry {
 		// either a tab and other spaces or two spaces in a row -- we hope that other spaces a escaped with \
 		String[] parts = line.split("\\t\\s*|\\s\\s+", 4);
 		if (parts.length < 3) {
-			throw new IllegalArgumentException("Invalid magic line: " + line);
+			if (errorCallBack != null) {
+				errorCallBack.error(line, "invalid number of whitespace separated fields, must be >= 4", null);
+			}
+			return null;
 		}
 
 		// level and offset
@@ -96,7 +100,10 @@ public class MagicEntry {
 		try {
 			offset = Integer.decode(offsetString);
 		} catch (NumberFormatException e) {
-			throw new IllegalArgumentException("Invalid offset number: " + line);
+			if (errorCallBack != null) {
+				errorCallBack.error(line, "invalid offset number:" + offsetString, e);
+			}
+			return null;
 		}
 
 		// type
@@ -105,15 +112,22 @@ public class MagicEntry {
 		// we use long because of overlaps
 		Long andValue = null;
 		if (sindex >= 0) {
+			String andStr = typeStr.substring(sindex + 1);
 			try {
-				andValue = Long.decode(typeStr.substring(sindex + 1));
+				andValue = Long.decode(andStr);
 			} catch (NumberFormatException e) {
-				throw new IllegalArgumentException("Invalid type and-number: " + line);
+				if (errorCallBack != null) {
+					errorCallBack.error(line, "invalid type AND-number: " + andStr, e);
+				}
+				return null;
 			}
 			typeStr = typeStr.substring(0, sindex);
 		}
 		if (typeStr.length() == 0) {
-			throw new IllegalArgumentException("Blank type string: " + line);
+			if (errorCallBack != null) {
+				errorCallBack.error(line, "blank type string", null);
+			}
+			return null;
 		}
 
 		boolean unsignedType = false;
@@ -129,7 +143,10 @@ public class MagicEntry {
 				}
 			}
 			if (matcher == null) {
-				throw new IllegalArgumentException("Unknown magic type '" + typeStr + "' on line<: " + line);
+				if (errorCallBack != null) {
+					errorCallBack.error(line, "unknown magic type string: " + typeStr, null);
+				}
+				return null;
 			}
 		}
 
@@ -138,7 +155,14 @@ public class MagicEntry {
 		if (testStr.equals("x")) {
 			testValue = null;
 		} else {
-			testValue = matcher.convertTestString(typeStr, testStr, offset);
+			try {
+				testValue = matcher.convertTestString(typeStr, testStr, offset);
+			} catch (Exception e) {
+				if (errorCallBack != null) {
+					errorCallBack.error(line, "could not convert magic test string: " + testStr, e);
+				}
+				return null;
+			}
 		}
 
 		String format;
@@ -276,10 +300,13 @@ public class MagicEntry {
 		return contentInfo;
 	}
 
-	private static void handleSpecial(MagicEntry parent, String line) {
-		String[] parts = line.split("[ \\t]+", 2);
+	private static void handleSpecial(MagicEntry parent, String line, ErrorCallBack errorCallBack) {
+		String[] parts = line.split("\\s+", 2);
 		if (parts.length < 2) {
-			throw new IllegalArgumentException("Invalid extension line: " + line);
+			if (errorCallBack != null) {
+				errorCallBack.error(line, "invalid extension line has less than 2 whitespace separated fields", null);
+			}
+			return;
 		}
 		String key = parts[0];
 		if (key.equals(MIME_TYPE_LINE)) {
@@ -287,24 +314,33 @@ public class MagicEntry {
 			return;
 		}
 		if (key.equals(STRENGTH_LINE)) {
-			handleStrength(parent, parts[1]);
+			handleStrength(parent, line, parts[1], errorCallBack);
 			return;
 		}
 		key = key.substring(2);
 		if (key.length() == 0) {
-			throw new IllegalArgumentException("Blank extension key: " + line);
+			if (errorCallBack != null) {
+				errorCallBack.error(line, "blank extension key", null);
+			}
+			return;
 		}
 
 		parent.addExtension(key, parts[1]);
 	}
 
-	private static void handleStrength(MagicEntry parent, String strengthValue) {
-		String[] parts = strengthValue.split("[ \\t]+", 2);
+	private static void handleStrength(MagicEntry parent, String line, String strengthValue, ErrorCallBack errorCallBack) {
+		String[] parts = strengthValue.split("\\s+", 2);
 		if (parts.length == 0) {
-			throw new IllegalArgumentException("Invalid strength value: " + strengthValue);
+			if (errorCallBack != null) {
+				errorCallBack.error(line, "invalid strength value: " + strengthValue, null);
+			}
+			return;
 		}
 		if (parts[0].length() == 0) {
-			throw new IllegalArgumentException("Invalid strength operator: " + strengthValue);
+			if (errorCallBack != null) {
+				errorCallBack.error(line, "invalid strength value: " + strengthValue, null);
+			}
+			return;
 		}
 		char operator = parts[0].charAt(0);
 		String valueStr;
@@ -317,7 +353,10 @@ public class MagicEntry {
 		try {
 			value = Integer.parseInt(valueStr);
 		} catch (NumberFormatException e) {
-			throw new IllegalArgumentException("Invalid strength value: " + strengthValue);
+			if (errorCallBack != null) {
+				errorCallBack.error(line, "invalid strength number value: " + valueStr, null);
+			}
+			return;
 		}
 
 		int strength = parent.strength;
@@ -335,7 +374,10 @@ public class MagicEntry {
 				strength /= value;
 				break;
 			default :
-				throw new IllegalArgumentException("Invalid strength operator: " + strengthValue);
+				if (errorCallBack != null) {
+					errorCallBack.error(line, "invalid strength operator: " + operator, null);
+				}
+				return;
 		}
 		parent.strength = strength;
 	}

@@ -56,31 +56,18 @@ public class ContentTypeUtilTest {
 		}
 	}
 
-	@Test
-	public void testSpecial() throws Exception {
-		ContentTypeUtil util = new ContentTypeUtil(new File("/tmp/x"));
-		ContentType type = contentTypeFromResource(util, "/files/x.class");
-		System.out.println(type);
-	}
-
-	@Test
-	public void testJpeg() throws Exception {
-		ContentTypeUtil util = new ContentTypeUtil(new File("/usr/share/file/magic/jpeg"));
-		ContentType type = util.findMatch("/Users/graywatson/Downloads/norwichtrip.jpg");
-		System.out.println(type);
-	}
-
-	@Test
-	public void testJpegJfif() throws Exception {
-		ContentTypeUtil util = new ContentTypeUtil(new File("/usr/share/file/magic/jpeg"));
-		ContentType type = util.findMatch("/Users/graywatson/Downloads/CKC_042-XL.jpg");
-		System.out.println(type);
-	}
+	// @Test
+	// public void testSpecial() throws Exception {
+	// ContentTypeUtil util = new ContentTypeUtil(new File("/tmp/x"));
+	// ContentType type = contentTypeFromResource(util, "/files/x.class");
+	// System.out.println(type);
+	// }
 
 	@Test
 	public void testDownloadsDir() throws Exception {
 		ContentTypeUtil util = new ContentTypeUtil();
-		for (File file : new File("/Users/graywatson/Downloads").listFiles()) {
+		String homeDir = System.getenv("HOME");
+		for (File file : new File(homeDir + "/Downloads").listFiles()) {
 			if (file.isFile()) {
 				ContentType type = util.findMatch(file);
 				System.out.println(file + " = " + type);

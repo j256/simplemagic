@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,6 +37,7 @@ public class ContentTypeUtil {
 
 	private final List<MagicEntry> magicEntries;
 	private int fileReadSize = DEFAULT_READ_SIZE;
+	private ErrorCallBack errorCallBack;
 
 	/**
 	 * Construct a magic utility using the internal magic file built into the package.
@@ -177,10 +179,17 @@ public class ContentTypeUtil {
 		this.fileReadSize = fileReadSize;
 	}
 
+	/**
+	 * Set our class which will get called whenever we get a configuration error.
+	 */
+	public void setErrorCallBack(ErrorCallBack errorCallBack) {
+		this.errorCallBack = errorCallBack;
+	}
+
 	private List<MagicEntry> loadInternalEntries() throws IOException {
 		InputStream stream = getClass().getResourceAsStream(INTERNAL_MAGIC_FILE);
 		if (stream == null) {
-			throw new IllegalStateException("Internal magic file not found in class-path: " + INTERNAL_MAGIC_FILE);
+			throw new FileNotFoundException("Internal magic file not found in class-path: " + INTERNAL_MAGIC_FILE);
 		}
 		Reader reader = null;
 		try {
@@ -209,9 +218,11 @@ public class ContentTypeUtil {
 
 			MagicEntry entry;
 			try {
-				entry = MagicEntry.parseLine(previous, line);
+				entry = MagicEntry.parseLine(previous, line, errorCallBack);
 			} catch (IllegalArgumentException e) {
-				System.err.println("Error in entry: " + e);
+				if (errorCallBack != null) {
+					errorCallBack.error(line, e.getMessage(), e);
+				}
 				// ignore this entry
 				continue;
 			}
@@ -233,5 +244,24 @@ public class ContentTypeUtil {
 				// ignored
 			}
 		}
+	}
+
+	/**
+	 * While we are parsing the magic configuration files, there are usually tons of badly formed lines and other
+	 * errors. This class defines the call-back which will be made whenever we discover an error.
+	 */
+	public interface ErrorCallBack {
+
+		/**
+		 * An error was generated while processing the line.
+		 * 
+		 * @param line
+		 *            Line where the error happened.
+		 * @param details
+		 *            Specific information about the error.
+		 * @param e
+		 *            Exception that was thrown trying to parse the line or null if none.
+		 */
+		public void error(String line, String details, Exception e);
 	}
 }
