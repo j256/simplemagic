@@ -7,12 +7,12 @@ import com.j256.simplemagic.entries.Formatter;
 import com.j256.simplemagic.entries.MagicMatcher;
 
 /**
- * A string of bytes. The string type specification can be optionally followed by /[Bbc]*. The ``B'' flag compacts
- * whitespace in the target, which must contain at least one whitespace character. If the magic has n consecutive
- * blanks, the target needs at least n consecutive blanks to match. The ``b'' flag treats every blank in the target as
- * an optional blank. Finally the ``c'' flag, specifies case insensitive matching: lower-case characters in the magic
- * match both lower and upper case characters in the target, whereas upper case characters in the magic only match
- * upper-case characters in the target.
+ * From the magic(5) man page: A string of bytes. The string type specification can be optionally followed by /[Bbc]*.
+ * The ``B'' flag compacts whitespace in the target, which must contain at least one whitespace character. If the magic
+ * has n consecutive blanks, the target needs at least n consecutive blanks to match. The ``b'' flag treats every blank
+ * in the target as an optional blank. Finally the ``c'' flag, specifies case insensitive matching: lower-case
+ * characters in the magic match both lower and upper case characters in the target, whereas upper case characters in
+ * the magic only match upper-case characters in the target.
  * 
  * @author graywatson
  */
@@ -267,6 +267,9 @@ public class StringType implements MagicMatcher {
 		return val;
 	}
 
+	/**
+	 * Internal holder for test information about strings.
+	 */
 	protected static class StringTestInfo {
 		final String pattern;
 		final boolean compactWhiteSpace;

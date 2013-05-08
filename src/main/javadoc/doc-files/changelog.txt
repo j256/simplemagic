@@ -1,3 +1,7 @@
+0.3: 05/08/2013
+	* Fixed some problems with the date types.  I assume now that the date (bedate, etc.) is in UTC timezone.
+	* Improved some more javadocs.
+
 0.2: 05/08/2013
 	* Fixed some magic bugs in the search and regex handling code exposed by better tests.  junit++.
 	* Got the date classes working.

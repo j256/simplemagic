@@ -11,17 +11,18 @@ import com.j256.simplemagic.endian.EndianType;
  * 
  * @author graywatson
  */
-public class UtcDateType extends LocalDateType {
+public class UtcLongDateType extends LocalLongDateType {
 
 	private static final TimeZone UTC_TIME_ZONE = TimeZone.getTimeZone("UTC");
 
-	public UtcDateType(EndianType endianType) {
+	public UtcLongDateType(EndianType endianType) {
 		super(endianType);
 	}
 
 	@Override
 	protected Date dateFromExtractedValue(long val) {
-		val *= 1000;
+		// XXX: is this in millis or seconds?
+		// val *= 1000;
 		Calendar calendar = Calendar.getInstance(UTC_TIME_ZONE);
 		calendar.setTimeInMillis(val);
 		return calendar.getTime();

@@ -11,13 +11,13 @@ import com.j256.simplemagic.entries.Formatter;
 import com.j256.simplemagic.entries.MagicMatcher;
 
 /**
- * A regular expression match in extended POSIX regular expression syntax (like egrep). Regular expressions can take
- * exponential time to process, and their performance is hard to predict, so their use is discouraged. When used in
- * production environments, their performance should be carefully checked. The type specification can be optionally
- * followed by /[c][s]. The 'c' flag makes the match case insensitive, while the 's' flag update the offset to the start
- * offset of the match, rather than the end. The regular expression is tested against line N + 1 onwards, where N is the
- * given offset. Line endings are assumed to be in the machine's native format. ^ and $ match the beginning and end of
- * individual lines, respectively, not beginning and end of file.
+ * From the magic(5) man page: A regular expression match in extended POSIX regular expression syntax (like egrep).
+ * Regular expressions can take exponential time to process, and their performance is hard to predict, so their use is
+ * discouraged. When used in production environments, their performance should be carefully checked. The type
+ * specification can be optionally followed by /[c][s]. The 'c' flag makes the match case insensitive, while the 's'
+ * flag update the offset to the start offset of the match, rather than the end. The regular expression is tested
+ * against line N + 1 onwards, where N is the given offset. Line endings are assumed to be in the machine's native
+ * format. ^ and $ match the beginning and end of individual lines, respectively, not beginning and end of file.
  * 
  * @author graywatson
  */

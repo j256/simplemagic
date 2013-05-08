@@ -28,6 +28,7 @@ import com.j256.simplemagic.entries.MagicEntry;
 public class ContentTypeUtil {
 
 	private final static String INTERNAL_MAGIC_FILE = "/magic.gz";
+	// if this changes, fixed the javadocs for setFileReadSize() below
 	private final static int DEFAULT_READ_SIZE = 10 * 1024;
 
 	/** internal entries loaded once if the {@link ContentTypeUtil#MagicUtil()} constructor is used. */
@@ -170,8 +171,7 @@ public class ContentTypeUtil {
 	}
 
 	/**
-	 * Set the default size that will be read if we are getting the content from a file. The default is most likely 10k
-	 * -- see {@link #DEFAULT_READ_SIZE}.
+	 * Set the default size that will be read if we are getting the content from a file. The default is most likely 10k.
 	 */
 	public void setFileReadSize(int fileReadSize) {
 		this.fileReadSize = fileReadSize;
@@ -211,7 +211,7 @@ public class ContentTypeUtil {
 			try {
 				entry = MagicEntry.parseLine(previous, line);
 			} catch (IllegalArgumentException e) {
-				 System.err.println("Error in entry: " + e);
+				System.err.println("Error in entry: " + e);
 				// ignore this entry
 				continue;
 			}

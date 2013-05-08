@@ -23,3 +23,11 @@ Used to maintain requested features or future work.
      is used as an offset in the file.  The default type if one is not specified is long.
 
 - compile the magic file into a serialized compressed file for size reasons
+
+- need to handle the indirect type?
+
+- need more tests on floating point numbers, find magics that use them
+
+- need to support the &offset format
+
+- is the quad date in seconds or millis, find a magic that uses them

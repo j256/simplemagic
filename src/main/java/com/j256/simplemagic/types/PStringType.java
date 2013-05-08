@@ -1,8 +1,8 @@
 package com.j256.simplemagic.types;
 
 /**
- * in the magic only match uppercase characters in the target. A Pascal-style string where the first byte is interpreted
- * as the an unsigned length. The string is not NUL terminated.
+ * A Pascal-style string where the first byte is interpreted as the an unsigned length. The string is not '\0'
+ * terminated.
  * 
  * @author graywatson
  */
