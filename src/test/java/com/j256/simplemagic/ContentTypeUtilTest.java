@@ -38,7 +38,7 @@ public class ContentTypeUtilTest {
 					new FileType("/files/x.bz2", "bzip2", "application/x-bzip2",
 							"bzip2 compressed data, block size = 900k"),
 					new FileType("/files/x.gz", "gzip", "application/x-gzip",
-							"gzip compressed data, from Unix, last modified: 2013-05-07 22:57:08 -0400"),
+							"gzip compressed data, from Unix, last modified: 2013-05-08 02:57:08 +0000"),
 					new FileType("/files/x.m4v", "ISO", "video/mp4", "ISO Media, MPEG v4 system, iTunes AVC-LC"),
 					new FileType("/files/x.xls", "OLE", null, "OLE 2 Compound Document"),
 					new FileType("/files/x.xlsx", "Zip", "application/zip",
