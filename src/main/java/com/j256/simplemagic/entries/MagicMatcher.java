@@ -11,7 +11,7 @@ public interface MagicMatcher {
 	 * Converts the test-string from the magic line to be an object to be passed into
 	 * {@link #isMatch(Object, int, byte[])}.
 	 */
-	public Object convertTestString(String test, int offset);
+	public Object convertTestString(String typeStr, String testStr, int offset);
 
 	/**
 	 * Extract the value from the bytes.

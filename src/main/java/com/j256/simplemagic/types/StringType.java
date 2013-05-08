@@ -18,11 +18,61 @@ import com.j256.simplemagic.entries.MagicMatcher;
  */
 public class StringType implements MagicMatcher {
 
-	private final static Pattern TARGET_PATTERN = Pattern.compile("(.*)/([Bbc]*)");
+	private final static Pattern TYPE_PATTERN = Pattern.compile("[^/]+(/\\d+)?(/[BbcwWt]*)?");
 	private static final String EMPTY = "";
+	private static final int MAX_NUM_LINES = 20;
 
-	public Object convertTestString(String test, int offset) {
-		return convertTestString(TARGET_PATTERN, test, offset);
+	public Object convertTestString(String typeStr, String testStr, int offset) {
+		Matcher matcher = TYPE_PATTERN.matcher(typeStr);
+		if (!matcher.matches()) {
+			// may not be able to get here
+			return new StringTestInfo(preProcessPattern(testStr), false, false, false, 0);
+		}
+		// max-offset is ignored by the search type
+		int maxOffset = 1;
+		String lengthStr = matcher.group(1);
+		if (lengthStr != null && lengthStr.length() > 1) {
+			// default is 1 line
+			int numLines = 1;
+			try {
+				// skip the '/'
+				numLines = Integer.decode(lengthStr.substring(1));
+			} catch (NumberFormatException e) {
+				// may not be able to get here
+				throw new IllegalArgumentException("Invalid format for search length: " + testStr);
+			}
+			if (numLines > MAX_NUM_LINES) {
+				numLines = MAX_NUM_LINES;
+			}
+			// numLines gets added to offset to get max-offset
+			maxOffset = offset + numLines;
+		}
+		boolean compactWhiteSpace = false;
+		boolean optionalWhiteSpace = false;
+		boolean caseInsensitive = false;
+		String flagsStr = matcher.group(2);
+		if (flagsStr != null) {
+			for (char ch : flagsStr.toCharArray()) {
+				switch (ch) {
+					case 'B' :
+						compactWhiteSpace = true;
+						break;
+					case 'b' :
+						optionalWhiteSpace = true;
+						break;
+					case 'c' :
+						caseInsensitive = true;
+						break;
+					case 't' :
+					case 'w' :
+					case 'W' :
+						// XXX: no idea what these do
+						break;
+				}
+			}
+		}
+		String processedPattern = preProcessPattern(testStr);
+		return new StringTestInfo(processedPattern, compactWhiteSpace, optionalWhiteSpace, caseInsensitive, maxOffset);
 	}
 
 	public Object extractValueFromBytes(int offset, byte[] bytes) {
@@ -76,6 +126,9 @@ public class StringType implements MagicMatcher {
 			// if it doesn't match, maybe the target is a whitespace
 			if ((lastMagicCompactWhitespace || info.optionalWhiteSpace) && Character.isWhitespace(targetCh)) {
 				do {
+					if (targetPos >= length) {
+						break;
+					}
 					if (bytes == null) {
 						targetCh = line.charAt(targetPos);
 					} else {
@@ -117,53 +170,6 @@ public class StringType implements MagicMatcher {
 	}
 
 	/**
-	 * Convert our test-string pattern into a StringTestInfo object.
-	 */
-	protected StringTestInfo convertTestString(Pattern pattern, String test, int offset) {
-		Matcher matcher = pattern.matcher(test);
-		if (!matcher.matches()) {
-			// may not be able to get here
-			return new StringTestInfo(preProcessPattern(test), false, false, false, 0);
-		}
-		boolean compactWhiteSpace = false;
-		boolean optionalWhiteSpace = false;
-		boolean caseInsensitive = false;
-		if (matcher.group(2) != null && matcher.group(2).length() > 0) {
-			for (char ch : matcher.group(2).toCharArray()) {
-				switch (ch) {
-					case 'B' :
-						compactWhiteSpace = true;
-						break;
-					case 'b' :
-						optionalWhiteSpace = true;
-						break;
-					case 'c' :
-						caseInsensitive = true;
-						break;
-				}
-			}
-		}
-		// max-offset is ignored by the search type
-		int maxOffset = 0;
-		if (matcher.groupCount() >= 4) {
-			// default is 1 line
-			int numLines = 1;
-			if (matcher.group(4) != null && matcher.group(4).length() > 0) {
-				try {
-					numLines = Integer.decode(matcher.group(4));
-				} catch (NumberFormatException e) {
-					// may not be able to get here
-					throw new IllegalArgumentException("Invalid format for search length: " + test);
-				}
-			}
-			// numLines gets added to offset to get max-offset
-			maxOffset = offset + numLines;
-		}
-		String processedPattern = preProcessPattern(matcher.group(1));
-		return new StringTestInfo(processedPattern, compactWhiteSpace, optionalWhiteSpace, caseInsensitive, maxOffset);
-	}
-
-	/**
 	 * Pre-processes the pattern by handling \007 type of escapes and others.
 	 */
 	private String preProcessPattern(String pattern) {
@@ -180,6 +186,7 @@ public class StringType implements MagicMatcher {
 				continue;
 			}
 			if (pos + 1 >= pattern.length()) {
+				// we'll end the pattern with a '\\' char
 				sb.append(ch);
 				break;
 			}
@@ -235,6 +242,7 @@ public class StringType implements MagicMatcher {
 					}
 					break;
 				}
+				case ' ' :
 				case '\\' :
 				default :
 					sb.append(ch);

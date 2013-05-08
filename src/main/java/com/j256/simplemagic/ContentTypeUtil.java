@@ -209,9 +209,9 @@ public class ContentTypeUtil {
 
 			MagicEntry entry;
 			try {
-				entry = MagicEntry.parseString(previous, line);
+				entry = MagicEntry.parseLine(previous, line);
 			} catch (IllegalArgumentException e) {
-				// System.err.println("Error in entry: " + e);
+				 System.err.println("Error in entry: " + e);
 				// ignore this entry
 				continue;
 			}

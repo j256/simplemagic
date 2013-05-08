@@ -14,7 +14,7 @@ public class IntegerType extends LongType {
 	}
 
 	@Override
-	public Long extractValueFromBytes(int offset, byte[] bytes) {
+	public Object extractValueFromBytes(int offset, byte[] bytes) {
 		// we use a long here because we don't want to overflow
 		return endianConverter.convertNumber(offset, bytes, 4);
 	}

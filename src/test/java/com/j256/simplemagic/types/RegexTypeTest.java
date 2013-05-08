@@ -12,7 +12,7 @@ public class RegexTypeTest {
 	@Test
 	public void testBasic() {
 		RegexType type = new RegexType();
-		Object test = type.convertTestString("hello[abc]", 0);
+		Object test = type.convertTestString("regex", "hello[abc]", 0);
 		byte[] bytes = "some line with helloa in it".getBytes();
 		Object extracted = type.isMatch(test, null, false, null, 0, bytes);
 		assertNotNull(extracted);
@@ -22,7 +22,7 @@ public class RegexTypeTest {
 	@Test
 	public void testCaseInsensitive() {
 		RegexType type = new RegexType();
-		Object test = type.convertTestString("hello[ABC]/c", 0);
+		Object test = type.convertTestString("regex/c", "hello[ABC]", 0);
 		byte[] bytes = "some line with helloa in it".getBytes();
 		Object extracted = type.isMatch(test, null, false, null, 0, bytes);
 		assertNotNull(extracted);

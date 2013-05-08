@@ -19,8 +19,8 @@ public class LongType implements MagicMatcher {
 		this.endianConverter = endianType.getConverter();
 	}
 
-	public Object convertTestString(String test, int offset) {
-		return new NumberOperator(test);
+	public Object convertTestString(String typeStr, String testStr, int offset) {
+		return new NumberOperator(testStr);
 	}
 
 	public Object extractValueFromBytes(int offset, byte[] bytes) {

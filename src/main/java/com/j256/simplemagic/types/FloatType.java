@@ -18,11 +18,11 @@ public class FloatType implements MagicMatcher {
 		this.endianConverter = endianType.getConverter();
 	}
 
-	public Object convertTestString(String test, int offset) {
+	public Object convertTestString(String typeStr, String testStr, int offset) {
 		try {
-			return Float.parseFloat(test);
+			return Float.parseFloat(testStr);
 		} catch (NumberFormatException e) {
-			throw new IllegalArgumentException("Could not parse float from: " + test);
+			throw new IllegalArgumentException("Could not parse float from: " + testStr);
 		}
 	}
 

@@ -59,7 +59,7 @@ public class MagicEntry {
 	/**
 	 * Parse a line from the magic configuration file into an entry.
 	 */
-	public static MagicEntry parseString(MagicEntry previous, String line) {
+	public static MagicEntry parseLine(MagicEntry previous, String line) {
 		if (line.startsWith("!:")) {
 			if (previous != null) {
 				// we ignore it if there is no previous entry to add it to
@@ -72,7 +72,11 @@ public class MagicEntry {
 		// !:mime[ ]application/pdf
 		// >5[ ]byte[ ]x[ ]\b, version %c
 		// >7[ ]byte[ ]x[ ]\b.%c
-		String[] parts = line.split("[\\t]+", 4);
+
+		// unfortunately, tab is not a reliable line splitter, even though patterns and formats have spaces (sigh)
+
+		// either a tab and other spaces or two spaces in a row -- we hope that other spaces a escaped with \
+		String[] parts = line.split("\\t\\s*|\\s\\s+", 4);
 		if (parts.length < 3) {
 			throw new IllegalArgumentException("Invalid magic line: " + line);
 		}
@@ -118,6 +122,11 @@ public class MagicEntry {
 			if (typeStr.charAt(0) == 'u') {
 				matcher = MagicType.matcherfromString(typeStr.substring(1));
 				unsignedType = true;
+			} else {
+				int index = typeStr.indexOf('/');
+				if (index > 0) {
+					matcher = MagicType.matcherfromString(typeStr.substring(0, index));
+				}
 			}
 			if (matcher == null) {
 				throw new IllegalArgumentException("Unknown magic type '" + typeStr + "' on line<: " + line);
@@ -125,11 +134,11 @@ public class MagicEntry {
 		}
 
 		Object testValue;
-		String valueStr = parts[2];
-		if (valueStr.equals("x")) {
+		String testStr = parts[2];
+		if (testStr.equals("x")) {
 			testValue = null;
 		} else {
-			testValue = matcher.convertTestString(valueStr, offset);
+			testValue = matcher.convertTestString(typeStr, testStr, offset);
 		}
 
 		String format;
@@ -180,7 +189,6 @@ public class MagicEntry {
 		}
 		return entry;
 	}
-
 	/**
 	 * Returns the content type associated with the bytes or null if it does not match.
 	 */
@@ -248,10 +256,12 @@ public class MagicEntry {
 			 * necessary for formats that are XML but we don't want to dominate plain old XML documents.
 			 */
 			boolean matched = false;
+			// we have to do this because the children's children set the name first otherwise
+			boolean assignName = (contentInfo.name == UNKNOWN_NAME);
 			for (MagicEntry child : children) {
 				if (child.processBytes(bytes, contentInfo) != null) {
 					matched = true;
-					if (contentInfo.name == UNKNOWN_NAME && child.name != null) {
+					if (assignName && child.name != null && child.name != UNKNOWN_NAME) {
 						contentInfo.name = child.name;
 					}
 					if (contentInfo.mimeType == null && child.mimeType != null) {
@@ -260,7 +270,7 @@ public class MagicEntry {
 				}
 			}
 			if (!matched) {
-				contentInfo = null;
+				return null;
 			}
 		}
 		return contentInfo;

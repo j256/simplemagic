@@ -12,7 +12,7 @@ import org.junit.Test;
 
 public class ContentTypeUtilTest {
 
-	private ContentTypeUtil contentTypeUtil = new ContentTypeUtil();
+	private ContentTypeUtil contentTypeUtil;
 
 	private FileType[] fileTypes =
 			new FileType[] { //
@@ -28,8 +28,25 @@ public class ContentTypeUtilTest {
 					new FileType("/files/x.rtf", "Rich", "text/rtf",
 							"Rich Text Format data, version 1, unknown character set unknown version"),
 					new FileType("/files/x.xml", "XML", "application/xml", "XML document text"),
-			// NEED: jpeg (JFIF and Exif), java code, c code, perl code, c++ code, javascript, html, excel,
-			// open-office, text-plain
+					new FileType("/files/jfif.jpg", "JPEG", "image/jpeg", "JPEG image data, JFIF standard 1.01"),
+					// partial file here
+					// new FileType("/files/exif.jpg", "JPEG", null, "JPEG image data, EXIF standard "),
+					new FileType("/files/x.jp2", "JPEG", "image/jp2", "JPEG 2000 image"),
+					new FileType("/files/x.class", "compiled", "application/x-java-applet",
+							"compiled Java class data, version 49.0"),
+					new FileType("/files/x.perl", "Perl", "text/x-perl", "Perl script text executable"),
+					new FileType("/files/x.bz2", "bzip2", "application/x-bzip2",
+							"bzip2 compressed data, block size = 900k"),
+					new FileType("/files/x.gz", "gzip", "application/x-gzip",
+							"gzip compressed data, from Unix, last modified: 2013-05-07 22:57:08 -0400"),
+					new FileType("/files/x.m4v", "ISO", "video/mp4", "ISO Media, MPEG v4 system, iTunes AVC-LC"),
+					new FileType("/files/x.xls", "OLE", null, "OLE 2 Compound Document"),
+					new FileType("/files/x.xlsx", "Zip", "application/zip",
+							"Zip archive data, at least v2.0 to extract"),
+					new FileType("/files/x.odt", "OpenDocument", "application/vnd.oasis.opendocument.text",
+							"OpenDocument Text"),
+					new FileType("/files/x.html", "HTML", "text/html", "HTML document text"),
+			// NEED: c code, perl code, c++ code, javascript, html, open-office, text-plain
 			};
 
 	@Test
@@ -40,9 +57,9 @@ public class ContentTypeUtilTest {
 	}
 
 	@Test
-	public void testXml() throws Exception {
+	public void testSpecial() throws Exception {
 		ContentTypeUtil util = new ContentTypeUtil(new File("/tmp/x"));
-		ContentType type = contentTypeFromResource(util, "/files/x.xml");
+		ContentType type = contentTypeFromResource(util, "/files/x.class");
 		System.out.println(type);
 	}
 
@@ -72,14 +89,17 @@ public class ContentTypeUtilTest {
 	}
 
 	private void testFile(FileType fileType) throws IOException {
+		if (contentTypeUtil == null) {
+			contentTypeUtil = new ContentTypeUtil();
+		}
 		ContentType type = contentTypeFromResource(contentTypeUtil, fileType.fileName);
 		if (fileType.expectedName == null) {
 			assertNull("expecting the content type of " + fileType.fileName + " to be null", type);
 		} else {
 			assertNotNull("not expecting the content type of " + fileType.fileName + " to be null", type);
-			assertEquals(fileType.expectedName, type.getName());
-			assertEquals(fileType.expectedMimeType, type.getMimeType());
-			assertEquals(fileType.expectedMessage, type.getMessage());
+			assertEquals("bad name of " + fileType.fileName, fileType.expectedName, type.getName());
+			assertEquals("bad mime-type of " + fileType.fileName, fileType.expectedMimeType, type.getMimeType());
+			assertEquals("bad message for " + fileType.fileName, fileType.expectedMessage, type.getMessage());
 		}
 	}
 

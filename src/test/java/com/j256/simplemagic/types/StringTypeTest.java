@@ -13,7 +13,7 @@ public class StringTypeTest {
 	@Test
 	public void testBasicMatch() {
 		StringType type = new StringType();
-		Object info = type.convertTestString("hello", 0);
+		Object info = type.convertTestString("string", "hello", 0);
 		byte[] bytes = new byte[] { 'h', 'e', 'l', 'l', 'o', '2' };
 		Object extract = type.isMatch(info, null, false, null, 0, bytes);
 		assertNotNull(extract);
@@ -24,7 +24,7 @@ public class StringTypeTest {
 	@Test
 	public void testBasicNoMatch() {
 		StringType type = new StringType();
-		Object info = type.convertTestString("hello", 0);
+		Object info = type.convertTestString("string", "hello", 0);
 		byte[] bytes = new byte[] { 'h', 'e', 'l', 'l' };
 		Object extract = type.extractValueFromBytes(0, bytes);
 		assertNull(type.isMatch(info, null, false, extract, 0, bytes));
@@ -35,7 +35,7 @@ public class StringTypeTest {
 	@Test
 	public void testOffset() {
 		StringType type = new StringType();
-		Object info = type.convertTestString("hello", 0);
+		Object info = type.convertTestString("string", "hello", 0);
 		byte[] bytes = new byte[] { 'w', 'o', 'w', 'h', 'e', 'l', 'l', 'o', '2', '3' };
 		Object extract = type.extractValueFromBytes(0, bytes);
 		assertNotNull(type.isMatch(info, null, false, extract, 3, bytes));
@@ -44,14 +44,14 @@ public class StringTypeTest {
 	@Test
 	public void testCaseInsensitive() {
 		StringType type = new StringType();
-		Object info = type.convertTestString("hello/c", 0);
+		Object info = type.convertTestString("string/c", "hello", 0);
 		byte[] bytes = new byte[] { 'h', 'e', 'l', 'l', 'o' };
 		Object extract = type.extractValueFromBytes(0, bytes);
 		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
 		bytes = new byte[] { 'h', 'E', 'l', 'l', 'o' };
 		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
 
-		info = type.convertTestString("Hello/c", 0);
+		info = type.convertTestString("string/c", "Hello", 0);
 		bytes = new byte[] { 'H', 'e', 'l', 'l', 'o' };
 		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
 		bytes = new byte[] { 'H', 'E', 'l', 'l', 'o' };
@@ -61,7 +61,7 @@ public class StringTypeTest {
 	@Test
 	public void testOptionalWhitespace() {
 		StringType type = new StringType();
-		Object info = type.convertTestString("hello/b", 0);
+		Object info = type.convertTestString("string/b", "hello", 0);
 		byte[] bytes = new byte[] { 'h', ' ', 'e', ' ', 'l', ' ', 'l', ' ', 'o' };
 		Object extract = type.extractValueFromBytes(0, bytes);
 		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
@@ -74,7 +74,7 @@ public class StringTypeTest {
 	@Test
 	public void testCompactWhitespace() {
 		StringType type = new StringType();
-		Object info = type.convertTestString("h ello/B", 0);
+		Object info = type.convertTestString("string/B", "h ello", 0);
 		byte[] bytes = new byte[] { 'h', ' ', 'e', 'l', 'l', 'o' };
 		Object extract = type.extractValueFromBytes(0, bytes);
 		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
@@ -82,7 +82,7 @@ public class StringTypeTest {
 		assertNull(type.isMatch(info, null, false, extract, 0, bytes));
 		bytes = new byte[] { 'h', ' ', ' ', 'e', 'l', 'l', 'o' };
 		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
-		info = type.convertTestString("h e llo/B", 0);
+		info = type.convertTestString("string/B", "h e llo", 0);
 		bytes = new byte[] { 'h', ' ', ' ', 'e', ' ', ' ', ' ', 'l', 'l', 'o' };
 		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
 		bytes = new byte[] { 'h', ' ', ' ', 'b', ' ', ' ', ' ', 'l', 'l', 'o' };
@@ -92,7 +92,7 @@ public class StringTypeTest {
 	@Test
 	public void testCompactWhitespacePlusCaseInsensitive() {
 		StringType type = new StringType();
-		Object info = type.convertTestString("h ello/Bc", 0);
+		Object info = type.convertTestString("string/Bc", "h ello", 0);
 		byte[] bytes = new byte[] { 'h', ' ', 'e', 'l', 'l', 'o' };
 		Object extract = type.extractValueFromBytes(0, bytes);
 		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
@@ -107,7 +107,7 @@ public class StringTypeTest {
 	@Test
 	public void testCompactPlusOptionalWhitespace() {
 		StringType type = new StringType();
-		Object info = type.convertTestString("h ello/Bb", 0);
+		Object info = type.convertTestString("string/Bb", "h ello", 0);
 		byte[] bytes = new byte[] { 'h', ' ', 'e', 'l', 'l', 'o' };
 		Object extract = type.extractValueFromBytes(0, bytes);
 		assertNotNull(type.isMatch(info, null, false, extract, 0, bytes));
@@ -124,7 +124,7 @@ public class StringTypeTest {
 	@Test
 	public void testRenderValue() {
 		StringType type = new StringType();
-		Object info = type.convertTestString("h ello/Bb", 0);
+		Object info = type.convertTestString("string/Bb", "h ello", 0);
 		byte[] bytes = new byte[] { 'h', ' ', 'e', 'l', 'l', 'o' };
 		Object extract = type.isMatch(info, null, false, null, 0, bytes);
 		assertNotNull(extract);

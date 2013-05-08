@@ -13,7 +13,7 @@ public class DefaultType implements MagicMatcher {
 
 	private static final String EMPTY = "";
 
-	public Object convertTestString(String test, int offset) {
+	public Object convertTestString(String typeStr, String testStr, int offset) {
 		// null is an error so we just return junk
 		return EMPTY;
 	}

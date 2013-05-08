@@ -18,11 +18,11 @@ public class DoubleType implements MagicMatcher {
 		this.endianConverter = endianType.getConverter();
 	}
 
-	public Object convertTestString(String test, int offset) {
+	public Object convertTestString(String typeStr, String testStr, int offset) {
 		try {
-			return Double.parseDouble(test);
+			return Double.parseDouble(testStr);
 		} catch (NumberFormatException e) {
-			throw new IllegalArgumentException("Could not parse double from: " + test);
+			throw new IllegalArgumentException("Could not parse double from: " + testStr);
 		}
 	}
 

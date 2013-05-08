@@ -1,4 +1,6 @@
 0.2: 05/06/2013
+	* Fixed some magic bugs in the search and regex handling code exposed by better tests.  junit++.
+	* Got the date classes working.
 	* Renamed some of the external classes and methods to make more sense.
 	* Refactored a bunch of the code internals.  Passing back data from match and extract now.
 	* Added initial implementation of the search type.

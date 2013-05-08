@@ -23,22 +23,25 @@ import com.j256.simplemagic.entries.MagicMatcher;
  */
 public class RegexType implements MagicMatcher {
 
+	private final static Pattern TYPE_PATTERN = Pattern.compile("[^/]+(/[cs]*)?");
 	private static final String EMPTY = "";
 
-	public Object convertTestString(String test, int offset) {
-		int index = test.lastIndexOf('/');
+	public Object convertTestString(String typeStr, String testStr, int offset) {
+		Matcher matcher = TYPE_PATTERN.matcher(typeStr);
 		PatternInfo patternInfo = new PatternInfo();
-		if (index >= 0 && (index == test.length() - 2 || index == test.length() - 3)) {
-			boolean valid = handleFlag(patternInfo, test.charAt(index + 1));
-			if (valid && index == test.length() - 3) {
-				valid = handleFlag(patternInfo, test.charAt(index + 2));
-			}
-			if (valid) {
-				// strip off the flag / suffix
-				test = test.substring(0, index);
+		if (matcher.matches()) {
+			String flagsStr = matcher.group(1);
+			if (flagsStr != null && flagsStr.length() > 1) {
+				for (char ch : flagsStr.toCharArray()) {
+					if (ch == 'c') {
+						patternInfo.patternFlags |= Pattern.CASE_INSENSITIVE;
+					} else if (ch == 's') {
+						patternInfo.updateOffsetStart = true;
+					}
+				}
 			}
 		}
-		patternInfo.pattern = Pattern.compile(".*(" + test + ").*", patternInfo.patternFlags);
+		patternInfo.pattern = Pattern.compile(".*(" + testStr + ").*", patternInfo.patternFlags);
 		return patternInfo;
 	}
 
@@ -77,18 +80,6 @@ public class RegexType implements MagicMatcher {
 
 	public void renderValue(StringBuilder sb, Object extractedValue, Formatter formatter) {
 		formatter.format(sb, extractedValue);
-	}
-
-	private boolean handleFlag(PatternInfo patternInfo, char flag) {
-		if (flag == 'c') {
-			patternInfo.patternFlags |= Pattern.CASE_INSENSITIVE;
-			return true;
-		} else if (flag == 's') {
-			patternInfo.updateOffsetStart = true;
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	private static class PatternInfo {

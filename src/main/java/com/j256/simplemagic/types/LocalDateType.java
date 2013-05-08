@@ -2,6 +2,7 @@ package com.j256.simplemagic.types;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import com.j256.simplemagic.endian.EndianType;
 import com.j256.simplemagic.entries.Formatter;
@@ -13,10 +14,10 @@ import com.j256.simplemagic.entries.Formatter;
  */
 public class LocalDateType extends IntegerType {
 
-	private final ThreadLocal<SimpleDateFormat> dateFormat = new ThreadLocal<SimpleDateFormat>() {
+	protected final ThreadLocal<SimpleDateFormat> dateFormat = new ThreadLocal<SimpleDateFormat>() {
 		@Override
 		protected SimpleDateFormat initialValue() {
-			return new SimpleDateFormat("");
+			return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 		}
 	};
 
@@ -26,11 +27,15 @@ public class LocalDateType extends IntegerType {
 
 	@Override
 	public void renderValue(StringBuilder sb, Object extractedValue, Formatter formatter) {
-		long val = (Integer) extractedValue;
+		long val = (Long) extractedValue;
+		formatter.format(sb, dateFormat.get().format(dateFromExtractedValue(val)));
+	}
+
+	protected Date dateFromExtractedValue(long val) {
 		val *= 1000;
 		// local timezone
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(val);
-		sb.append(dateFormat.get().format(calendar));
+		return calendar.getTime();
 	}
 }
