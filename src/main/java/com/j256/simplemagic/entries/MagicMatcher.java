@@ -22,7 +22,9 @@ public interface MagicMatcher {
 	public Object extractValueFromBytes(int offset, byte[] bytes);
 
 	/**
-	 * Matches if the bytes match at a certain offset. Returns the extracted-value object, or null if no match.
+	 * Matches if the bytes match at a certain offset.
+	 * 
+	 * @return The extracted-value object, or null if no match.
 	 */
 	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue, int offset,
 			byte[] bytes);

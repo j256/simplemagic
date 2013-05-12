@@ -242,7 +242,21 @@ public class MagicEntry {
 
 	@Override
 	public String toString() {
-		return matcher.toString();
+		StringBuilder sb = new StringBuilder();
+		sb.append("level ").append(level);
+		if (name != null) {
+			sb.append(",name '").append(name).append('\'');
+		}
+		if (mimeType != null) {
+			sb.append(",mime '").append(mimeType).append('\'');
+		}
+		if (testValue != null) {
+			sb.append(",test '").append(testValue).append('\'');
+		}
+		if (formatter != null) {
+			sb.append(",format '").append(formatter).append('\'');
+		}
+		return sb.toString();
 	}
 
 	private void addChild(MagicEntry child) {
@@ -285,8 +299,8 @@ public class MagicEntry {
 			for (MagicEntry child : children) {
 				if (child.processBytes(bytes, contentInfo) != null) {
 					matched = true;
-					if (assignName && child.name != null && child.name != UNKNOWN_NAME) {
-						contentInfo.name = child.name;
+					if (assignName) {
+						contentInfo.setName(child);
 					}
 					if (contentInfo.mimeType == null && child.mimeType != null) {
 						contentInfo.mimeType = child.mimeType;
@@ -391,11 +405,18 @@ public class MagicEntry {
 
 	private static class ContentInfo {
 		String name;
+		int nameLevel;
 		String mimeType;
 		final StringBuilder sb = new StringBuilder();
 		private ContentInfo(String name, String mimeType) {
 			this.name = name;
 			this.mimeType = mimeType;
+		}
+		public void setName(MagicEntry entry) {
+			if (name == UNKNOWN_NAME || (entry.name != null && entry.name != UNKNOWN_NAME && entry.level < nameLevel)) {
+				name = entry.name;
+				nameLevel = entry.level;
+			}
 		}
 	}
 }

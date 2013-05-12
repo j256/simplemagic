@@ -10,8 +10,6 @@ Used to maintain requested features or future work.
 
 - "offset" in the regex type, does it mean lines or bytes?
 
-- does the ID3 types mean the ID3 audio?   guess so 
-
 - need to handle the complex offset types:
      Offsets do not need to be constant, but can also be read from the file being examined.  If the first character following the
      last > is a ( then the string after the parenthesis is interpreted as an indirect offset.  That means that the number after
@@ -22,12 +20,23 @@ Used to maintain requested features or future work.
      the m type interprets the number as a middle endian (PDP-11) value.  To that number the value of y is added and the result
      is used as an offset in the file.  The default type if one is not specified is long.
 
-- compile the magic file into a serialized compressed file for size reasons
-
+- maybe compile the magic file into a serialized compressed file for size reasons?
+	- at least pre-process it to normalize whitespace
 - need to handle the indirect type?
-
 - need more tests on floating point numbers, find magics that use them
-
 - need to support the &offset format
+- is the quad date in seconds or millis?? find a magic that uses them
+- need to support the ID3 types, maybe it means just the ID3 length?
 
-- is the quad date in seconds or millis, find a magic that uses them
+------------------------------------------------------------------------------------------------------------
+
+Speed improvements:
+
+- categorize the file as ~ascii or not, only run the search and regex on the ascii files
+	- maybe process the file by lines and search each rule instead of having each rule search the file
+- for the binary types, return the starting offset and starting byte (watch network byte order)
+	- then walk the first X bytes and only call the rules if they have the appropriate starting byte
+	- all other rules then in an "other" rule list
+	- try to get down to as few rules in the "other" list
+
+------------------------------------------------------------------------------------------------------------

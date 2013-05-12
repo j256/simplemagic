@@ -1,3 +1,5 @@
+0.5: 05/XX/2013
+
 0.4: 05/08/2013
 	* Added error callbacks and removed the System.err.println that got checked in by mistake.
 
@@ -11,7 +13,7 @@
 	* Renamed some of the external classes and methods to make more sense.
 	* Refactored a bunch of the code internals.  Passing back data from match and extract now.
 	* Added initial implementation of the search type.
-	* Improved some of the javadocs after walked them.
+	* Improved some of the javadocs after going through all of them.
 	* Fixed some old references to Simple JMX that I copied the docs from.
 	* Added more test files.
 

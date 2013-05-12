@@ -46,7 +46,12 @@ public class ContentTypeUtilTest {
 					new FileType("/files/x.odt", "OpenDocument", "application/vnd.oasis.opendocument.text",
 							"OpenDocument Text"),
 					new FileType("/files/x.html", "HTML", "text/html", "HTML document text"),
-			// NEED: c code, perl code, c++ code, javascript, html, open-office, text-plain
+					new FileType("/files/x.aiff", "IFF", "audio/x-aiff", "IFF data, AIFF audio"),
+					new FileType("/files/x.mp3", "MPEG", "audio/mpeg",
+							"MPEG ADTS, layer III, v1, 128 kbps, 44.1 kHz, Stereo"),
+					new FileType("/files/x.wav", "RIFF", "audio/x-wav",
+							"RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, stereo 44100 Hz"),
+			// end
 			};
 
 	@Test
@@ -56,12 +61,13 @@ public class ContentTypeUtilTest {
 		}
 	}
 
-	// @Test
-	// public void testSpecial() throws Exception {
-	// ContentTypeUtil util = new ContentTypeUtil(new File("/tmp/x"));
-	// ContentType type = contentTypeFromResource(util, "/files/x.class");
-	// System.out.println(type);
-	// }
+	@Test
+	public void testSpecial() throws Exception {
+		// ContentTypeUtil util = new ContentTypeUtil(new File("/tmp/x"));
+		ContentTypeUtil util = new ContentTypeUtil();
+		ContentType type = contentTypeFromResource(util, "/files/exif.jpg");
+		System.out.println(type);
+	}
 
 	@Test
 	public void testDownloadsDir() throws Exception {

@@ -38,6 +38,11 @@ public class NumberOperator {
 		return operator.doTest(extractedValue, value);
 	}
 
+	@Override
+	public String toString() {
+		return operator + ", value " + value;
+	}
+
 	/**
 	 * Operators for tests. If no operator character then equals is assumed.
 	 */
