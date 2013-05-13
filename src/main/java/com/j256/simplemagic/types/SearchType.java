@@ -27,7 +27,7 @@ public class SearchType extends StringType {
 	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue, int offset,
 			byte[] bytes) {
 		if (offset > MAX_NUM_LINES) {
-			return false;
+			return null;
 		}
 		StringTestInfo info = (StringTestInfo) testValue;
 		BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes)));
