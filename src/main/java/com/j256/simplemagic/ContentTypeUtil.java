@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import com.j256.simplemagic.entries.MagicEntry;
+import com.j256.simplemagic.entries.MagicEntryParser;
 
 /**
  * Class which reads in the magic files and determines the {@link ContentType} for files and byte arrays. You use the
@@ -253,7 +254,7 @@ public class ContentTypeUtil {
 
 			MagicEntry entry;
 			try {
-				entry = MagicEntry.parseLine(previous, line, errorCallBack);
+				entry = MagicEntryParser.parseLine(previous, line, errorCallBack);
 			} catch (IllegalArgumentException e) {
 				if (errorCallBack != null) {
 					errorCallBack.error(line, e.getMessage(), e);
