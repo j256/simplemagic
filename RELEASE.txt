@@ -13,7 +13,11 @@ To release SimpleMagic:
 	cd $HOME/svn/local/simplemagic
 	sh release.sh
 
-	NOTE: if you need to, mvn -P st release:rollback will go back to the starting pom.xml 
+	NOTE: if you need to, mvn -P st release:rollback will go back to the starting pom.xml
+	
+	If you need to remove the github tag use:
+		git tag -d simplemagic-0.6
+		git push origin :simplemagic-0.6
 
 4) Login to Sontype:    https://oss.sonatype.org/
 
