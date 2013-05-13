@@ -6,7 +6,7 @@
 @c %**end of header
 
 @c ----------------------------------------------------------------
-@set simplemagic_version 0.4
+@set simplemagic_version 0.5
 @set simplemagic_year 2013
 @set simplemagic_date May @value{simplemagic_year}
 @set package SimpleMagic
@@ -86,6 +86,8 @@ with the default constructor, it will load the internal magic entries file.  @xr
 @example
 ContentTypeUtil util = new ContentTypeUtil();
 ContentType contentType = util.findMatch("/tmp/upload.tmp");
+// or   ContentType contentType = util.findMatch(inputStream);
+// or   ContentType contentType = util.findMatch(contentByteArray);
 System.out.println("Content-type is: " + contentType.getName());
 @end example
 

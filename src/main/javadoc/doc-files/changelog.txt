@@ -1,4 +1,4 @@
-0.5: 05/XX/2013
+0.5: 05/13/2013
 	* Added support for the extended and relative offsets.
 	* Added support for the ID3 7-bit lengths.
 	* Fixed a bug in the search type.
