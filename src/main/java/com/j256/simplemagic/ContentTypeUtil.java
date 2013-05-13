@@ -46,6 +46,18 @@ public class ContentTypeUtil {
 	 *             If there was a problem reading the magic entries from the internal magic file.
 	 */
 	public ContentTypeUtil() {
+		this((ErrorCallBack) null);
+	}
+
+	/**
+	 * Construct a magic utility using the internal magic file built into the package. This also allows the caller to
+	 * log any errors discovered in the file(s).
+	 * 
+	 * @throws IllegalStateException
+	 *             If there was a problem reading the magic entries from the internal magic file.
+	 */
+	public ContentTypeUtil(ErrorCallBack errorCallBack) {
+		this.errorCallBack = errorCallBack;
 		if (internalMagicEntries == null) {
 			try {
 				internalMagicEntries = loadInternalEntries();
@@ -64,7 +76,18 @@ public class ContentTypeUtil {
 	 *             If there was a problem reading the magic entries from the internal magic file.
 	 */
 	public ContentTypeUtil(String fileOrDirectoryPath) throws IOException {
-		this(new File(fileOrDirectoryPath));
+		this(new File(fileOrDirectoryPath), null);
+	}
+
+	/**
+	 * Construct a magic utility using the magic files from a file or a directory of files. This also allows the caller
+	 * to log any errors discovered in the file(s).
+	 * 
+	 * @throws IOException
+	 *             If there was a problem reading the magic entries from the internal magic file.
+	 */
+	public ContentTypeUtil(String fileOrDirectoryPath, ErrorCallBack errorCallBack) throws IOException {
+		this(new File(fileOrDirectoryPath), errorCallBack);
 	}
 
 	/**
@@ -74,6 +97,18 @@ public class ContentTypeUtil {
 	 *             If there was a problem reading the magic entries from the internal magic file.
 	 */
 	public ContentTypeUtil(File fileOrDirectory) throws IOException {
+		this(fileOrDirectory, null);
+	}
+
+	/**
+	 * Construct a magic utility using the magic files from a file or a directory of files. This also allows the caller
+	 * to log any errors discovered in the file(s).
+	 * 
+	 * @throws IOException
+	 *             If there was a problem reading the magic entries from the internal magic file.
+	 */
+	public ContentTypeUtil(File fileOrDirectory, ErrorCallBack errorCallBack) throws IOException {
+		this.errorCallBack = errorCallBack;
 		List<MagicEntry> entryList = new ArrayList<MagicEntry>();
 		if (fileOrDirectory.isFile()) {
 			FileReader reader = new FileReader(fileOrDirectory);
