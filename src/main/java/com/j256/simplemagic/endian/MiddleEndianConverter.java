@@ -12,6 +12,14 @@ public class MiddleEndianConverter implements EndianConverter {
 	}
 
 	public Long convertNumber(int offset, byte[] bytes, int size) {
+		return convertNumber(offset, bytes, size, 8, 0xFF);
+	}
+
+	public Long convertId3(int offset, byte[] bytes, int size) {
+		return convertNumber(offset, bytes, size, 7, 0x7F);
+	}
+
+	private Long convertNumber(int offset, byte[] bytes, int size, int shift, int mask) {
 		if (size != 4) {
 			throw new UnsupportedOperationException("Middle-endian only supports 4-byte integers");
 		}
@@ -20,10 +28,10 @@ public class MiddleEndianConverter implements EndianConverter {
 		}
 		long value = 0;
 		// BADC
-		value = value << 8 | (bytes[1] & 0xFF);
-		value = value << 8 | (bytes[0] & 0xFF);
-		value = value << 8 | (bytes[3] & 0xFF);
-		value = value << 8 | (bytes[2] & 0xFF);
+		value = value << shift | (bytes[1] & mask);
+		value = value << shift | (bytes[0] & mask);
+		value = value << shift | (bytes[3] & mask);
+		value = value << shift | (bytes[2] & mask);
 		return value;
 	}
 }

@@ -12,12 +12,20 @@ public class LittleEndianConverter implements EndianConverter {
 	}
 
 	public Long convertNumber(int offset, byte[] bytes, int size) {
+		return convertNumber(offset, bytes, size, 8, 0xFF);
+	}
+
+	public Long convertId3(int offset, byte[] bytes, int size) {
+		return convertNumber(offset, bytes, size, 7, 0x7F);
+	}
+
+	public Long convertNumber(int offset, byte[] bytes, int size, int shift, int mask) {
 		if (offset + size > bytes.length) {
 			return null;
 		}
 		long value = 0;
 		for (int i = offset + (size - 1); i >= offset; i--) {
-			value = value << 8 | (bytes[i] & 0xFF);
+			value = value << shift | (bytes[i] & mask);
 		}
 		return value;
 	}

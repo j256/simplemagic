@@ -9,6 +9,7 @@ import com.j256.simplemagic.types.ByteType;
 import com.j256.simplemagic.types.DefaultType;
 import com.j256.simplemagic.types.DoubleType;
 import com.j256.simplemagic.types.FloatType;
+import com.j256.simplemagic.types.Id3LengthType;
 import com.j256.simplemagic.types.IntegerType;
 import com.j256.simplemagic.types.LittleEndianString16Type;
 import com.j256.simplemagic.types.LocalDateType;
@@ -54,7 +55,8 @@ public enum MagicType {
 	/** 8 byte value in native-endian byte order, interpreted as a Unix date using the local time zone. */
 	LONG_LOCAL_DATE("qldate", new LocalLongDateType(EndianType.NATIVE)),
 
-	// beid3
+	/** 4 byte integer with each byte using lower 7-bits in big-endian byte order. */
+	BIG_ENDIAN_ID3("beid3", new Id3LengthType(EndianType.BIG)),
 	/** 2 byte short integer in big-endian byte order. */
 	BIG_ENDIAN_SHORT("beshort", new ShortType(EndianType.BIG)),
 	/** 4 byte "long" integer in big-endian byte order. This is C language long (shudder). */
@@ -76,7 +78,8 @@ public enum MagicType {
 	/** String made up of 2-byte characters in big-endian byte order. */
 	BIG_ENDIAN_TWO_BYTE_STRING("bestring16", new BigEndianString16Type()),
 
-	// leid3
+	/** 4 byte integer with each byte using lower 7-bits in little-endian byte order. */
+	LITTLE_ENDIAN_ID3("leid3", new Id3LengthType(EndianType.LITTLE)),
 	/** 2 byte short integer in little-endian byte order. */
 	LITTLE_ENDIAN_SHORT("leshort", new ShortType(EndianType.LITTLE)),
 	/** 4 byte "long" integer in little-endian byte order. This is C language long (shudder). */
