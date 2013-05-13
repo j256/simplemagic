@@ -93,6 +93,24 @@ System.out.println("Content-type is: " + contentType.getName());
 
 @end enumerate
 
+Once you have the @code{ContentType} it provides:
+
+@itemize @bullet
+@item Approximate content-name
+@item Full message produced by the magic file
+@item Mime-type string if one configured by the config file
+@end itemize
+
+Here are some examples of @code{ContentType} output:
+
+@itemize @bullet
+@item HTML, mime 'text/html', msg 'HTML document text'
+@item Java, msg 'Java serialization data, version 5'
+@item PDF, mime 'application/pdf', msg 'PDF document, version 1.4'
+@item GIF, mime 'image/gif', msg 'GIF image data, version 89a, 16 x 16'
+@item JPEG, mime 'image/jpeg', msg 'JPEG image data, JFIF standard 1.01'
+@end itemize
+
 For somewhat more extensive instructions, @pxref{Using}.
 
 @c ----------------------------------------------------------------
@@ -104,6 +122,8 @@ For somewhat more extensive instructions, @pxref{Using}.
 @menu
 * Downloading ::                Downloading the SimpleMagic jar.
 * Loading Magic Entries ::      Loading in the magic entries from files.
+* Finding Content Type ::       Finding the content type from data.
+* Content Type Info ::          Content type information returned.
 @end menu
 
 @c ----------------------------------------------------------------
@@ -120,7 +140,7 @@ central maven repository}.
 The code works with Java 5 or later.
 
 @c ----------------------------------------------------------------
-@node Loading Magic Entries, License, Downloading, Using
+@node Loading Magic Entries, Finding Content Type, Downloading, Using
 @section How To Load Magic Entries
 
 @cindex default magic entries
@@ -147,14 +167,70 @@ or directory to have it parse and use another definition file.
 
 @example
 ContentTypeUtil util = new ContentTypeUtil("/etc/magic");
-ContentType contentType = util.findMatch(uploadedBytes);
 @end example
 
 @emph{WARNING:} although we've tried to support different types of magic entries, there are local per-OS variations that may
 not be supported.  
 
 @c ----------------------------------------------------------------
-@node License, Index of Concepts, Loading Magic Entries, Top
+@node Finding Content Type, Content Type Info, Downloading, Using
+@section How To Find The Content Type
+
+Once you have loaded the magic entry information into your @code{ContentTypeUtil}, you can use the utility class to find
+the content type of files, byte arrays, or @code{InputStream}s.  The base method gets content type information from a
+@code{byte[]}.
+
+@example
+byte[] uploadedBytes = ...;
+ContentType contentType = util.findMatch(uploadedBytes);
+@end example
+
+You can also get the content type of a file which is read with a @code{FileInputStream}:
+
+@example
+ContentType contentType = util.findMatch("/tmp/uploadedFile.tmp");
+// File uploadedFile = ...
+// ContentType contentType = util.findMatch(uploadedFile);
+@end example
+
+If you have an @code{InputStream}, you can also use it directly:
+
+@example
+InputStream inputStream = ...
+ContentType contentType = util.findMatch(inputStream);
+@end example
+
+For the file and stream versions, the first 10k of the data is read and processed.
+
+@c ----------------------------------------------------------------
+@node Content Type Info, License, Finding Content Type, Using
+@section Content Type Information
+
+Once you have the @code{ContentType}, it provides:
+
+@itemize @bullet
+@item Approximate content-name
+@item Full message produced by the magic file
+@item Mime-type string if one configured by the config file
+@end itemize
+
+Here are some examples of @code{ContentType} output:
+
+@itemize @bullet
+@item HTML, mime 'text/html', msg 'HTML document text'
+@item Java, msg 'Java serialization data, version 5'
+@item PDF, mime 'application/pdf', msg 'PDF document, version 1.4'
+@item gzip, mime 'application/x-gzip', msg 'gzip compressed data, was "", from Unix...'
+@item GIF, mime 'image/gif', msg 'GIF image data, version 89a, 16 x 16'
+@item PNG, mime 'image/png', msg 'PNG image, 600 x 371, 8-bit/color RGB, non-interlaced'
+@item ISO, mime 'audio/mp4', msg 'ISO Media, MPEG v4 system, iTunes AAC-LC'
+@item Microsoft, mime 'application/msword', msg 'Microsoft Word Document'
+@item RIFF, mime 'audio/x-wav', msg 'RIFF (little-endian) data, WAVE audio...'
+@item JPEG, mime 'image/jpeg', msg 'JPEG image data, JFIF standard 1.01'
+@end itemize
+
+@c ----------------------------------------------------------------
+@node License, Index of Concepts, Content Type Info, Top
 @chapter Open Source License
 
 @cindex license
