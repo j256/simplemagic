@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.j256.simplemagic.ContentType;
 import com.j256.simplemagic.ContentTypeUtil.ErrorCallBack;
+import com.j256.simplemagic.endian.EndianConverter;
+import com.j256.simplemagic.endian.EndianType;
 
 /**
  * Representation of a line of information from the magic (5) format.
@@ -25,7 +29,9 @@ public class MagicEntry {
 	private final MagicEntry parent;
 	private final String name;
 	private final int level;
+	private final boolean addOffset;
 	private final int offset;
+	private final OffsetInfo offsetInfo;
 	private final MagicMatcher matcher;
 	private final Long andValue;
 	private final boolean unsignedType;
@@ -38,12 +44,15 @@ public class MagicEntry {
 	private String mimeType;
 	private Map<String, String> extensionMap;
 
-	private MagicEntry(MagicEntry parent, String name, int level, int offset, MagicMatcher matcher, Long andValue,
-			boolean unsignedType, Object testValue, boolean formatSpacePrefix, String format) {
+	private MagicEntry(MagicEntry parent, String name, int level, boolean addOffset, int offset, OffsetInfo offsetInfo,
+			MagicMatcher matcher, Long andValue, boolean unsignedType, Object testValue, boolean formatSpacePrefix,
+			String format) {
 		this.parent = parent;
 		this.name = name;
 		this.level = level;
+		this.addOffset = addOffset;
 		this.offset = offset;
+		this.offsetInfo = offsetInfo;
 		this.matcher = matcher;
 		this.andValue = andValue;
 		this.unsignedType = unsignedType;
@@ -75,13 +84,8 @@ public class MagicEntry {
 		// >7[ ]byte[ ]x[ ]\b.%c
 
 		// unfortunately, tab is not a reliable line splitter, even though patterns and formats have spaces (sigh)
-
-		// either a tab and other spaces or two spaces in a row -- we hope that other spaces a escaped with \
-		String[] parts = line.split("\\t\\s*|\\s\\s+", 4);
-		if (parts.length < 3) {
-			if (errorCallBack != null) {
-				errorCallBack.error(line, "invalid number of whitespace separated fields, must be >= 4", null);
-			}
+		String[] parts = splitLine(line, errorCallBack);
+		if (parts == null) {
 			return null;
 		}
 
@@ -97,13 +101,40 @@ public class MagicEntry {
 			offsetString = parts[0].substring(sindex + 1);
 		}
 		int offset;
-		try {
-			offset = Integer.decode(offsetString);
-		} catch (NumberFormatException e) {
+		OffsetInfo offsetInfo;
+		if (offsetString.length() == 0) {
 			if (errorCallBack != null) {
-				errorCallBack.error(line, "invalid offset number:" + offsetString, e);
+				errorCallBack.error(line, "invalid offset number:" + offsetString, null);
 			}
 			return null;
+		}
+		boolean addOffset = false;
+		if (offsetString.charAt(0) == '&') {
+			addOffset = true;
+			offsetString = offsetString.substring(1);
+		}
+		if (offsetString.length() == 0) {
+			if (errorCallBack != null) {
+				errorCallBack.error(line, "invalid offset number:" + offsetString, null);
+			}
+			return null;
+		}
+		if (offsetString.charAt(0) == '(') {
+			offset = -1;
+			offsetInfo = OffsetInfo.parseOffset(offsetString, line, errorCallBack);
+			if (offsetInfo == null) {
+				return null;
+			}
+		} else {
+			try {
+				offset = Integer.decode(offsetString);
+				offsetInfo = null;
+			} catch (NumberFormatException e) {
+				if (errorCallBack != null) {
+					errorCallBack.error(line, "invalid offset number:" + offsetString, e);
+				}
+				return null;
+			}
 		}
 
 		// type
@@ -200,8 +231,8 @@ public class MagicEntry {
 			}
 		}
 		MagicEntry entry =
-				new MagicEntry(parent, name, level, offset, matcher, andValue, unsignedType, testValue,
-						formatSpacePrefix, format);
+				new MagicEntry(parent, name, level, addOffset, offset, offsetInfo, matcher, andValue, unsignedType,
+						testValue, formatSpacePrefix, format);
 		if (level > 0) {
 			if (previous == null) {
 				// if no previous then we have to drop this
@@ -213,11 +244,12 @@ public class MagicEntry {
 		}
 		return entry;
 	}
+
 	/**
 	 * Returns the content type associated with the bytes or null if it does not match.
 	 */
 	public ContentType processBytes(byte[] bytes) {
-		ContentInfo info = processBytes(bytes, null);
+		ContentInfo info = processBytes(bytes, 0, null);
 		if (info == null || info.name == UNKNOWN_NAME) {
 			return null;
 		} else {
@@ -259,6 +291,96 @@ public class MagicEntry {
 		return sb.toString();
 	}
 
+	private static String[] splitLine(String line, ErrorCallBack errorCallBack) {
+		// skip opening whitespace if any
+		int startPos = findNonWhitespace(line, 0);
+		if (startPos >= line.length()) {
+			return null;
+		}
+
+		// find the level info
+		int endPos = findWhitespaceWithoutEscape(line, startPos);
+		if (endPos >= line.length()) {
+			if (errorCallBack != null) {
+				errorCallBack.error(line, "invalid number of whitespace separated fields, must be >= 4", null);
+			}
+			return null;
+		}
+		String levelStr = line.substring(startPos, endPos);
+
+		// skip whitespace
+		startPos = findNonWhitespace(line, endPos + 1);
+		if (startPos >= line.length()) {
+			if (errorCallBack != null) {
+				errorCallBack.error(line, "invalid number of whitespace separated fields, must be >= 4", null);
+			}
+			return null;
+		}
+		// find the type string
+		endPos = findWhitespaceWithoutEscape(line, startPos);
+		if (endPos >= line.length()) {
+			if (errorCallBack != null) {
+				errorCallBack.error(line, "invalid number of whitespace separated fields, must be >= 4", null);
+			}
+			return null;
+		}
+		String typeStr = line.substring(startPos, endPos);
+
+		// skip whitespace
+		startPos = findNonWhitespace(line, endPos + 1);
+		if (startPos >= line.length()) {
+			if (errorCallBack != null) {
+				errorCallBack.error(line, "invalid number of whitespace separated fields, must be >= 4", null);
+			}
+			return null;
+		}
+		// find the test string
+		endPos = findWhitespaceWithoutEscape(line, startPos);
+		// endPos can be == length
+		String testStr = line.substring(startPos, endPos);
+
+		// skip any whitespace
+		startPos = findNonWhitespace(line, endPos + 1);
+		// format is optional, this could return length
+		if (startPos < line.length()) {
+			// format is the rest of the line
+			return new String[] { levelStr, typeStr, testStr, line.substring(startPos) };
+		} else {
+			return new String[] { levelStr, typeStr, testStr };
+		}
+	}
+
+	private static int findNonWhitespace(String line, int startPos) {
+		int pos;
+		for (pos = startPos; pos < line.length(); pos++) {
+			if (!Character.isWhitespace(line.charAt(pos))) {
+				break;
+			}
+		}
+		return pos;
+	}
+
+	private static int findWhitespaceWithoutEscape(String line, int startPos) {
+		boolean lastEscape = false;
+		int pos;
+		for (pos = startPos; pos < line.length(); pos++) {
+			char ch = line.charAt(pos);
+			if (ch == ' ') {
+				if (!lastEscape) {
+					break;
+				}
+				lastEscape = false;
+			} else if (Character.isWhitespace(line.charAt(pos))) {
+				break;
+			} else if (ch == '\\') {
+				lastEscape = true;
+			} else {
+				lastEscape = false;
+			}
+		}
+		return pos;
+	}
+
 	private void addChild(MagicEntry child) {
 		if (children == null) {
 			children = new ArrayList<MagicEntry>();
@@ -266,7 +388,14 @@ public class MagicEntry {
 		children.add(child);
 	}
 
-	private ContentInfo processBytes(byte[] bytes, ContentInfo contentInfo) {
+	private ContentInfo processBytes(byte[] bytes, int prevOffset, ContentInfo contentInfo) {
+		int offset = this.offset;
+		if (offsetInfo != null) {
+			offset = offsetInfo.getOffset(bytes);
+		}
+		if (addOffset) {
+			offset = prevOffset + offset;
+		}
 		Object val = matcher.extractValueFromBytes(offset, bytes);
 		if (val == null) {
 			return null;
@@ -297,7 +426,7 @@ public class MagicEntry {
 			// we have to do this because the children's children set the name first otherwise
 			boolean assignName = (contentInfo.name == UNKNOWN_NAME);
 			for (MagicEntry child : children) {
-				if (child.processBytes(bytes, contentInfo) != null) {
+				if (child.processBytes(bytes, offset, contentInfo) != null) {
 					matched = true;
 					if (assignName) {
 						contentInfo.setName(child);
@@ -416,6 +545,142 @@ public class MagicEntry {
 			if (name == UNKNOWN_NAME || (entry.name != null && entry.name != UNKNOWN_NAME && entry.level < nameLevel)) {
 				name = entry.name;
 				nameLevel = entry.level;
+			}
+		}
+	}
+
+	/**
+	 * Information about the extended offset.
+	 * 
+	 * Offsets do not need to be constant, but can also be read from the file being examined. If the first character
+	 * following the last '>' is a '(' then the string after the parenthesis is interpreted as an indirect offset. That
+	 * means that the number after the parenthesis is used as an offset in the file. The value at that offset is read,
+	 * and is used again as an offset in the file. Indirect offsets are of the form: ((x[.[bislBISLm]][+-]y). The value
+	 * of x is used as an offset in the file. A byte, id3 length, short or long is read at that offset depending on the
+	 * [bislBISLm] type specifier. The capitalized types interpret the number as a big-endian value, whereas the small
+	 * letter versions interpret the number as a little-endian value; the 'm' type interprets the number as a
+	 * middle-endian (PDP-11) value. To that number the value of y is added and the result is used as an offset in the
+	 * file. The default type if one is not specified is 4-byte long.
+	 */
+	private static class OffsetInfo {
+		private final static Pattern OFFSET_PATTERN = Pattern.compile("\\(([0-9x]+)\\.([bislBISLm])([+-])([0-9x]+)\\)");
+
+		final int offset;
+		final EndianConverter converter;
+		final boolean id3;
+		final int size;
+		final int add;
+
+		private OffsetInfo(int offset, EndianConverter converter, boolean id3, int size, int add) {
+			this.offset = offset;
+			this.converter = converter;
+			this.id3 = id3;
+			this.size = size;
+			this.add = add;
+		}
+
+		public static OffsetInfo parseOffset(String offsetString, String line, ErrorCallBack errorCallBack) {
+			// (9.b+19)
+			Matcher matcher = OFFSET_PATTERN.matcher(offsetString);
+			if (!matcher.matches()) {
+				return null;
+			}
+			int offset;
+			try {
+				offset = Integer.decode(matcher.group(1));
+			} catch (NumberFormatException e) {
+				if (errorCallBack != null) {
+					errorCallBack.error(line, "invalid long offset number: " + offsetString, e);
+				}
+				return null;
+			}
+			if (matcher.group(2) == null) {
+				if (errorCallBack != null) {
+					errorCallBack.error(line, "invalid long offset type: " + offsetString, null);
+				}
+				return null;
+			}
+			char ch;
+			if (matcher.group(2).length() == 1) {
+				ch = matcher.group(2).charAt(0);
+			} else {
+				// it will use the default
+				ch = '\0';
+			}
+			EndianConverter converter = null;
+			boolean id3 = false;
+			int size = 0;
+			switch (ch) {
+				case 'b' :
+					converter = EndianType.LITTLE.getConverter();
+					size = 1;
+					break;
+				case 'i' :
+					converter = EndianType.LITTLE.getConverter();
+					size = 4;
+					id3 = true;
+					break;
+				case 's' :
+					converter = EndianType.LITTLE.getConverter();
+					size = 2;
+					break;
+				case 'l' :
+					converter = EndianType.LITTLE.getConverter();
+					size = 4;
+					break;
+				case 'B' :
+					converter = EndianType.BIG.getConverter();
+					size = 1;
+					break;
+				case 'I' :
+					converter = EndianType.BIG.getConverter();
+					size = 4;
+					id3 = true;
+					break;
+				case 'S' :
+					converter = EndianType.BIG.getConverter();
+					size = 2;
+					break;
+				case 'L' :
+					converter = EndianType.BIG.getConverter();
+					size = 4;
+					break;
+				case 'm' :
+					converter = EndianType.MIDDLE.getConverter();
+					size = 4;
+					break;
+				default :
+					converter = EndianType.LITTLE.getConverter();
+					size = 4;
+					break;
+			}
+			int add;
+			try {
+				add = Integer.decode(matcher.group(4));
+			} catch (NumberFormatException e) {
+				if (errorCallBack != null) {
+					errorCallBack.error(line, "invalid long add value: " + matcher.group(4), e);
+				}
+				return null;
+			}
+			// decode doesn't work with leading '+', grumble
+			if ("-".equals(matcher.group(3))) {
+				add = -add;
+			}
+			return new OffsetInfo(offset, converter, id3, size, add);
+		}
+
+		public Integer getOffset(byte[] bytes) {
+			Long val;
+			if (id3) {
+				val = (Long) converter.convertId3(offset, bytes, size);
+			} else {
+				val = (Long) converter.convertNumber(offset, bytes, size);
+			}
+			if (val == null) {
+				return null;
+			} else {
+				return (int) (val + add);
 			}
 		}
 	}
