@@ -2,12 +2,6 @@
 Used to maintain requested features or future work.
 ===================================================
 
-- Need to handle:
-	macintosh:>0x402          beldate-0x7C25B080      x               created: %s,
-	macintosh:>0x406          beldate-0x7C25B080      >0              last backup: %s,
-    filesystems:>>>>>>>>&0    bedate                  =0              full dump
-    filesystems:>>>>>>>>&0    bedate                  !0              incremental since: %s
-
 - "offset" in the regex type, does it mean lines or bytes?
 
 - maybe compile the magic file into a serialized compressed file for size reasons?
@@ -15,6 +9,12 @@ Used to maintain requested features or future work.
 - need to handle the indirect type?
 - need more tests on floating point numbers, find magics that use them
 - is the quad date in seconds or millis?? find a magic that uses them
+- add an internal name mapping
+	- Microsoft -> Word
+	- RIFF -> WAV
+	- etc.
+	- maybe have internal enumerated types for this
+- looks like unix gzip files are showing up as DOS FAT?  WTF?
 
 ------------------------------------------------------------------------------------------------------------
 
