@@ -385,7 +385,7 @@ public class MagicEntryParser {
 	 * middle-endian (PDP-11) value. To that number the value of y is added and the result is used as an offset in the
 	 * file. The default type if one is not specified is 4-byte long.
 	 */
-	public static OffsetInfo parseOffset(String offsetString, String line, ErrorCallBack errorCallBack) {
+	private static OffsetInfo parseOffset(String offsetString, String line, ErrorCallBack errorCallBack) {
 		// (9.b+19)
 		Matcher matcher = OFFSET_PATTERN.matcher(offsetString);
 		if (!matcher.matches()) {
@@ -414,17 +414,18 @@ public class MagicEntryParser {
 			ch = '\0';
 		}
 		EndianConverter converter = null;
-		boolean id3 = false;
+		boolean isId3 = false;
 		int size = 0;
 		switch (ch) {
 			case 'b' :
+				// endian doesn't really matter for 1 byte
 				converter = EndianType.LITTLE.getConverter();
 				size = 1;
 				break;
 			case 'i' :
 				converter = EndianType.LITTLE.getConverter();
 				size = 4;
-				id3 = true;
+				isId3 = true;
 				break;
 			case 's' :
 				converter = EndianType.LITTLE.getConverter();
@@ -435,13 +436,14 @@ public class MagicEntryParser {
 				size = 4;
 				break;
 			case 'B' :
+				// endian doesn't really matter for 1 byte
 				converter = EndianType.BIG.getConverter();
 				size = 1;
 				break;
 			case 'I' :
 				converter = EndianType.BIG.getConverter();
 				size = 4;
-				id3 = true;
+				isId3 = true;
 				break;
 			case 'S' :
 				converter = EndianType.BIG.getConverter();
@@ -473,6 +475,6 @@ public class MagicEntryParser {
 		if ("-".equals(matcher.group(3))) {
 			add = -add;
 		}
-		return new OffsetInfo(offset, converter, id3, size, add);
+		return new OffsetInfo(offset, converter, isId3, size, add);
 	}
 }

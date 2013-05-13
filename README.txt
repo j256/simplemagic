@@ -22,3 +22,7 @@ To get started you use the SimpleMagic package like the following:
     // ContentTypeUtil util = new ContentTypeUtil("/etc/magic");
     ...
     ContentType contentType = util.findMatch("/tmp/upload.tmp");
+    // or
+    ContentType contentType = util.findMatch(inputStream);
+    // or
+    ContentType contentType = util.findMatch(contentByteArray);

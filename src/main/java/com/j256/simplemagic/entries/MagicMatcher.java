@@ -9,7 +9,7 @@ public interface MagicMatcher {
 
 	/**
 	 * Converts the test-string from the magic line to be an object to be passed into
-	 * {@link #isMatch(Object, int, byte[])}.
+	 * {@link #isMatch(Object, Long, boolean, Object, int, byte[])}.
 	 */
 	public Object convertTestString(String typeStr, String testStr, int offset);
 
