@@ -30,7 +30,7 @@ public class ContentTypeUtilTest {
 					new FileType("/files/x.xml", "XML", "application/xml", "XML document text"),
 					new FileType("/files/jfif.jpg", "JPEG", "image/jpeg", "JPEG image data, JFIF standard 1.01"),
 					// partial file here
-					// new FileType("/files/exif.jpg", "JPEG", null, "JPEG image data, EXIF standard "),
+					new FileType("/files/exif.jpg", "JPEG", "image/jpeg", "JPEG image data, EXIF standard 2.1"),
 					new FileType("/files/x.jp2", "JPEG", "image/jp2", "JPEG 2000 image"),
 					new FileType("/files/x.class", "compiled", "application/x-java-applet",
 							"compiled Java class data, version 49.0"),
@@ -61,13 +61,16 @@ public class ContentTypeUtilTest {
 		}
 	}
 
-	@Test
-	public void testSpecial() throws Exception {
-		// ContentTypeUtil util = new ContentTypeUtil(new File("/tmp/x"));
-		ContentTypeUtil util = new ContentTypeUtil();
-		ContentType type = contentTypeFromResource(util, "/files/exif.jpg");
-		System.out.println(type);
-	}
+	// @Test
+	// public void testSpecial() throws Exception {
+	// ContentTypeUtil util = new ContentTypeUtil("/tmp/x", new ErrorCallBack() {
+	// public void error(String line, String details, Exception e) {
+	// System.err.println("Error " + details + ": " + line);
+	// }
+	// });
+	// ContentType type = contentTypeFromResource(util, "/files/x.gz");
+	// System.out.println(type);
+	// }
 
 	@Test
 	public void testDownloadsDir() throws Exception {

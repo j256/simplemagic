@@ -1,4 +1,8 @@
 0.5: 05/XX/2013
+	* Added support for the extended and relative offsets.
+	* Added support for the ID3 7-bit lengths.
+	* Fixed a bug in the search type.
+	* Added by-hand parsing of the lines since the whitespace from magic files is very inconsistent. 
 
 0.4: 05/08/2013
 	* Added error callbacks and removed the System.err.println that got checked in by mistake.

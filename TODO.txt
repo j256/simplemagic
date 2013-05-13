@@ -10,23 +10,11 @@ Used to maintain requested features or future work.
 
 - "offset" in the regex type, does it mean lines or bytes?
 
-- need to handle the complex offset types:
-     Offsets do not need to be constant, but can also be read from the file being examined.  If the first character following the
-     last > is a ( then the string after the parenthesis is interpreted as an indirect offset.  That means that the number after
-     the parenthesis is used as an offset in the file.  The value at that offset is read, and is used again as an offset in the
-     file.  Indirect offsets are of the form: ((x [.[bislBISL]][+-][ y ]).  The value of x is used as an offset in the file.  A
-     byte, id3 length, short or long is read at that offset depending on the [bislBISLm] type specifier.  The capitalized types
-     interpret the number as a big endian value, whereas the small letter versions interpret the number as a little endian value;
-     the m type interprets the number as a middle endian (PDP-11) value.  To that number the value of y is added and the result
-     is used as an offset in the file.  The default type if one is not specified is long.
-
 - maybe compile the magic file into a serialized compressed file for size reasons?
 	- at least pre-process it to normalize whitespace
 - need to handle the indirect type?
 - need more tests on floating point numbers, find magics that use them
-- need to support the &offset format
 - is the quad date in seconds or millis?? find a magic that uses them
-- need to support the ID3 types, maybe it means just the ID3 length?
 
 ------------------------------------------------------------------------------------------------------------
 
