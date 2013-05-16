@@ -131,6 +131,9 @@ public enum ContentType {
 	 * Return the type associated with the mime-type string or {@link #UNKNOWN} if not found.
 	 */
 	public static ContentType fromMimeType(String mimeType) {
+		if (mimeType == null) {
+			return UNKNOWN;
+		}
 		ContentType type = mimeTypeMap.get(mimeType);
 		if (type == null) {
 			return UNKNOWN;

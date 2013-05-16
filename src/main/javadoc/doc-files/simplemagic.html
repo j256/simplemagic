@@ -123,7 +123,8 @@ System.out.println(&quot;Content-type is: &quot; + info.getName());
 <p>Once you have the <code>ContentInfo</code> it provides:
 </p>
 <ul>
-<li> Approximate content-name
+<li> Enumerated type if the type is common otherwise set to <code>UNKNOWN</code>
+</li><li> Approximate content-name
 </li><li> Full message produced by the magic file
 </li><li> Mime-type string if one configured by the config file
 </li></ul>
@@ -318,9 +319,12 @@ ContentInfo info = util.findMatch(inputStream);
 <p>Once you have the <code>ContentInfo</code>, it provides:
 </p>
 <ul>
-<li> Approximate content-name
-</li><li> Full message produced by the magic file
-</li><li> Mime-type string if one configured by the config file
+<li> Enumerated content-type if the type is common otherwise set to <code>UNKNOWN</code>.  This is determined by mapping the
+mime-type string to an internal enumerated type and is not determined from the magic file entries.
+</li><li> Approximate content-name.  If the content-type is known then this will be a constant string.  If not know then this
+is usually the first word of the full message from the magic file. 
+</li><li> Details about the content produced by the magic file.
+</li><li> Mime-type string if one configured by the config file.
 </li></ul>
 
 <p>Here are some examples of <code>ContentInfo</code> output:
