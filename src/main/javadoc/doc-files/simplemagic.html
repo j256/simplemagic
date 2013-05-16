@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
 <html>
-<!-- Created on May 13, 2013 by texi2html 1.82
+<!-- Created on May 15, 2013 by texi2html 1.82
 texi2html was written by: 
             Lionel Cons <Lionel.Cons@cern.ch> (original author)
             Karl Berry  <karl@freefriends.org>
@@ -100,25 +100,43 @@ There is also a <a href="http://256.com/sources/simplemagic/docs/simplemagic.pdf
 <a name="index-getting-started"></a>
 <a name="index-how-to-get-started"></a>
 <a name="index-quick-start"></a>
-<a name="index-ContentTypeUtil"></a>
+<a name="index-ContentInfoUtil"></a>
 <p>To use SimpleMagic you need to do the following steps.  For more information, see section <a href="#Using">Using SimpleMagic</a>.
 </p>
 <ol>
 <li> Download SimpleMagic from the <a href="http://256.com/sources/simplemagic/releases/">SimpleMagic release page</a>.  See section <a href="#Downloading">Downloading Jar</a>.
 
-</li><li> Optionally load in the magic entries from local file(s).  By default, if you construct a <code>ContentTypeUtil</code> instance
+</li><li> Optionally load in the magic entries from local file(s).  By default, if you construct a <code>ContentInfoUtil</code> instance
 with the default constructor, it will load the internal magic entries file.  See section <a href="#Loading-Magic-Entries">How To Load Magic Entries</a>.
 
-</li><li> Use the <code>ContentTypeUtil</code> class to get content-types for files or <code>byte[]</code>:
+</li><li> Use the <code>ContentInfoUtil</code> class to get content-types for files or <code>byte[]</code>:
 
-<table><tr><td>&nbsp;</td><td><pre class="example">ContentTypeUtil util = new ContentTypeUtil();
-ContentType contentType = util.findMatch(&quot;/tmp/upload.tmp&quot;);
-// or   ContentType contentType = util.findMatch(inputStream);
-// or   ContentType contentType = util.findMatch(contentByteArray);
-System.out.println(&quot;Content-type is: &quot; + contentType.getName());
+<table><tr><td>&nbsp;</td><td><pre class="example">ContentInfoUtil util = new ContentInfoUtil();
+ContentInfo info = util.findMatch(&quot;/tmp/upload.tmp&quot;);
+// or   ContentInfo info = util.findMatch(inputStream);
+// or   ContentInfo info = util.findMatch(contentByteArray);
+System.out.println(&quot;Content-type is: &quot; + info.getName());
 </pre></td></tr></table>
 
 </li></ol>
+
+<p>Once you have the <code>ContentInfo</code> it provides:
+</p>
+<ul>
+<li> Approximate content-name
+</li><li> Full message produced by the magic file
+</li><li> Mime-type string if one configured by the config file
+</li></ul>
+
+<p>Here are some examples of <code>ContentInfo</code> output:
+</p>
+<ul>
+<li> HTML, mime &rsquo;text/html&rsquo;, msg &rsquo;HTML document text&rsquo;
+</li><li> Java, msg &rsquo;Java serialization data, version 5&rsquo;
+</li><li> PDF, mime &rsquo;application/pdf&rsquo;, msg &rsquo;PDF document, version 1.4&rsquo;
+</li><li> GIF, mime &rsquo;image/gif&rsquo;, msg &rsquo;GIF image data, version 89a, 16 x 16&rsquo;
+</li><li> JPEG, mime &rsquo;image/jpeg&rsquo;, msg &rsquo;JPEG image data, JFIF standard 1.01&rsquo;
+</li></ul>
 
 <p>For somewhat more extensive instructions, see section <a href="#Using">Using SimpleMagic</a>.
 </p>
@@ -149,6 +167,10 @@ System.out.println(&quot;Content-type is: &quot; + contentType.getName());
 <tr><td align="left" valign="top"><a href="#Downloading">2.1 Downloading Jar</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">                Downloading the SimpleMagic jar.
 </td></tr>
 <tr><td align="left" valign="top"><a href="#Loading-Magic-Entries">2.2 How To Load Magic Entries</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">      Loading in the magic entries from files.
+</td></tr>
+<tr><td align="left" valign="top"><a href="#Finding-Content-Info">2.3 How To Find The Content Info</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">       Finding the content type from data.
+</td></tr>
+<tr><td align="left" valign="top"><a href="#Content-Info">2.4 Content Information</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">               Content type information returned.
 </td></tr>
 </table>
 
@@ -184,7 +206,7 @@ System.out.println(&quot;Content-type is: &quot; + contentType.getName());
 <a name="Loading-Magic-Entries"></a>
 <table cellpadding="1" cellspacing="1" border="0">
 <tr><td valign="middle" align="left">[<a href="#Downloading" title="Previous section in reading order"> &lt; </a>]</td>
-<td valign="middle" align="left">[<a href="#License" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left">[<a href="#Finding-Content-Info" title="Next section in reading order"> &gt; </a>]</td>
 <td valign="middle" align="left"> &nbsp; </td>
 <td valign="middle" align="left">[<a href="#Using" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
 <td valign="middle" align="left">[<a href="#Using" title="Up section"> Up </a>]</td>
@@ -219,20 +241,107 @@ look at the start of the file for the string <code>&quot;GIF8&quot;</code>.  If 
 
 <a name="index-alternative-magic-files"></a>
 <a name="index-_002fetc_002fmagic"></a>
-<p>If you do not want to use the internal magic definitions, you can also construct the <code>ContentTypeUtil</code> class with a file
+<p>If you do not want to use the internal magic definitions, you can also construct the <code>ContentInfoUtil</code> class with a file
 or directory to have it parse and use another definition file.
 </p>
-<table><tr><td>&nbsp;</td><td><pre class="example">ContentTypeUtil util = new ContentTypeUtil(&quot;/etc/magic&quot;);
-ContentType contentType = util.findMatch(uploadedBytes);
+<table><tr><td>&nbsp;</td><td><pre class="example">ContentInfoUtil util = new ContentInfoUtil(&quot;/etc/magic&quot;);
 </pre></td></tr></table>
 
 <p><em>WARNING:</em> although we&rsquo;ve tried to support different types of magic entries, there are local per-OS variations that may
 not be supported.  
 </p>
 <hr size="6">
-<a name="License"></a>
+<a name="Finding-Content-Info"></a>
 <table cellpadding="1" cellspacing="1" border="0">
 <tr><td valign="middle" align="left">[<a href="#Loading-Magic-Entries" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#Content-Info" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#Using" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#Using" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="#License" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="#Index-of-Concepts" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<a name="How-To-Find-The-Content-Info"></a>
+<h2 class="section">2.3 How To Find The Content Info</h2>
+
+<p>Once you have loaded the magic entry information into your <code>ContentInfoUtil</code>, you can use the utility class to find
+the content info of files, byte arrays, or <code>InputStream</code>s.  The base method gets content info information from a
+<code>byte[]</code>.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">byte[] uploadedBytes = ...;
+ContentInfo info = util.findMatch(uploadedBytes);
+</pre></td></tr></table>
+
+<p>You can also get the content type of a file which is read with a <code>FileInputStream</code>:
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">ContentInfo info = util.findMatch(&quot;/tmp/uploadedFile.tmp&quot;);
+// File uploadedFile = ...
+// ContentInfo info = util.findMatch(uploadedFile);
+</pre></td></tr></table>
+
+<p>If you have an <code>InputStream</code>, you can also use it directly:
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">InputStream inputStream = ...
+ContentInfo info = util.findMatch(inputStream);
+</pre></td></tr></table>
+
+<p>For the file and stream versions, the first 10k of the data is read and processed.
+</p>
+<hr size="6">
+<a name="Content-Info"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#Finding-Content-Info" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#License" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#Using" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#Using" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="#License" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[<a href="#SEC_Contents" title="Table of contents">Contents</a>]</td>
+<td valign="middle" align="left">[<a href="#Index-of-Concepts" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<a name="Content-Information"></a>
+<h2 class="section">2.4 Content Information</h2>
+
+<p>Once you have the <code>ContentInfo</code>, it provides:
+</p>
+<ul>
+<li> Approximate content-name
+</li><li> Full message produced by the magic file
+</li><li> Mime-type string if one configured by the config file
+</li></ul>
+
+<p>Here are some examples of <code>ContentInfo</code> output:
+</p>
+<ul>
+<li> HTML, mime &rsquo;text/html&rsquo;, msg &rsquo;HTML document text&rsquo;
+</li><li> Java, msg &rsquo;Java serialization data, version 5&rsquo;
+</li><li> PDF, mime &rsquo;application/pdf&rsquo;, msg &rsquo;PDF document, version 1.4&rsquo;
+</li><li> gzip, mime &rsquo;application/x-gzip&rsquo;, msg &rsquo;gzip compressed data, was &quot;&quot;, from Unix...&rsquo;
+</li><li> GIF, mime &rsquo;image/gif&rsquo;, msg &rsquo;GIF image data, version 89a, 16 x 16&rsquo;
+</li><li> PNG, mime &rsquo;image/png&rsquo;, msg &rsquo;PNG image, 600 x 371, 8-bit/color RGB, non-interlaced&rsquo;
+</li><li> ISO, mime &rsquo;audio/mp4&rsquo;, msg &rsquo;ISO Media, MPEG v4 system, iTunes AAC-LC&rsquo;
+</li><li> Microsoft, mime &rsquo;application/msword&rsquo;, msg &rsquo;Microsoft Word Document&rsquo;
+</li><li> RIFF, mime &rsquo;audio/x-wav&rsquo;, msg &rsquo;RIFF (little-endian) data, WAVE audio...&rsquo;
+</li><li> JPEG, mime &rsquo;image/jpeg&rsquo;, msg &rsquo;JPEG image data, JFIF standard 1.01&rsquo;
+</li></ul>
+
+<hr size="6">
+<a name="License"></a>
+<table cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#Content-Info" title="Previous section in reading order"> &lt; </a>]</td>
 <td valign="middle" align="left">[<a href="#Index-of-Concepts" title="Next section in reading order"> &gt; </a>]</td>
 <td valign="middle" align="left"> &nbsp; </td>
 <td valign="middle" align="left">[<a href="#Using" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
@@ -327,7 +436,7 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
 <tr><td></td><td valign="top"><a href="#index-author">author</a></td><td valign="top"><a href="#Top">SimpleMagic</a></td></tr>
 <tr><td colspan="3"> <hr></td></tr>
 <tr><th><a name="Index-of-Concepts-1_cp_letter-C">C</a></th><td></td><td></td></tr>
-<tr><td></td><td valign="top"><a href="#index-ContentTypeUtil">ContentTypeUtil</a></td><td valign="top"><a href="#Quick-Start">1. Start Using Quickly</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-ContentInfoUtil">ContentInfoUtil</a></td><td valign="top"><a href="#Quick-Start">1. Start Using Quickly</a></td></tr>
 <tr><td colspan="3"> <hr></td></tr>
 <tr><th><a name="Index-of-Concepts-1_cp_letter-D">D</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-default-magic-entries">default magic entries</a></td><td valign="top"><a href="#Loading-Magic-Entries">2.2 How To Load Magic Entries</a></td></tr>
@@ -418,6 +527,8 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
   <ul class="toc">
     <li><a name="toc-Downloading-Jar" href="#Downloading">2.1 Downloading Jar</a></li>
     <li><a name="toc-How-To-Load-Magic-Entries" href="#Loading-Magic-Entries">2.2 How To Load Magic Entries</a></li>
+    <li><a name="toc-How-To-Find-The-Content-Info" href="#Finding-Content-Info">2.3 How To Find The Content Info</a></li>
+    <li><a name="toc-Content-Information" href="#Content-Info">2.4 Content Information</a></li>
   </ul></li>
   <li><a name="toc-Open-Source-License" href="#License">3. Open Source License</a></li>
   <li><a name="toc-Index-of-Concepts-1" href="#Index-of-Concepts">Index of Concepts</a></li>
@@ -433,7 +544,7 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
 </tr></table>
 <h1>About This Document</h1>
 <p>
-  This document was generated by <em>Gray Watson</em> on <em>May 13, 2013</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.82</em></a>.
+  This document was generated by <em>Gray Watson</em> on <em>May 15, 2013</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.82</em></a>.
 </p>
 <p>
   The buttons in the navigation panels have the following meaning:
@@ -535,7 +646,7 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
 <hr size="1">
 <p>
  <font size="-1">
-  This document was generated by <em>Gray Watson</em> on <em>May 13, 2013</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.82</em></a>.
+  This document was generated by <em>Gray Watson</em> on <em>May 15, 2013</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.82</em></a>.
  </font>
  <br>
 

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.j256.simplemagic.ContentType;
+import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.endian.EndianConverter;
 
 /**
@@ -66,12 +66,12 @@ public class MagicEntry {
 	/**
 	 * Returns the content type associated with the bytes or null if it does not match.
 	 */
-	public ContentType processBytes(byte[] bytes) {
-		ContentInfo info = processBytes(bytes, 0, null);
-		if (info == null || info.name == UNKNOWN_NAME) {
+	public ContentInfo processBytes(byte[] bytes) {
+		ContentData data = processBytes(bytes, 0, null);
+		if (data == null || data.name == UNKNOWN_NAME) {
 			return null;
 		} else {
-			return new ContentType(info.name, info.mimeType, info.sb.toString());
+			return new ContentInfo(data.name, data.mimeType, data.sb.toString());
 		}
 	}
 
@@ -138,7 +138,7 @@ public class MagicEntry {
 	/**
 	 * Main processing method which can go recursive.
 	 */
-	private ContentInfo processBytes(byte[] bytes, int prevOffset, ContentInfo contentInfo) {
+	private ContentData processBytes(byte[] bytes, int prevOffset, ContentData contentInfo) {
 		int offset = this.offset;
 		if (offsetInfo != null) {
 			offset = offsetInfo.getOffset(bytes);
@@ -158,7 +158,7 @@ public class MagicEntry {
 		}
 
 		if (contentInfo == null) {
-			contentInfo = new ContentInfo(name, mimeType);
+			contentInfo = new ContentData(name, mimeType);
 		}
 		if (formatter != null) {
 			// if we are appending and need a space then preprend one
@@ -199,12 +199,12 @@ public class MagicEntry {
 	/**
 	 * Internal processing information about the content.
 	 */
-	private static class ContentInfo {
+	private static class ContentData {
 		String name;
 		int nameLevel;
 		String mimeType;
 		final StringBuilder sb = new StringBuilder();
-		private ContentInfo(String name, String mimeType) {
+		private ContentData(String name, String mimeType) {
 			this.name = name;
 			this.mimeType = mimeType;
 		}

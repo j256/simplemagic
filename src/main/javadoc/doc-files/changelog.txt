@@ -1,3 +1,7 @@
+0.6: 05/15/2013
+	* Changed the name of the ContentType to be ContentDetails.
+	* Added an enumerated ContentType to map common mime-types to be known enumerated content types.
+
 0.5: 05/13/2013
 	* Added support for the extended and relative offsets.
 	* Added support for the ID3 7-bit lengths.

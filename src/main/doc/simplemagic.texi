@@ -71,29 +71,29 @@ Gray Watson @uref{http://256.com/gray/}
 @cindex getting started
 @cindex how to get started
 @cindex quick start
-@cindex ContentTypeUtil
+@cindex ContentInfoUtil
 To use SimpleMagic you need to do the following steps.  For more information, @pxref{Using}.
 
 @enumerate
 
 @item Download SimpleMagic from the @uref{http://256.com/sources/simplemagic/releases/, SimpleMagic release page}.  @xref{Downloading}.
 
-@item Optionally load in the magic entries from local file(s).  By default, if you construct a @code{ContentTypeUtil} instance
+@item Optionally load in the magic entries from local file(s).  By default, if you construct a @code{ContentInfoUtil} instance
 with the default constructor, it will load the internal magic entries file.  @xref{Loading Magic Entries}.
 
-@item Use the @code{ContentTypeUtil} class to get content-types for files or @code{byte[]}:
+@item Use the @code{ContentInfoUtil} class to get content-types for files or @code{byte[]}:
 
 @example
-ContentTypeUtil util = new ContentTypeUtil();
-ContentType contentType = util.findMatch("/tmp/upload.tmp");
-// or   ContentType contentType = util.findMatch(inputStream);
-// or   ContentType contentType = util.findMatch(contentByteArray);
-System.out.println("Content-type is: " + contentType.getName());
+ContentInfoUtil util = new ContentInfoUtil();
+ContentInfo info = util.findMatch("/tmp/upload.tmp");
+// or   ContentInfo info = util.findMatch(inputStream);
+// or   ContentInfo info = util.findMatch(contentByteArray);
+System.out.println("Content-type is: " + info.getName());
 @end example
 
 @end enumerate
 
-Once you have the @code{ContentType} it provides:
+Once you have the @code{ContentInfo} it provides:
 
 @itemize @bullet
 @item Approximate content-name
@@ -101,7 +101,7 @@ Once you have the @code{ContentType} it provides:
 @item Mime-type string if one configured by the config file
 @end itemize
 
-Here are some examples of @code{ContentType} output:
+Here are some examples of @code{ContentInfo} output:
 
 @itemize @bullet
 @item HTML, mime 'text/html', msg 'HTML document text'
@@ -122,8 +122,8 @@ For somewhat more extensive instructions, @pxref{Using}.
 @menu
 * Downloading ::                Downloading the SimpleMagic jar.
 * Loading Magic Entries ::      Loading in the magic entries from files.
-* Finding Content Type ::       Finding the content type from data.
-* Content Type Info ::          Content type information returned.
+* Finding Content Info ::       Finding the content type from data.
+* Content Info ::               Content type information returned.
 @end menu
 
 @c ----------------------------------------------------------------
@@ -140,7 +140,7 @@ central maven repository}.
 The code works with Java 5 or later.
 
 @c ----------------------------------------------------------------
-@node Loading Magic Entries, Finding Content Type, Downloading, Using
+@node Loading Magic Entries, Finding Content Info, Downloading, Using
 @section How To Load Magic Entries
 
 @cindex default magic entries
@@ -162,51 +162,51 @@ look at the start of the file for the string @code{"GIF8"}.  If it is there then
 
 @cindex alternative magic files
 @cindex /etc/magic
-If you do not want to use the internal magic definitions, you can also construct the @code{ContentTypeUtil} class with a file
+If you do not want to use the internal magic definitions, you can also construct the @code{ContentInfoUtil} class with a file
 or directory to have it parse and use another definition file.
 
 @example
-ContentTypeUtil util = new ContentTypeUtil("/etc/magic");
+ContentInfoUtil util = new ContentInfoUtil("/etc/magic");
 @end example
 
 @emph{WARNING:} although we've tried to support different types of magic entries, there are local per-OS variations that may
 not be supported.  
 
 @c ----------------------------------------------------------------
-@node Finding Content Type, Content Type Info, Downloading, Using
-@section How To Find The Content Type
+@node Finding Content Info, Content Info, Downloading, Using
+@section How To Find The Content Info
 
-Once you have loaded the magic entry information into your @code{ContentTypeUtil}, you can use the utility class to find
-the content type of files, byte arrays, or @code{InputStream}s.  The base method gets content type information from a
+Once you have loaded the magic entry information into your @code{ContentInfoUtil}, you can use the utility class to find
+the content info of files, byte arrays, or @code{InputStream}s.  The base method gets content info information from a
 @code{byte[]}.
 
 @example
 byte[] uploadedBytes = ...;
-ContentType contentType = util.findMatch(uploadedBytes);
+ContentInfo info = util.findMatch(uploadedBytes);
 @end example
 
 You can also get the content type of a file which is read with a @code{FileInputStream}:
 
 @example
-ContentType contentType = util.findMatch("/tmp/uploadedFile.tmp");
+ContentInfo info = util.findMatch("/tmp/uploadedFile.tmp");
 // File uploadedFile = ...
-// ContentType contentType = util.findMatch(uploadedFile);
+// ContentInfo info = util.findMatch(uploadedFile);
 @end example
 
 If you have an @code{InputStream}, you can also use it directly:
 
 @example
 InputStream inputStream = ...
-ContentType contentType = util.findMatch(inputStream);
+ContentInfo info = util.findMatch(inputStream);
 @end example
 
 For the file and stream versions, the first 10k of the data is read and processed.
 
 @c ----------------------------------------------------------------
-@node Content Type Info, License, Finding Content Type, Using
-@section Content Type Information
+@node Content Info, License, Finding Content Info, Using
+@section Content Information
 
-Once you have the @code{ContentType}, it provides:
+Once you have the @code{ContentInfo}, it provides:
 
 @itemize @bullet
 @item Approximate content-name
@@ -214,7 +214,7 @@ Once you have the @code{ContentType}, it provides:
 @item Mime-type string if one configured by the config file
 @end itemize
 
-Here are some examples of @code{ContentType} output:
+Here are some examples of @code{ContentInfo} output:
 
 @itemize @bullet
 @item HTML, mime 'text/html', msg 'HTML document text'
@@ -230,7 +230,7 @@ Here are some examples of @code{ContentType} output:
 @end itemize
 
 @c ----------------------------------------------------------------
-@node License, Index of Concepts, Content Type Info, Top
+@node License, Index of Concepts, Content Info, Top
 @chapter Open Source License
 
 @cindex license

@@ -3,7 +3,7 @@ package com.j256.simplemagic.entries;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.j256.simplemagic.ContentTypeUtil.ErrorCallBack;
+import com.j256.simplemagic.ContentInfoUtil.ErrorCallBack;
 import com.j256.simplemagic.endian.EndianConverter;
 import com.j256.simplemagic.endian.EndianType;
 import com.j256.simplemagic.entries.MagicEntry.OffsetInfo;

@@ -17,18 +17,19 @@ Gray Watson
 To get started you use the SimpleMagic package like the following:
 
     // create a magic utility using the internal magic file
-    ContentTypeUtil util = new ContentTypeUtil();
+    ContentInfoUtil util = new ContentInfoUtil();
     // if you want to use a different config file(s), you can load them by hand:
-    // ContentTypeUtil util = new ContentTypeUtil("/etc/magic");
+    // ContentInfoUtil util = new ContentInfoUtil("/etc/magic");
     ...
-    ContentType contentType = util.findMatch("/tmp/upload.tmp");
+    ContentDetails details = util.findMatch("/tmp/upload.tmp");
     // or
-    ContentType contentType = util.findMatch(inputStream);
+    ContentDetails details = util.findMatch(inputStream);
     // or
-    ContentType contentType = util.findMatch(contentByteArray);
+    ContentDetails details = util.findMatch(contentByteArray);
 
-Once you have the ContentType it provides:
+Once you have the ContentDetails it provides:
  
+    * Enumerated type if the type is common
     * Approximate content-name
     * Full message produced by the magic file
     * Mime-type string if one configured by the config file
