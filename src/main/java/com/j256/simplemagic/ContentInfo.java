@@ -1,7 +1,7 @@
 package com.j256.simplemagic;
 
 /**
- * Content details associated with a file or bytes, returned by the magic matching code in
+ * Information associated with some content, returned by the magic matching code in
  * {@link ContentInfoUtil#findMatch(String)} and other methods.
  * 
  * @author graywatson
@@ -15,7 +15,7 @@ public class ContentInfo {
 
 	public ContentInfo(String name, String mimeType, String message) {
 		this.contentType = ContentType.fromMimeType(mimeType);
-		if (this.contentType == ContentType.UNKNOWN) {
+		if (this.contentType == ContentType.OTHER) {
 			this.name = name;
 		} else {
 			this.name = this.contentType.getSimpleName();
@@ -25,7 +25,7 @@ public class ContentInfo {
 	}
 
 	/**
-	 * Returns the internal enumerated type associated with the content or {@link ContentType#UNKNOWN} if not known.
+	 * Returns the internal enumerated type associated with the content or {@link ContentType#OTHER} if not known.
 	 */
 	public ContentType getContentType() {
 		return contentType;

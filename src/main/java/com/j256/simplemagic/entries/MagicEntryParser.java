@@ -9,7 +9,7 @@ import com.j256.simplemagic.endian.EndianType;
 import com.j256.simplemagic.entries.MagicEntry.OffsetInfo;
 
 /**
- * Representation of a line of information from the magic (5) format.
+ * Class which parses a line from the magic (5) format and produces a {@link MagicEntry} class.
  * 
  * @author graywatson
  */
@@ -375,6 +375,9 @@ public class MagicEntryParser {
 	}
 
 	/**
+	 * Copied from the magic(5) man page:
+	 * 
+	 * <p>
 	 * Offsets do not need to be constant, but can also be read from the file being examined. If the first character
 	 * following the last '>' is a '(' then the string after the parenthesis is interpreted as an indirect offset. That
 	 * means that the number after the parenthesis is used as an offset in the file. The value at that offset is read,
@@ -384,6 +387,7 @@ public class MagicEntryParser {
 	 * letter versions interpret the number as a little-endian value; the 'm' type interprets the number as a
 	 * middle-endian (PDP-11) value. To that number the value of y is added and the result is used as an offset in the
 	 * file. The default type if one is not specified is 4-byte long.
+	 * </p>
 	 */
 	private static OffsetInfo parseOffset(String offsetString, String line, ErrorCallBack errorCallBack) {
 		// (9.b+19)

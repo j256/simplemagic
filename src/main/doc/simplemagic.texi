@@ -93,10 +93,11 @@ System.out.println("Content-type is: " + info.getName());
 
 @end enumerate
 
-Once you have the @code{ContentInfo} it provides:
+If the @code{findMatch(...)} method does not recognize the content then it will return null.  If it does match one of the
+entries then it will return a @code{ContentInfo} class which provides:
 
 @itemize @bullet
-@item Enumerated type if the type is common otherwise set to @code{UNKNOWN}
+@item Enumerated type if the type is common otherwise set to @code{OTHER}
 @item Approximate content-name
 @item Full message produced by the magic file
 @item Mime-type string if one configured by the config file
@@ -207,10 +208,11 @@ For the file and stream versions, the first 10k of the data is read and processe
 @node Content Info, License, Finding Content Info, Using
 @section Content Information
 
-Once you have the @code{ContentInfo}, it provides:
+If the @code{findMatch(...)} method does not recognize the content then it will return null.  If it does match one of the
+entries then it will return a @code{ContentInfo} class which provides:
 
 @itemize @bullet
-@item Enumerated content-type if the type is common otherwise set to @code{UNKNOWN}.  This is determined by mapping the
+@item Enumerated content-type if the type is common otherwise set to @code{OTHER}.  This is determined by mapping the
 mime-type string to an internal enumerated type and is not determined from the magic file entries.
 @item Approximate content-name.  If the content-type is known then this will be a constant string.  If not know then this
 is usually the first word of the full message from the magic file. 

@@ -138,7 +138,7 @@ public class MagicEntry {
 	/**
 	 * Main processing method which can go recursive.
 	 */
-	private ContentData processBytes(byte[] bytes, int prevOffset, ContentData contentInfo) {
+	private ContentData processBytes(byte[] bytes, int prevOffset, ContentData contentData) {
 		int offset = this.offset;
 		if (offsetInfo != null) {
 			offset = offsetInfo.getOffset(bytes);
@@ -157,15 +157,15 @@ public class MagicEntry {
 			}
 		}
 
-		if (contentInfo == null) {
-			contentInfo = new ContentData(name, mimeType);
+		if (contentData == null) {
+			contentData = new ContentData(name, mimeType);
 		}
 		if (formatter != null) {
 			// if we are appending and need a space then preprend one
-			if (formatSpacePrefix && contentInfo.sb.length() > 0) {
-				contentInfo.sb.append(' ');
+			if (formatSpacePrefix && contentData.sb.length() > 0) {
+				contentData.sb.append(' ');
 			}
-			matcher.renderValue(contentInfo.sb, val, formatter);
+			matcher.renderValue(contentData.sb, val, formatter);
 		}
 		if (children != null) {
 			/*
@@ -177,15 +177,15 @@ public class MagicEntry {
 			 * WARNING: we can't do this check after we return from processing the bytes because the children's children
 			 * set the name first otherwise and we need the parent's name to dominate.
 			 */
-			boolean assignName = (contentInfo.name == UNKNOWN_NAME);
+			boolean assignName = (contentData.name == UNKNOWN_NAME);
 			for (MagicEntry child : children) {
-				if (child.processBytes(bytes, offset, contentInfo) != null) {
+				if (child.processBytes(bytes, offset, contentData) != null) {
 					matched = true;
 					if (assignName) {
-						contentInfo.setName(child);
+						contentData.setName(child);
 					}
-					if (contentInfo.mimeType == null && child.mimeType != null) {
-						contentInfo.mimeType = child.mimeType;
+					if (contentData.mimeType == null && child.mimeType != null) {
+						contentData.mimeType = child.mimeType;
 					}
 				}
 			}
@@ -193,11 +193,11 @@ public class MagicEntry {
 				return null;
 			}
 		}
-		return contentInfo;
+		return contentData;
 	}
 
 	/**
-	 * Internal processing information about the content.
+	 * Internal processing data about the content.
 	 */
 	private static class ContentData {
 		String name;
@@ -212,6 +212,18 @@ public class MagicEntry {
 			if (name == UNKNOWN_NAME || (entry.name != null && entry.name != UNKNOWN_NAME && entry.level < nameLevel)) {
 				name = entry.name;
 				nameLevel = entry.level;
+			}
+		}
+		@Override
+		public String toString() {
+			if (sb.length() == 0) {
+				if (name == null) {
+					return super.toString();
+				} else {
+					return name;
+				}
+			} else {
+				return sb.toString();
 			}
 		}
 	}

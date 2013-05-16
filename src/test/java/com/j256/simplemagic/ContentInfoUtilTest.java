@@ -10,6 +10,8 @@ import java.io.InputStream;
 
 import org.junit.Test;
 
+import com.j256.simplemagic.ContentInfoUtil.ErrorCallBack;
+
 public class ContentInfoUtilTest {
 
 	private ContentInfoUtil contentInfoUtil;
@@ -25,7 +27,7 @@ public class ContentInfoUtilTest {
 					new FileType("/files/x.tiff", ContentType.TIFF, "tiff", "image/tiff", "TIFF image data, big-endian"),
 					new FileType("/files/x.zip", ContentType.ZIP, "zip", "application/zip",
 							"Zip archive data, at least v1.0 to extract"),
-					new FileType("/files/x.javaserial", ContentType.UNKNOWN, "Java", null,
+					new FileType("/files/x.javaserial", ContentType.OTHER, "Java", null,
 							"Java serialization data, version 5"),
 					new FileType("/files/x.doc", ContentType.MICROSOFT_WORD, "word", "application/msword",
 							"Microsoft Word Document"),
@@ -48,10 +50,10 @@ public class ContentInfoUtilTest {
 							"gzip compressed data, from Unix, last modified: 2013-05-08 02:57:08 +0000"),
 					new FileType("/files/x.m4v", ContentType.MP4, "mp4", "video/mp4",
 							"ISO Media, MPEG v4 system, iTunes AVC-LC"),
-					new FileType("/files/x.xls", ContentType.UNKNOWN, "OLE", null, "OLE 2 Compound Document"),
+					new FileType("/files/x.xls", ContentType.OTHER, "OLE", null, "OLE 2 Compound Document"),
 					new FileType("/files/x.xlsx", ContentType.ZIP, "zip", "application/zip",
 							"Zip archive data, at least v2.0 to extract"),
-					new FileType("/files/x.odt", ContentType.UNKNOWN, "OpenDocument",
+					new FileType("/files/x.odt", ContentType.OTHER, "OpenDocument",
 							"application/vnd.oasis.opendocument.text", "OpenDocument Text"),
 					new FileType("/files/x.html", ContentType.HTML, "html", "text/html", "HTML document text"),
 					new FileType("/files/x.aiff", ContentType.AIFF, "aiff", "audio/x-aiff", "IFF data, AIFF audio"),
@@ -59,6 +61,9 @@ public class ContentInfoUtilTest {
 							"MPEG ADTS, layer III, v1, 128 kbps, 44.1 kHz, Stereo"),
 					new FileType("/files/x.wav", ContentType.WAV, "wav", "audio/x-wav",
 							"RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, stereo 44100 Hz"),
+							// truncated file
+					new FileType("/files/x.nuv", ContentType.OTHER, "MythTV", null,
+							"MythTV NuppelVideo v (640x480),progressive,aspect:1.00,fps:29.97"),
 			// end
 			};
 
@@ -69,16 +74,16 @@ public class ContentInfoUtilTest {
 		}
 	}
 
-	// @Test
-	// public void testSpecial() throws Exception {
-	// ContentInfoUtil util = new ContentInfoUtil("/tmp/x", new ErrorCallBack() {
-	// public void error(String line, String details, Exception e) {
-	// System.err.println("Error " + details + ": " + line);
-	// }
-	// });
-	// ContentInfo info = contentInfoFromResource(util, "/files/x.gz");
-	// System.out.println(type);
-	// }
+	@Test
+	public void testSpecial() throws Exception {
+		ContentInfoUtil util = new ContentInfoUtil("/tmp/x", new ErrorCallBack() {
+			public void error(String line, String details, Exception e) {
+				System.err.println("Error " + details + ": " + line);
+			}
+		});
+		ContentInfo info = contentInfoFromResource(util, "/files/x.nuv");
+		System.out.println(info);
+	}
 
 	@Test
 	public void testDownloadsDir() throws Exception {

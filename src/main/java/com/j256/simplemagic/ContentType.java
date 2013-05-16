@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Enumerated type of the content if it is known by SimpleMagic. This information is _not_ processed from the magic
- * files.
+ * Enumerated type of the content if it is known by SimpleMagic matched from the mime-type. This information is _not_
+ * processed from the magic files.
  * 
  * @author graywatson
  */
@@ -184,8 +184,8 @@ public enum ContentType {
 	/** Zoo archive data */
 	ZOO("application/x-zoo", "zoo"),
 
-	// default if no match
-	UNKNOWN("unknown", "unknown"),
+	// default if no specific match to the mime-type
+	OTHER("other", "other"),
 	// end
 	;
 
@@ -213,15 +213,15 @@ public enum ContentType {
 	}
 
 	/**
-	 * Return the type associated with the mime-type string or {@link #UNKNOWN} if not found.
+	 * Return the type associated with the mime-type string or {@link #OTHER} if not found.
 	 */
 	public static ContentType fromMimeType(String mimeType) {
 		if (mimeType == null) {
-			return UNKNOWN;
+			return OTHER;
 		}
 		ContentType type = mimeTypeMap.get(mimeType);
 		if (type == null) {
-			return UNKNOWN;
+			return OTHER;
 		} else {
 			return type;
 		}
