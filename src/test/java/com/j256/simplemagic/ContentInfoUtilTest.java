@@ -3,14 +3,17 @@ package com.j256.simplemagic;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Arrays;
 
 import org.junit.Test;
-
-import com.j256.simplemagic.ContentInfoUtil.ErrorCallBack;
 
 public class ContentInfoUtilTest {
 
@@ -61,7 +64,7 @@ public class ContentInfoUtilTest {
 							"MPEG ADTS, layer III, v1, 128 kbps, 44.1 kHz, Stereo"),
 					new FileType("/files/x.wav", ContentType.WAV, "wav", "audio/x-wav",
 							"RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, stereo 44100 Hz"),
-							// truncated file
+					// truncated file
 					new FileType("/files/x.nuv", ContentType.OTHER, "MythTV", null,
 							"MythTV NuppelVideo v (640x480),progressive,aspect:1.00,fps:29.97"),
 			// end
@@ -75,15 +78,21 @@ public class ContentInfoUtilTest {
 	}
 
 	@Test
-	public void testSpecial() throws Exception {
-		ContentInfoUtil util = new ContentInfoUtil("/tmp/x", new ErrorCallBack() {
-			public void error(String line, String details, Exception e) {
-				System.err.println("Error " + details + ": " + line);
-			}
-		});
-		ContentInfo info = contentInfoFromResource(util, "/files/x.nuv");
-		System.out.println(info);
+	public void testFileExtensions() {
+		assertEquals(ContentType.GIF, ContentType.fromFileExtension("gif"));
+		assertEquals(ContentType.OTHER, ContentType.fromFileExtension("xyzzy"));
 	}
+
+	// @Test
+	// public void testSpecial() throws Exception {
+	// ContentInfoUtil util = new ContentInfoUtil("/tmp/x", new ErrorCallBack() {
+	// public void error(String line, String details, Exception e) {
+	// System.err.println("Error " + details + ": " + line);
+	// }
+	// });
+	// ContentInfo info = contentInfoFromResource(util, "/files/x.nuv");
+	// System.out.println(info);
+	// }
 
 	@Test
 	public void testDownloadsDir() throws Exception {
@@ -102,6 +111,46 @@ public class ContentInfoUtilTest {
 			contentInfoUtil = new ContentInfoUtil();
 		}
 		ContentInfo details = contentInfoFromResource(contentInfoUtil, fileType.fileName);
+		checkInfo(fileType, details);
+		details = contentInfoFromStreamWrapper(contentInfoUtil, fileType.fileName);
+		checkInfo(fileType, details);
+	}
+
+	private ContentInfo contentInfoFromResource(ContentInfoUtil util, String resource) throws IOException {
+		InputStream stream = getClass().getResourceAsStream(resource);
+		assertNotNull("Could not file resource: " + resource, stream);
+		try {
+			return util.findMatch(stream);
+		} finally {
+			stream.close();
+		}
+	}
+
+	private ContentInfo contentInfoFromStreamWrapper(ContentInfoUtil util, String resource) throws IOException {
+		InputStream resourceStream = getClass().getResourceAsStream(resource);
+		ByteArrayOutputStream outputStream;
+		try {
+			outputStream = new ByteArrayOutputStream();
+			copyStream(resourceStream, outputStream);
+		} finally {
+			resourceStream.close();
+		}
+		byte[] resourceBytes = outputStream.toByteArray();
+
+		ByteArrayInputStream inputSteam = new ByteArrayInputStream(resourceBytes);
+		ContentInfoInputStreamWrapper wrappedStream = new ContentInfoInputStreamWrapper(inputSteam, util);
+		ByteArrayOutputStream checkOutputStream = new ByteArrayOutputStream();
+		copyStream(wrappedStream, checkOutputStream);
+
+		assertTrue(Arrays.equals(resourceBytes, checkOutputStream.toByteArray()));
+		try {
+			return wrappedStream.findMatch();
+		} finally {
+			resourceStream.close();
+		}
+	}
+
+	private void checkInfo(FileType fileType, ContentInfo details) {
 		if (fileType.expectedName == null) {
 			assertNull("expecting the content type of " + fileType.fileName + " to be null", details);
 		} else {
@@ -113,13 +162,14 @@ public class ContentInfoUtilTest {
 		}
 	}
 
-	private ContentInfo contentInfoFromResource(ContentInfoUtil util, String resource) throws IOException {
-		InputStream stream = getClass().getResourceAsStream(resource);
-		assertNotNull("Could not file resource: " + resource, stream);
-		try {
-			return util.findMatch(stream);
-		} finally {
-			stream.close();
+	private void copyStream(InputStream input, OutputStream output) throws IOException {
+		byte[] buffer = new byte[1024];
+		while (true) {
+			int numRead = input.read(buffer);
+			if (numRead < 0) {
+				return;
+			}
+			output.write(buffer, 0, numRead);
 		}
 	}
 

@@ -1,3 +1,7 @@
+1.1: 05/XX/2013
+	* Added the ContentInfoInputStreamWrapper for getting content-info as the stream is being read.
+	* Added some initial file-extension mapping to the ContentType class.  Need to add many more entries.
+
 1.0: 05/16/2013
 	* Renamed the ContentType.UNKNOWN to be ContentType.OTHER to not be confused with not known content.
 	* I think it is ready for a 1.X release.

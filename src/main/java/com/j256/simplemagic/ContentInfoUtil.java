@@ -31,7 +31,7 @@ public class ContentInfoUtil {
 
 	private final static String INTERNAL_MAGIC_FILE = "/magic.gz";
 	// if this changes, fixed the javadocs for setFileReadSize() below
-	private final static int DEFAULT_READ_SIZE = 10 * 1024;
+	public final static int DEFAULT_READ_SIZE = 10 * 1024;
 
 	/** internal entries loaded once if the {@link ContentInfoUtil#MagicUtil()} constructor is used. */
 	private static List<MagicEntry> internalMagicEntries;
@@ -196,9 +196,6 @@ public class ContentInfoUtil {
 	 * Return the content type from the associated bytes or null if none of the magic entries matched.
 	 */
 	public ContentInfo findMatch(byte[] bytes) {
-		if (magicEntries == null) {
-			throw new IllegalStateException("Magic files have not been loaded");
-		}
 		for (MagicEntry entry : magicEntries) {
 			ContentInfo info = entry.processBytes(bytes);
 			if (info != null) {
