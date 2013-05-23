@@ -202,6 +202,19 @@ InputStream inputStream = ...
 ContentInfo info = util.findMatch(inputStream);
 @end example
 
+If you want to process a stream of bytes as the bytes are being read, you can use the @code{ContentInfoInputStreamWrapper}
+utility class.  This takes an @code{InputStream} which it wraps and delegates to.  After you have read the bytes through
+the wrapper, you can call the @code{findMatch()} method to get its content information.
+
+@example
+HttpServletRequest request = ...
+ContentInfoInputStreamWrapper inputStream
+   = new ContentInfoInputStreamWrapper(request.getInputStream());
+// read in the file from the http request, ...
+// after we have read it in, we can get its content-info 
+ContentInfo info = inputStream.findMatch();
+@end example
+
 For the file and stream versions, the first 10k of the data is read and processed.
 
 @c ----------------------------------------------------------------
