@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/loose.dtd">
 <html>
-<!-- Created on May 16, 2013 by texi2html 1.82
+<!-- Created on May 24, 2013 by texi2html 1.82
 texi2html was written by: 
             Lionel Cons <Lionel.Cons@cern.ch> (original author)
             Karl Berry  <karl@freefriends.org>
@@ -51,7 +51,7 @@ ul.toc {list-style: none}
 <a name="SimpleMagic"></a>
 <h1 class="settitle">SimpleMagic</h1>
 
-<p>Version 1.0 &ndash; May 2013
+<p>Version 1.1 &ndash; May 2013
 </p>
 <a name="index-introduction"></a>
 <a name="index-author"></a>
@@ -277,24 +277,43 @@ not be supported.
 the content info of files, byte arrays, or <code>InputStream</code>s.  The base method gets content info information from a
 <code>byte[]</code>.
 </p>
+<a name="index-byte-array-content"></a>
 <table><tr><td>&nbsp;</td><td><pre class="example">byte[] uploadedBytes = ...;
 ContentInfo info = util.findMatch(uploadedBytes);
 </pre></td></tr></table>
 
 <p>You can also get the content type of a file which is read with a <code>FileInputStream</code>:
 </p>
+<a name="index-file-content"></a>
 <table><tr><td>&nbsp;</td><td><pre class="example">ContentInfo info = util.findMatch(&quot;/tmp/uploadedFile.tmp&quot;);
 // File uploadedFile = ...
 // ContentInfo info = util.findMatch(uploadedFile);
 </pre></td></tr></table>
 
+<a name="index-input-stream-content"></a>
 <p>If you have an <code>InputStream</code>, you can also use it directly:
 </p>
 <table><tr><td>&nbsp;</td><td><pre class="example">InputStream inputStream = ...
 ContentInfo info = util.findMatch(inputStream);
 </pre></td></tr></table>
 
-<p>For the file and stream versions, the first 10k of the data is read and processed.
+<a name="index-ContentInfoInputStreamWrapper"></a>
+<a name="index-wrapped-input-stream"></a>
+<a name="index-delegate-to-input-stream"></a>
+<a name="index-input-stream-wrapper"></a>
+<p>If you want to process a stream of bytes as the bytes are being read, you can use the <code>ContentInfoInputStreamWrapper</code>
+utility class.  This takes an <code>InputStream</code> which it wraps and delegates to.  After you have read the bytes through
+the wrapper, you can call the <code>findMatch()</code> method to get its content information.
+</p>
+<table><tr><td>&nbsp;</td><td><pre class="example">HttpServletRequest request = ...
+ContentInfoInputStreamWrapper inputStream
+   = new ContentInfoInputStreamWrapper(request.getInputStream());
+// read in the file from the http request, ...
+// after we have read it in, we can get its content-info 
+ContentInfo info = inputStream.findMatch();
+</pre></td></tr></table>
+
+<p>For the file and stream versions, the first 10 kilobytes of the data is read and processed.
 </p>
 <hr size="6">
 <a name="Content-Info"></a>
@@ -406,9 +425,13 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
 <br>
 <a href="#Index-of-Concepts-1_cp_letter-A" class="summary-letter"><b>A</b></a>
  &nbsp; 
+<a href="#Index-of-Concepts-1_cp_letter-B" class="summary-letter"><b>B</b></a>
+ &nbsp; 
 <a href="#Index-of-Concepts-1_cp_letter-C" class="summary-letter"><b>C</b></a>
  &nbsp; 
 <a href="#Index-of-Concepts-1_cp_letter-D" class="summary-letter"><b>D</b></a>
+ &nbsp; 
+<a href="#Index-of-Concepts-1_cp_letter-F" class="summary-letter"><b>F</b></a>
  &nbsp; 
 <a href="#Index-of-Concepts-1_cp_letter-G" class="summary-letter"><b>G</b></a>
  &nbsp; 
@@ -441,12 +464,20 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
 <tr><td></td><td valign="top"><a href="#index-alternative-magic-files">alternative magic files</a></td><td valign="top"><a href="#Loading-Magic-Entries">2.2 How To Load Magic Entries</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-author">author</a></td><td valign="top"><a href="#Top">SimpleMagic</a></td></tr>
 <tr><td colspan="3"> <hr></td></tr>
+<tr><th><a name="Index-of-Concepts-1_cp_letter-B">B</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-byte-array-content">byte array content</a></td><td valign="top"><a href="#Finding-Content-Info">2.3 How To Find The Content Info</a></td></tr>
+<tr><td colspan="3"> <hr></td></tr>
 <tr><th><a name="Index-of-Concepts-1_cp_letter-C">C</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-ContentInfoInputStreamWrapper">ContentInfoInputStreamWrapper</a></td><td valign="top"><a href="#Finding-Content-Info">2.3 How To Find The Content Info</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-ContentInfoUtil">ContentInfoUtil</a></td><td valign="top"><a href="#Quick-Start">1. Start Using Quickly</a></td></tr>
 <tr><td colspan="3"> <hr></td></tr>
 <tr><th><a name="Index-of-Concepts-1_cp_letter-D">D</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-default-magic-entries">default magic entries</a></td><td valign="top"><a href="#Loading-Magic-Entries">2.2 How To Load Magic Entries</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-delegate-to-input-stream">delegate to input stream</a></td><td valign="top"><a href="#Finding-Content-Info">2.3 How To Find The Content Info</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-downloading-the-jars">downloading the jars</a></td><td valign="top"><a href="#Downloading">2.1 Downloading Jar</a></td></tr>
+<tr><td colspan="3"> <hr></td></tr>
+<tr><th><a name="Index-of-Concepts-1_cp_letter-F">F</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-file-content">file content</a></td><td valign="top"><a href="#Finding-Content-Info">2.3 How To Find The Content Info</a></td></tr>
 <tr><td colspan="3"> <hr></td></tr>
 <tr><th><a name="Index-of-Concepts-1_cp_letter-G">G</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-getting-started">getting started</a></td><td valign="top"><a href="#Quick-Start">1. Start Using Quickly</a></td></tr>
@@ -457,6 +488,8 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
 <tr><td></td><td valign="top"><a href="#index-how-to-use">how to use</a></td><td valign="top"><a href="#Using">2. Using SimpleMagic</a></td></tr>
 <tr><td colspan="3"> <hr></td></tr>
 <tr><th><a name="Index-of-Concepts-1_cp_letter-I">I</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-input-stream-content">input stream content</a></td><td valign="top"><a href="#Finding-Content-Info">2.3 How To Find The Content Info</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-input-stream-wrapper">input stream wrapper</a></td><td valign="top"><a href="#Finding-Content-Info">2.3 How To Find The Content Info</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-introduction">introduction</a></td><td valign="top"><a href="#Top">SimpleMagic</a></td></tr>
 <tr><td colspan="3"> <hr></td></tr>
 <tr><th><a name="Index-of-Concepts-1_cp_letter-L">L</a></th><td></td><td></td></tr>
@@ -482,6 +515,7 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
 <tr><td colspan="3"> <hr></td></tr>
 <tr><th><a name="Index-of-Concepts-1_cp_letter-W">W</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-where-to-get-new-jars">where to get new jars</a></td><td valign="top"><a href="#Downloading">2.1 Downloading Jar</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-wrapped-input-stream">wrapped input stream</a></td><td valign="top"><a href="#Finding-Content-Info">2.3 How To Find The Content Info</a></td></tr>
 <tr><td colspan="3"> <hr></td></tr>
 </table>
 <table><tr><th valign="top">Jump to: &nbsp; </th><td><a href="#Index-of-Concepts-1_cp_symbol-1" class="summary-letter"><b>/</b></a>
@@ -489,9 +523,13 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
 <br>
 <a href="#Index-of-Concepts-1_cp_letter-A" class="summary-letter"><b>A</b></a>
  &nbsp; 
+<a href="#Index-of-Concepts-1_cp_letter-B" class="summary-letter"><b>B</b></a>
+ &nbsp; 
 <a href="#Index-of-Concepts-1_cp_letter-C" class="summary-letter"><b>C</b></a>
  &nbsp; 
 <a href="#Index-of-Concepts-1_cp_letter-D" class="summary-letter"><b>D</b></a>
+ &nbsp; 
+<a href="#Index-of-Concepts-1_cp_letter-F" class="summary-letter"><b>F</b></a>
  &nbsp; 
 <a href="#Index-of-Concepts-1_cp_letter-G" class="summary-letter"><b>G</b></a>
  &nbsp; 
@@ -550,7 +588,7 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
 </tr></table>
 <h1>About This Document</h1>
 <p>
-  This document was generated by <em>Gray Watson</em> on <em>May 16, 2013</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.82</em></a>.
+  This document was generated by <em>Gray Watson</em> on <em>May 24, 2013</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.82</em></a>.
 </p>
 <p>
   The buttons in the navigation panels have the following meaning:
@@ -652,7 +690,7 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
 <hr size="1">
 <p>
  <font size="-1">
-  This document was generated by <em>Gray Watson</em> on <em>May 16, 2013</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.82</em></a>.
+  This document was generated by <em>Gray Watson</em> on <em>May 24, 2013</em> using <a href="http://www.nongnu.org/texi2html/"><em>texi2html 1.82</em></a>.
  </font>
  <br>
 
