@@ -20,7 +20,7 @@ public enum ContentType {
 	/** ARC archive data */
 	ARC("application/x-arc", "arc", "arc"),
 	/** MPEG audio file */
-	AUDIO_MPEG("audio/mpeg", "mpeg", "mpeg", "mpg", "mpga", "mp2", "mp2a", "mp3", "m2a", "m3a"),
+	AUDIO_MPEG("audio/mpeg", "mpeg", "mpga", "mp2", "mp2a", "mp3", "m2a", "m3a"),
 	/** Microsoft AVI video file */
 	AVI("video/x-msvideo", "avi", "avi"),
 	/** Unix AWK command script */
@@ -50,7 +50,7 @@ public enum ContentType {
 	/** TeX DVI output file */
 	DVI("application/x-dvi", "dvi", "dvi"),
 	/** Macromedia Flash data */
-	FLASH("application/x-shockwave-flash", "flash"),
+	FLASH("application/x-shockwave-flash", "flash", "swf"),
 	/** Macromedia Flash movie file */
 	FLASH_VIDEO("video/x-flv", "flash-video", "flv"),
 	/** FORTRAN program */
@@ -78,7 +78,7 @@ public enum ContentType {
 	/** MS Windows icon resource */
 	ICO("image/x-ico", "ico", "ico"),
 	/** ISO 9660 CD-ROM filesystem data */
-	ISO_9660("application/x-iso9660-image", "iso9660"),
+	ISO_9660("application/x-iso9660-image", "iso9660", "iso"),
 	/** Java applet */
 	JAVA_APPLET("application/x-java-applet", "applet"),
 	/** Java keystore file */
@@ -94,7 +94,7 @@ public enum ContentType {
 	/** Lotus 123 spreadsheet */
 	LOTUS_123("application/x-123", "lotus-123", "123"),
 	/** Microsoft access database */
-	MICROSOFT_ACCESS("application/x-msaccess", "access"),
+	MICROSOFT_ACCESS("application/x-msaccess", "access", "mdb"),
 	/** Microsoft excel spreadsheet */
 	MICROSOFT_EXCEL("application/vnd.ms-excel", "excel", "xls", "xlm", "xla", "xlc", "xlt", "xlw"),
 	/** Microsoft word document */
@@ -116,7 +116,7 @@ public enum ContentType {
 	/** PBM image */
 	PBM("image/x-portable-bitmap", "pbm", "pbm"),
 	/** PDF document */
-	PDF("application/pdf", "pdf", "pbm"),
+	PDF("application/pdf", "pdf"),
 	/** Perl script */
 	PERL("text/x-perl", "perl", "pl"),
 	/** PGM image */
@@ -128,7 +128,7 @@ public enum ContentType {
 	/** PGP signature */
 	PGP_SIGNATURE("application/pgp-signature", "pgp-signature"),
 	/** Photoshop image */
-	PHOTOSHOP("image/vnd.adobe.photoshop", "photoshop"),
+	PHOTOSHOP("image/vnd.adobe.photoshop", "photoshop", "psd"),
 	/** PHP script */
 	PHP("text/x-php", "php", "php"),
 	/** PNG image */
@@ -142,9 +142,9 @@ public enum ContentType {
 	/** Real-audio file */
 	REAL_AUDIO("audio/x-pn-realaudio", "real-audio", "ram", "ra"),
 	/** Real-media file */
-	REAL_MEDIA("application/vnd.rn-realmedia", "real-media"),
+	REAL_MEDIA("application/vnd.rn-realmedia", "real-media", "rm"),
 	/** RFC822 news message */
-	RFC822("message/rfc822", "rfc822"),
+	MIME("message/rfc822", "mime", "eml", "mime"),
 	/** RedHat package file */
 	RPM("application/x-rpm", "rpm", "rpm"),
 	/** Rich text format document */
@@ -154,7 +154,7 @@ public enum ContentType {
 	/** Unix shell script */
 	SHELL_SCRIPT("text/x-shellscript", "shell-script", "sh"),
 	/** Mac Stuffit archive data */
-	STUFFIT("application/x-stuffit", "stuffit"),
+	STUFFIT("application/x-stuffit", "stuffit", "sit"),
 	/** SVG image */
 	SVG("image/svg+xml", "svg", "svg", "svgz"),
 	/** TAR archive data */
@@ -168,7 +168,7 @@ public enum ContentType {
 	/** Troff document */
 	TROFF("text/troff", "troff", "t", "tr", "roff", "man", "me", "ms"),
 	/** vCard visiting card */
-	VCARD("text/x-vcard", "vcard"),
+	VCARD("text/x-vcard", "vcard", "vcf"),
 	/** Mpeg video */
 	VIDEO_MPEG("video/mpeg", "mpeg", "mpeg", "mpg", "mpe", "m1v", "m2v"),
 	/** VRML modeling file */
@@ -176,7 +176,7 @@ public enum ContentType {
 	/** WAV audio */
 	WAV("audio/x-wav", "wav", "wav"),
 	/** X3D modeling file */
-	X3D("model/x3d", "x3d", "x3d"),
+	X3D("model/x3d", "x3d", "x3d", "x3dz"),
 	/** XML document */
 	XML("application/xml", "xml", "xml", "xsl"),
 	/** Zip archive data */
@@ -186,9 +186,11 @@ public enum ContentType {
 
 	/**
 	 * Copied from http://svn.apache.org/viewvc/httpd/httpd/trunk/docs/conf/mime.types?view=co
+	 * 
+	 * FYI: many of these are not in the built in magic rules file.
 	 */
 	ANDREW_INSERT("application/andrew-inset", "andrew-insert", "ez"),
-	APPLIXWARE("application/applixware", "applixware", "aw", "aw"),
+	APPLIXWARE("application/applixware", "applixware", "aw"),
 	ATOM("application/atom+xml", "atom", "atom"),
 	CU_SEEME("application/cu-seeme", "cu-seeme", "cu"),
 	DOCBOOK("application/docbook+xml", "docbook", "dbk"),
@@ -543,7 +545,6 @@ public enum ContentType {
 	MUSICXML("application/vnd.recordare.musicxml+xml", "musicxml", "musicxml"),
 	CRYPTONOTE("application/vnd.rig.cryptonote", "cryptonote", "cryptonote"),
 	COD("application/vnd.rim.cod", "cod", "cod"),
-	RM("application/vnd.rn-realmedia", "rm", "rm"),
 	RMVB("application/vnd.rn-realmedia-vbr", "rmvb", "rmvb"),
 	LINK66("application/vnd.route66.link66+xml", "link66", "link66"),
 	ST("application/vnd.sailingtracker.track", "st", "st"),
@@ -666,7 +667,6 @@ public enum ContentType {
 	GTAR("application/x-gtar", "gtar", "gtar"),
 	HDF("application/x-hdf", "hdf", "hdf"),
 	INSTALL("application/x-install-instructions", "install", "install"),
-	ISO("application/x-iso9660-image", "iso", "iso"),
 	JNLP("application/x-java-jnlp-file", "jnlp", "jnlp"),
 	LATEX("application/x-latex", "latex", "latex"),
 	MIE("application/x-mie", "mie", "mie"),
@@ -676,7 +676,6 @@ public enum ContentType {
 	WMD("application/x-ms-wmd", "wmd", "wmd"),
 	WMZ("application/x-ms-wmz", "wmz", "wmz"),
 	XBAP("application/x-ms-xbap", "xbap", "xbap"),
-	MDB("application/x-msaccess", "mdb", "mdb"),
 	OBD("application/x-msbinder", "obd", "obd"),
 	CRD("application/x-mscardfile", "crd", "crd"),
 	CLP("application/x-msclip", "clp", "clp"),
@@ -691,12 +690,11 @@ public enum ContentType {
 	PKCS7_CERTIFICATES("application/x-pkcs7-certificates", "pkcs7-certificates", "p7b", "spc"),
 	P7R("application/x-pkcs7-certreqresp", "p7r", "p7r"),
 	RIS("application/x-research-info-systems", "ris", "ris"),
-	SH("application/x-sh", "sh", "sh"),
+	// extensions defined in SHELL_SCRIPT
+	SH("application/x-sh", "sh"),
 	SHAR("application/x-shar", "shar", "shar"),
-	SWF("application/x-shockwave-flash", "swf", "swf"),
 	XAP("application/x-silverlight-app", "xap", "xap"),
 	SQL("application/x-sql", "sql", "sql"),
-	SIT("application/x-stuffit", "sit", "sit"),
 	SITX("application/x-stuffitx", "sitx", "sitx"),
 	SRT("application/x-subrip", "srt", "srt"),
 	SV4CPIO("application/x-sv4cpio", "sv4cpio", "sv4cpio"),
@@ -763,9 +761,9 @@ public enum ContentType {
 	KTX("image/ktx", "ktx", "ktx"),
 	BTIF("image/prs.btif", "btif", "btif"),
 	SGI("image/sgi", "sgi", "sgi"),
-	PSD("image/vnd.adobe.photoshop", "psd", "psd"),
 	DECE_GRAPHIC("image/vnd.dece.graphic", "dece-graphic", "uvi", "uvvi", "uvg", "uvvg"),
-	SUB("image/vnd.dvb.subtitle", "sub", "sub"),
+	// extensions in DVB_SUBTITLE
+	SUB("image/vnd.dvb.subtitle", "sub"),
 	DJVU("image/vnd.djvu", "djvu", "djvu", "djv"),
 	DWG("image/vnd.dwg", "dwg", "dwg"),
 	DXF("image/vnd.dxf", "dxf", "dxf"),
@@ -792,7 +790,6 @@ public enum ContentType {
 	XBM("image/x-xbitmap", "xbm", "xbm"),
 	XPM("image/x-xpixmap", "xpm", "xpm"),
 	XWD("image/x-xwindowdump", "xwd", "xwd"),
-	MIME("message/rfc822", "mime", "eml", "mime"),
 	IGES("model/iges", "iges", "igs", "iges"),
 	MESH("model/mesh", "mesh", "msh", "mesh", "silo"),
 	DAE("model/vnd.collada+xml", "dae", "dae"),
@@ -803,7 +800,8 @@ public enum ContentType {
 	VTU("model/vnd.vtu", "vtu", "vtu"),
 	X3D_BINARY("model/x3d+binary", "x3d-binary", "x3db", "x3dbz"),
 	X3D_VRML("model/x3d+vrml", "x3d-vrml", "x3dv", "x3dvz"),
-	X3D_XML("model/x3d+xml", "x3d-xml", "x3d", "x3dz"),
+	// extensions in X3D
+	X3D_XML("model/x3d+xml", "x3d-xml"),
 	CALENDAR("text/calendar", "calendar", "ics", "ifb"),
 	CSS("text/css", "css", "css"),
 	CSV("text/csv", "csv", "csv"),
@@ -836,7 +834,6 @@ public enum ContentType {
 	SFV("text/x-sfv", "sfv", "sfv"),
 	UU("text/x-uuencode", "uu", "uu"),
 	VCS("text/x-vcalendar", "vcs", "vcs"),
-	VCF("text/x-vcard", "vcf", "vcf"),
 	THREE_GP("video/3gpp", "3gp", "3gp"),
 	THREE_G2("video/3gpp2", "3g2", "3g2"),
 	H261("video/h261", "h261", "h261"),
@@ -859,7 +856,6 @@ public enum ContentType {
 	WEBM("video/webm", "webm", "webm"),
 	F4V("video/x-f4v", "f4v", "f4v"),
 	FLI("video/x-fli", "fli", "fli"),
-	FLV("video/x-flv", "flv", "flv"),
 	M4V("video/x-m4v", "m4v", "m4v"),
 	MATROSKA("video/x-matroska", "matroska", "mkv", "mk3d", "mks"),
 	MICROSOFT_ASF("video/x-ms-asf", "asf", "asf", "asx"),
@@ -908,6 +904,14 @@ public enum ContentType {
 	 */
 	public String getSimpleName() {
 		return simpleName;
+	}
+
+	public String getMimeType() {
+		return mimeType;
+	}
+
+	public String[] getFileExtensions() {
+		return fileExtensions;
 	}
 
 	/**
