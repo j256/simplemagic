@@ -104,7 +104,7 @@ public enum ContentType {
 	/** MNG video */
 	MNG("video/x-mng", "mng", "mng"),
 	/** MP4 encoded video */
-	MP4A("video/mp4", "mp4a", "mp4", "mp4a"),
+	MP4A("video/mp4", "mp4a", "mp4", "mp4a", "mpg4"),
 	/** MP4V encoded video */
 	MP4V("video/mp4v-es", "mp4v", "mp4v"),
 	/** New Awk script */
@@ -510,7 +510,7 @@ public enum ContentType {
 	OPENDOCUMENT_TEXT("application/vnd.oasis.opendocument.text", "opendocument-text", "odt"),
 	OPENDOCUMENT_TEXT_MASTER("application/vnd.oasis.opendocument.text-master", "opendocument-text-master", "odm"),
 	OPENDOCUMENT_TEXT_TEMPLATE("application/vnd.oasis.opendocument.text-template", "opendocument-text-template", "ott"),
-	OTH("application/vnd.oasis.opendocument.text-web", "oth", "oth"),
+	OPENDOCUMENT_TEXT_WEB("application/vnd.oasis.opendocument.text-web", "opendocument-text-web", "oth"),
 	XO("application/vnd.olpc-sugar", "xo", "xo"),
 	DD2("application/vnd.oma.dd2+xml", "dd2", "dd2"),
 	OXT("application/vnd.openofficeorg.extension", "oxt", "oxt"),
@@ -844,7 +844,6 @@ public enum ContentType {
 	JPGV("video/jpeg", "jpgv", "jpgv"),
 	JPM("video/jpm", "jpm", "jpm", "jpgm"),
 	MJ2("video/mj2", "mj2", "mj2", "mjp2"),
-	MP4("video/mp4", "mp4 mp4v mpg4", "mp4", "mp4v", "mpg4"),
 	OGV("video/ogg", "ogv", "ogv"),
 	DECE_HD("video/vnd.dece.hd", "dece-hd", "uvh", "uvvh"),
 	DECE_MOBILE("video/vnd.dece.mobile", "dece-mobile", "uvm", "uvvm"),
