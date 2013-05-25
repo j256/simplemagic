@@ -182,6 +182,7 @@ Once you have loaded the magic entry information into your @code{ContentInfoUtil
 the content info of files, byte arrays, or @code{InputStream}s.  The base method gets content info information from a
 @code{byte[]}.
 
+@cindex byte array content
 @example
 byte[] uploadedBytes = ...;
 ContentInfo info = util.findMatch(uploadedBytes);
@@ -189,12 +190,14 @@ ContentInfo info = util.findMatch(uploadedBytes);
 
 You can also get the content type of a file which is read with a @code{FileInputStream}:
 
+@cindex file content
 @example
 ContentInfo info = util.findMatch("/tmp/uploadedFile.tmp");
 // File uploadedFile = ...
 // ContentInfo info = util.findMatch(uploadedFile);
 @end example
 
+@cindex input stream content
 If you have an @code{InputStream}, you can also use it directly:
 
 @example
@@ -202,6 +205,10 @@ InputStream inputStream = ...
 ContentInfo info = util.findMatch(inputStream);
 @end example
 
+@cindex ContentInfoInputStreamWrapper
+@cindex wrapped input stream
+@cindex delegate to input stream
+@cindex input stream wrapper
 If you want to process a stream of bytes as the bytes are being read, you can use the @code{ContentInfoInputStreamWrapper}
 utility class.  This takes an @code{InputStream} which it wraps and delegates to.  After you have read the bytes through
 the wrapper, you can call the @code{findMatch()} method to get its content information.
@@ -215,7 +222,7 @@ ContentInfoInputStreamWrapper inputStream
 ContentInfo info = inputStream.findMatch();
 @end example
 
-For the file and stream versions, the first 10k of the data is read and processed.
+For the file and stream versions, the first 10 kilobytes of the data is read and processed.
 
 @c ----------------------------------------------------------------
 @node Content Info, License, Finding Content Info, Using
