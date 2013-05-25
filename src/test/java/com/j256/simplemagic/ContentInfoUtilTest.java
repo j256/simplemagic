@@ -95,10 +95,28 @@ public class ContentInfoUtilTest {
 	// }
 
 	@Test
-	public void testDownloadsDir() throws Exception {
+	public void testExtensions() {
+		assertNull(ContentInfoUtil.findExtensionMatch("hello"));
+		assertEquals(ContentType.HTML, ContentInfoUtil.findExtensionMatch("html").getContentType());
+		assertEquals(ContentType.HTML, ContentInfoUtil.findExtensionMatch("INDEX.HTM").getContentType());
+	}
+
+	@Test
+	public void testMimeType() {
+		assertNull(ContentInfoUtil.findMimeTypeMatch("something/foo"));
+		assertEquals(ContentType.HTML, ContentInfoUtil.findMimeTypeMatch("text/html").getContentType());
+		assertEquals(ContentType.HTML, ContentInfoUtil.findMimeTypeMatch("TEXT/HTML").getContentType());
+	}
+
+	@Test
+	public void testLocalDownloadsDir() throws Exception {
 		ContentInfoUtil util = new ContentInfoUtil();
 		String homeDir = System.getenv("HOME");
-		for (File file : new File(homeDir + "/Downloads").listFiles()) {
+		File downloadDir = new File(homeDir + "/Downloads");
+		if (!downloadDir.isDirectory()) {
+			return;
+		}
+		for (File file : downloadDir.listFiles()) {
 			if (file.isFile()) {
 				ContentInfo type = util.findMatch(file);
 				System.out.println(file + " = " + type);

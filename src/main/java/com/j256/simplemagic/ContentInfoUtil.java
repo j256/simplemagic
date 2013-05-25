@@ -206,6 +206,49 @@ public class ContentInfoUtil {
 	}
 
 	/**
+	 * Return the content type if the extension from the file-name matches our internal list. This can either be just
+	 * the extension part or it will look for the last period and take the string after that as the extension.
+	 * 
+	 * @return The matching content-info or null if no matches.
+	 */
+	public static ContentInfo findExtensionMatch(String name) {
+		name = name.toLowerCase();
+
+		// look up the whole name first
+		ContentType type = ContentType.fromFileExtension(name);
+		if (type != ContentType.OTHER) {
+			return new ContentInfo(type);
+		}
+
+		// now find the .ext part
+		int index = name.lastIndexOf('.');
+		if (index < 0 || index == name.length() - 1) {
+			return null;
+		}
+
+		type = ContentType.fromFileExtension(name.substring(index + 1));
+		if (type == ContentType.OTHER) {
+			return null;
+		} else {
+			return new ContentInfo(type);
+		}
+	}
+
+	/**
+	 * Return the content type if the mime-type matches our internal list.
+	 * 
+	 * @return The matching content-info or null if no matches.
+	 */
+	public static ContentInfo findMimeTypeMatch(String mimeType) {
+		ContentType type = ContentType.fromMimeType(mimeType.toLowerCase());
+		if (type == ContentType.OTHER) {
+			return null;
+		} else {
+			return new ContentInfo(type);
+		}
+	}
+
+	/**
 	 * Set the default size that will be read if we are getting the content from a file. The default is most likely 10k.
 	 */
 	public void setFileReadSize(int fileReadSize) {

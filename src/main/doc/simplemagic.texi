@@ -6,7 +6,7 @@
 @c %**end of header
 
 @c ----------------------------------------------------------------
-@set simplemagic_version 1.1
+@set simplemagic_version 1.2
 @set simplemagic_year 2013
 @set simplemagic_date May @value{simplemagic_year}
 @set package SimpleMagic
@@ -101,6 +101,7 @@ entries then it will return a @code{ContentInfo} class which provides:
 @item Approximate content-name
 @item Full message produced by the magic file
 @item Mime-type string if one configured by the config file
+@item Associated file extensions if any associated
 @end itemize
 
 Here are some examples of @code{ContentInfo} output:
@@ -224,6 +225,36 @@ ContentInfo info = inputStream.findMatch();
 
 For the file and stream versions, the first 10 kilobytes of the data is read and processed.
 
+There is also a long internal list of file types copied from the Apache list --
+@uref{http://svn.apache.org/viewvc/httpd/httpd/trunk/docs/conf/mime.types?view=co}.  Not all of the files in this list
+have associated magic number information.  However, with the list you can look up mime-types or by file-extension and
+get the associated information. 
+
+@cindex file extensions
+@cindex extensions
+You can use the internal list to lookup by file-extension:
+
+@example
+// find details about files with .pdf extension
+ContentInfo info =
+   ContentInfoUtil.findExtensionMatch("file.pdf");
+// you can even just pass in the extension name
+ContentInfo info =
+   ContentInfoUtil.findExtensionMatch("DOC");
+@end example
+
+@cindex mime-type
+Or you can look up by mime-type:
+
+@example
+// find details about this mime-type
+ContentInfo info =
+   ContentInfoUtil.findMimeTypeMatch("image/vnd.dwg");
+@end example
+
+Some internal entries provide more information than others.  This list is a work in progress.  Please submit improvements
+and edits as necessary.
+
 @c ----------------------------------------------------------------
 @node Content Info, License, Finding Content Info, Using
 @section Content Information
@@ -237,22 +268,26 @@ mime-type string to an internal enumerated type and is not determined from the m
 @item Approximate content-name.  If the content-type is known then this will be a constant string.  If not know then this
 is usually the first word of the full message from the magic file. 
 @item Details about the content produced by the magic file.
+@cindex mime-type
 @item Mime-type string if one configured by the config file.
+@cindex file extensions
+@cindex extensions
+@item Associated file-extensions if in the internal list.
 @end itemize
 
 Here are some examples of @code{ContentInfo} output:
 
 @itemize @bullet
-@item HTML, mime 'text/html', msg 'HTML document text'
-@item Java, msg 'Java serialization data, version 5'
-@item PDF, mime 'application/pdf', msg 'PDF document, version 1.4'
+@item html, mime 'text/html', msg 'HTML document text'
+@item java, msg 'Java serialization data, version 5'
+@item pdf, mime 'application/pdf', msg 'PDF document, version 1.4'
 @item gzip, mime 'application/x-gzip', msg 'gzip compressed data, was "", from Unix...'
-@item GIF, mime 'image/gif', msg 'GIF image data, version 89a, 16 x 16'
-@item PNG, mime 'image/png', msg 'PNG image, 600 x 371, 8-bit/color RGB, non-interlaced'
-@item ISO, mime 'audio/mp4', msg 'ISO Media, MPEG v4 system, iTunes AAC-LC'
-@item Microsoft, mime 'application/msword', msg 'Microsoft Word Document'
-@item RIFF, mime 'audio/x-wav', msg 'RIFF (little-endian) data, WAVE audio...'
-@item JPEG, mime 'image/jpeg', msg 'JPEG image data, JFIF standard 1.01'
+@item gif, mime 'image/gif', msg 'GIF image data, version 89a, 16 x 16'
+@item png, mime 'image/png', msg 'PNG image, 600 x 371, 8-bit/color RGB, non-interlaced'
+@item mp4a, mime 'audio/mp4', msg 'ISO Media, MPEG v4 system, iTunes AAC-LC'
+@item word, mime 'application/msword', msg 'Microsoft Word Document'
+@item wav, mime 'audio/x-wav', msg 'RIFF (little-endian) data, WAVE audio...'
+@item jpeg, mime 'image/jpeg', msg 'JPEG image data, JFIF standard 1.01'
 @end itemize
 
 @c ----------------------------------------------------------------
