@@ -1,5 +1,7 @@
 package com.j256.simplemagic;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,5 +35,11 @@ public class ContentTypeTest {
 				}
 			}
 		}
+	}
+
+	@Test
+	public void testFileExtensions() {
+		assertEquals(ContentType.GIF, ContentType.fromFileExtension("gif"));
+		assertEquals(ContentType.OTHER, ContentType.fromFileExtension("xyzzy"));
 	}
 }

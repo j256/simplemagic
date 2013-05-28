@@ -77,12 +77,6 @@ public class ContentInfoUtilTest {
 		}
 	}
 
-	@Test
-	public void testFileExtensions() {
-		assertEquals(ContentType.GIF, ContentType.fromFileExtension("gif"));
-		assertEquals(ContentType.OTHER, ContentType.fromFileExtension("xyzzy"));
-	}
-
 	// @Test
 	// public void testSpecial() throws Exception {
 	// ContentInfoUtil util = new ContentInfoUtil("/tmp/x", new ErrorCallBack() {
