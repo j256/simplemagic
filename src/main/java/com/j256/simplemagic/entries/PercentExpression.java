@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Representation of our percent expression used by the {@link Formatter} class.
+ * Representation of our percent expression used by the {@link MagicFormatter} class.
  * 
  * @author graywatson
  */
@@ -16,7 +16,7 @@ public class PercentExpression {
 	private final static String SPACE_CHARS = "                                                                      ";
 
 	private final static Pattern FORMAT_PATTERN = Pattern.compile("%([0#+ -]*)([0-9]*)(\\.([0-9]+))?(["
-			+ Formatter.PATTERN_MODIFIERS + "]*)([" + Formatter.FINAL_PATTERN_CHARS + "])");
+			+ MagicFormatter.PATTERN_MODIFIERS + "]*)([" + MagicFormatter.FINAL_PATTERN_CHARS + "])");
 
 	private final String expression;
 	private final boolean justValue;
@@ -33,7 +33,7 @@ public class PercentExpression {
 	private final Format altDecimalFormat;
 
 	/**
-	 * Package permissions because the {@link Formatter} should only be constructing it.
+	 * Package permissions because the {@link MagicFormatter} should only be constructing it.
 	 */
 	PercentExpression(String expression) {
 		this.expression = expression;

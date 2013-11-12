@@ -32,5 +32,5 @@ public interface MagicMatcher {
 	/**
 	 * Returns the string version of the extracted value.
 	 */
-	public void renderValue(StringBuilder sb, Object extractedValue, Formatter formatter);
+	public void renderValue(StringBuilder sb, Object extractedValue, MagicFormatter formatter);
 }
