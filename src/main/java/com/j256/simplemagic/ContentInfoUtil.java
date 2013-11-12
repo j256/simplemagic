@@ -54,6 +54,8 @@ public class ContentInfoUtil {
 	 * Construct a magic utility using the internal magic file built into the package. This also allows the caller to
 	 * log any errors discovered in the file(s).
 	 * 
+	 * @param errorCallBack
+	 *            Call back which shows any problems with the magic entries loaded.
 	 * @throws IllegalStateException
 	 *             If there was a problem reading the magic entries from the internal magic file.
 	 */
@@ -61,10 +63,13 @@ public class ContentInfoUtil {
 		this.errorCallBack = errorCallBack;
 		if (internalMagicEntries == null) {
 			try {
-				internalMagicEntries = loadInternalEntries();
+				internalMagicEntries = readEntriesFromResource(INTERNAL_MAGIC_FILE);
 			} catch (IOException e) {
 				throw new IllegalStateException("Could not load entries from internal magic file: "
 						+ INTERNAL_MAGIC_FILE, e);
+			}
+			if (internalMagicEntries == null) {
+				throw new IllegalStateException("Internal magic file not found in class-path: " + INTERNAL_MAGIC_FILE);
 			}
 		}
 		this.magicEntries = internalMagicEntries;
@@ -73,6 +78,8 @@ public class ContentInfoUtil {
 	/**
 	 * Construct a magic utility using the magic files from a file or a directory of files.
 	 * 
+	 * @param fileOrDirectoryOrResourcePath
+	 *            A path which can be a magic file, or a directory of magic files, or a magic file in a resource path.
 	 * @throws IOException
 	 *             If there was a problem reading the magic entries from the internal magic file.
 	 */
@@ -84,16 +91,32 @@ public class ContentInfoUtil {
 	 * Construct a magic utility using the magic files from a file or a directory of files. This also allows the caller
 	 * to log any errors discovered in the file(s).
 	 * 
+	 * @param fileOrDirectoryOrResourcePath
+	 *            A path which can be a magic file, or a directory of magic files, or a magic file in a resource path.
+	 * @param errorCallBack
+	 *            Call back which shows any problems with the magic entries loaded.
 	 * @throws IOException
 	 *             If there was a problem reading the magic entries from the internal magic file.
 	 */
-	public ContentInfoUtil(String fileOrDirectoryPath, ErrorCallBack errorCallBack) throws IOException {
-		this(new File(fileOrDirectoryPath), errorCallBack);
+	public ContentInfoUtil(String fileOrDirectoryOrResourcePath, ErrorCallBack errorCallBack) throws IOException {
+		this.errorCallBack = errorCallBack;
+		List<MagicEntry> magicEntries = readEntriesFromResource(fileOrDirectoryOrResourcePath);
+		if (magicEntries == null) {
+			File file = new File(fileOrDirectoryOrResourcePath);
+			magicEntries = readEntriesFromFile(file);
+		}
+		if (magicEntries == null) {
+			throw new IllegalArgumentException("Magic path specified is not a file, directory, or resource: "
+					+ fileOrDirectoryOrResourcePath);
+		}
+		this.magicEntries = magicEntries;
 	}
 
 	/**
 	 * Construct a magic utility using the magic files from a file or a directory of files.
 	 * 
+	 * @param fileOrDirectory
+	 *            A path which can be a magic file, or a directory of magic files.
 	 * @throws IOException
 	 *             If there was a problem reading the magic entries from the internal magic file.
 	 */
@@ -105,36 +128,20 @@ public class ContentInfoUtil {
 	 * Construct a magic utility using the magic files from a file or a directory of files. This also allows the caller
 	 * to log any errors discovered in the file(s).
 	 * 
+	 * @param fileOrDirectory
+	 *            A path which can be a magic file, or a directory of magic files.
+	 * @param errorCallBack
+	 *            Call back which shows any problems with the magic entries loaded.
 	 * @throws IOException
 	 *             If there was a problem reading the magic entries from the internal magic file.
 	 */
 	public ContentInfoUtil(File fileOrDirectory, ErrorCallBack errorCallBack) throws IOException {
 		this.errorCallBack = errorCallBack;
-		List<MagicEntry> entryList = new ArrayList<MagicEntry>();
-		if (fileOrDirectory.isFile()) {
-			FileReader reader = new FileReader(fileOrDirectory);
-			try {
-				readFile(entryList, reader);
-			} finally {
-				closeQuietly(reader);
-			}
-		} else if (fileOrDirectory.isDirectory()) {
-			for (File subFile : fileOrDirectory.listFiles()) {
-				FileReader reader = null;
-				try {
-					reader = new FileReader(subFile);
-					readFile(entryList, reader);
-				} catch (IOException e) {
-					// ignore the file
-				} finally {
-					closeQuietly(reader);
-				}
-			}
-		} else {
-			throw new IllegalArgumentException("Magic file directory specified is not a file or directory: "
+		this.magicEntries = readEntriesFromFile(fileOrDirectory);
+		if (this.magicEntries == null) {
+			throw new IllegalArgumentException("Magic path specified is not a file, directory, or resource: "
 					+ fileOrDirectory);
 		}
-		magicEntries = entryList;
 	}
 
 	/**
@@ -196,13 +203,23 @@ public class ContentInfoUtil {
 	 * Return the content type from the associated bytes or null if none of the magic entries matched.
 	 */
 	public ContentInfo findMatch(byte[] bytes) {
+		ContentInfo partialMatch = null;
 		for (MagicEntry entry : magicEntries) {
 			ContentInfo info = entry.processBytes(bytes);
-			if (info != null) {
+			if (info == null) {
+				continue;
+			}
+			if (!info.isPartial()) {
+				// first non-partial wins
 				return info;
+			} else if (partialMatch == null) {
+				// first partial match wins
+				partialMatch = info;
+			} else {
+				// first partial match wins
 			}
 		}
-		return null;
+		return partialMatch;
 	}
 
 	/**
@@ -262,17 +279,49 @@ public class ContentInfoUtil {
 		this.errorCallBack = errorCallBack;
 	}
 
-	private List<MagicEntry> loadInternalEntries() throws IOException {
-		InputStream stream = getClass().getResourceAsStream(INTERNAL_MAGIC_FILE);
+	private List<MagicEntry> readEntriesFromFile(File fileOrDirectory) throws FileNotFoundException, IOException {
+		List<MagicEntry> entryList = new ArrayList<MagicEntry>();
+		if (fileOrDirectory.isFile()) {
+			FileReader reader = new FileReader(fileOrDirectory);
+			try {
+				readEntries(entryList, reader);
+			} finally {
+				closeQuietly(reader);
+			}
+		} else if (fileOrDirectory.isDirectory()) {
+			for (File subFile : fileOrDirectory.listFiles()) {
+				FileReader reader = null;
+				try {
+					reader = new FileReader(subFile);
+					readEntries(entryList, reader);
+				} catch (IOException e) {
+					// ignore the file
+				} finally {
+					closeQuietly(reader);
+				}
+			}
+		} else {
+			return null;
+		}
+		return entryList;
+	}
+
+	private List<MagicEntry> readEntriesFromResource(String resource) throws IOException {
+		InputStream stream = getClass().getResourceAsStream(resource);
 		if (stream == null) {
-			throw new FileNotFoundException("Internal magic file not found in class-path: " + INTERNAL_MAGIC_FILE);
+			return null;
 		}
 		Reader reader = null;
 		try {
-			reader = new InputStreamReader(new GZIPInputStream(new BufferedInputStream(stream)));
+			// this suffix test is here for testing purposes so we can generate a simple magic file
+			if (resource.endsWith(".gz")) {
+				reader = new InputStreamReader(new GZIPInputStream(new BufferedInputStream(stream)));
+			} else {
+				reader = new InputStreamReader(new BufferedInputStream(stream));
+			}
 			stream = null;
 			List<MagicEntry> entryList = new ArrayList<MagicEntry>();
-			readFile(entryList, reader);
+			readEntries(entryList, reader);
 			return entryList;
 		} finally {
 			closeQuietly(reader);
@@ -280,7 +329,7 @@ public class ContentInfoUtil {
 		}
 	}
 
-	private void readFile(List<MagicEntry> entryList, Reader reader) throws IOException {
+	private void readEntries(List<MagicEntry> entryList, Reader reader) throws IOException {
 		BufferedReader lineReader = new BufferedReader(reader);
 		MagicEntry previous = null;
 		while (true) {
