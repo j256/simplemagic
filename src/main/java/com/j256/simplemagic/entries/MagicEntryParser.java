@@ -292,7 +292,7 @@ public class MagicEntryParser {
 		return pos;
 	}
 
-	private static void handleSpecial(MagicEntry parent, String line, ErrorCallBack errorCallBack) {
+	private static void handleSpecial(MagicEntry previous, String line, ErrorCallBack errorCallBack) {
 		String[] parts = line.split("\\s+", 2);
 		if (parts.length < 2) {
 			if (errorCallBack != null) {
@@ -302,11 +302,11 @@ public class MagicEntryParser {
 		}
 		String key = parts[0];
 		if (key.equals(MIME_TYPE_LINE)) {
-			parent.setMimeType(parts[1]);
+			previous.setMimeType(parts[1]);
 			return;
 		}
 		if (key.equals(STRENGTH_LINE)) {
-			handleStrength(parent, line, parts[1], errorCallBack);
+			handleStrength(previous, line, parts[1], errorCallBack);
 			return;
 		}
 		key = key.substring(2);
@@ -318,7 +318,8 @@ public class MagicEntryParser {
 		}
 	}
 
-	private static void handleStrength(MagicEntry parent, String line, String strengthValue, ErrorCallBack errorCallBack) {
+	private static void handleStrength(MagicEntry previous, String line, String strengthValue,
+			ErrorCallBack errorCallBack) {
 		String[] parts = strengthValue.split("\\s+", 2);
 		if (parts.length == 0) {
 			if (errorCallBack != null) {
@@ -349,7 +350,7 @@ public class MagicEntryParser {
 			return;
 		}
 
-		int strength = parent.getStrength();
+		int strength = previous.getStrength();
 		switch (operator) {
 			case '+' :
 				strength += value;
@@ -369,7 +370,7 @@ public class MagicEntryParser {
 				}
 				return;
 		}
-		parent.setStrength(strength);
+		previous.setStrength(strength);
 	}
 
 	/**
