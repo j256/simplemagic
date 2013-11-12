@@ -1,9 +1,7 @@
 package com.j256.simplemagic.entries;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.endian.EndianConverter;
@@ -18,7 +16,9 @@ public class MagicEntry {
 
 	private static final String UNKNOWN_NAME = "unknown";
 
-	private List<MagicEntry> children;
+	// list is used while parsing entries, array is used while matching on them 
+	private List<MagicEntry> childrenList;
+	private MagicEntry[] childrenArray;
 
 	private final MagicEntry parent;
 	private final String name;
@@ -32,11 +32,10 @@ public class MagicEntry {
 	// the testValue object is defined by the particular matcher
 	private final Object testValue;
 	private final boolean formatSpacePrefix;
-	private final Formatter formatter;
+	private final MagicFormatter formatter;
 
 	private int strength;
 	private String mimeType;
-	private Map<String, String> extensionMap;
 
 	/**
 	 * Package protected constructor.
@@ -58,7 +57,7 @@ public class MagicEntry {
 		if (format == null) {
 			this.formatter = null;
 		} else {
-			this.formatter = new Formatter(format);
+			this.formatter = new MagicFormatter(format);
 		}
 		this.strength = 1;
 	}
@@ -71,7 +70,7 @@ public class MagicEntry {
 		if (data == null || data.name == UNKNOWN_NAME) {
 			return null;
 		} else {
-			return new ContentInfo(data.name, data.mimeType, data.sb.toString());
+			return new ContentInfo(data.name, data.mimeType, data.sb.toString(), data.partial);
 		}
 	}
 
@@ -99,21 +98,30 @@ public class MagicEntry {
 	}
 
 	void addChild(MagicEntry child) {
-		if (children == null) {
-			children = new ArrayList<MagicEntry>();
+		if (childrenList == null) {
+			childrenList = new ArrayList<MagicEntry>();
 		}
-		children.add(child);
+		childrenList.add(child);
+	}
+
+	/**
+	 * Called after parsing of an entry has completed. This allows us to tighten up some memory.
+	 */
+	public void parseComplete() {
+		if (childrenList != null) {
+			childrenArray = childrenList.toArray(new MagicEntry[childrenList.size()]);
+			// help gc
+			childrenList.clear();
+			childrenList = null;
+			// recurse to complete the children, and the children's children, ...
+			for (MagicEntry entry : childrenArray) {
+				entry.parseComplete();
+			}
+		}
 	}
 
 	void setMimeType(String mimeType) {
 		this.mimeType = mimeType;
-	}
-
-	void addExtension(String key, String value) {
-		if (extensionMap == null) {
-			extensionMap = new HashMap<String, String>();
-		}
-		extensionMap.put(key, value);
 	}
 
 	@Override
@@ -159,39 +167,38 @@ public class MagicEntry {
 
 		if (contentData == null) {
 			contentData = new ContentData(name, mimeType);
+			// default is a child didn't match, set a partial so the matcher will keep looking
+			contentData.partial = true;
 		}
 		if (formatter != null) {
-			// if we are appending and need a space then preprend one
+			// if we are appending and need a space then prepend one
 			if (formatSpacePrefix && contentData.sb.length() > 0) {
 				contentData.sb.append(' ');
 			}
 			matcher.renderValue(contentData.sb, val, formatter);
 		}
-		if (children != null) {
-			/*
-			 * If there are children then one of them has to match otherwise the whole thing doesn't match. This is
-			 * necessary for formats that are XML but we don't want to dominate plain old XML documents.
-			 */
-			boolean matched = false;
-			/*
-			 * WARNING: we can't do this check after we return from processing the bytes because the children's children
-			 * set the name first otherwise and we need the parent's name to dominate.
-			 */
-			boolean assignName = (contentData.name == UNKNOWN_NAME);
-			for (MagicEntry child : children) {
-				if (child.processBytes(bytes, offset, contentData) != null) {
-					matched = true;
-					if (assignName) {
-						contentData.setName(child);
-					}
-					if (contentData.mimeType == null && child.mimeType != null) {
-						contentData.mimeType = child.mimeType;
-					}
-				}
+
+		if (childrenArray == null) {
+			// no children so we have a full match and can set partial to false
+			contentData.partial = false;
+		} else {
+			for (MagicEntry child : childrenArray) {
+				child.processBytes(bytes, offset, contentData);
+				// NOTE: we continue to match to see if we can add additional information to the name
 			}
-			if (!matched) {
-				return null;
-			}
+		}
+		/*
+		 * Now that we have processed this entry (either with or without children), see if we still need to annotate the
+		 * content information.
+		 * 
+		 * NOTE: the children will have the first opportunity to set this which makes sense since they are the most
+		 * specific.
+		 */
+		if (name != UNKNOWN_NAME && contentData.name == UNKNOWN_NAME) {
+			contentData.setName(name);
+		}
+		if (mimeType != null && contentData.mimeType == null) {
+			contentData.mimeType = mimeType;
 		}
 		return contentData;
 	}
@@ -201,18 +208,15 @@ public class MagicEntry {
 	 */
 	private static class ContentData {
 		String name;
-		int nameLevel;
+		boolean partial;
 		String mimeType;
 		final StringBuilder sb = new StringBuilder();
 		private ContentData(String name, String mimeType) {
 			this.name = name;
 			this.mimeType = mimeType;
 		}
-		public void setName(MagicEntry entry) {
-			if (name == UNKNOWN_NAME || (entry.name != null && entry.name != UNKNOWN_NAME && entry.level < nameLevel)) {
-				name = entry.name;
-				nameLevel = entry.level;
-			}
+		public void setName(String name) {
+			this.name = name;
 		}
 		@Override
 		public String toString() {
