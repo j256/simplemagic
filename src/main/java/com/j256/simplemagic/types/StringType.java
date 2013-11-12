@@ -89,6 +89,10 @@ public class StringType implements MagicMatcher {
 		formatter.format(sb, extractedValue);
 	}
 
+	public Byte getStartingByte(Object testValue) {
+		return ((StringTestInfo) testValue).getStartingByte();
+	}
+
 	/**
 	 * Called from the string and search types to see if a string or byte array matches our pattern.
 	 */
@@ -285,6 +289,14 @@ public class StringType implements MagicMatcher {
 			this.optionalWhiteSpace = optionalWhiteSpace;
 			this.caseInsensitive = caseInsensitive;
 			this.maxOffset = maxOffset;
+		}
+
+		public Byte getStartingByte() {
+			if (pattern.length() == 0) {
+				return null;
+			} else {
+				return (byte) pattern.charAt(0);
+			}
 		}
 
 		@Override

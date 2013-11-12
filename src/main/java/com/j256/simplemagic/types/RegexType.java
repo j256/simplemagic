@@ -82,6 +82,10 @@ public class RegexType implements MagicMatcher {
 		formatter.format(sb, extractedValue);
 	}
 
+	public Byte getStartingByte(Object testValue) {
+		return null;
+	}
+
 	private static class PatternInfo {
 		int patternFlags;
 		// TODO: need to implement this flag

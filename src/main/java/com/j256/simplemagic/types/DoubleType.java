@@ -48,4 +48,8 @@ public class DoubleType implements MagicMatcher {
 	public void renderValue(StringBuilder sb, Object extractedValue, MagicFormatter formatter) {
 		formatter.format(sb, extractedValue);
 	}
+
+	public Byte getStartingByte(Object testValue) {
+		return null;
+	}
 }
