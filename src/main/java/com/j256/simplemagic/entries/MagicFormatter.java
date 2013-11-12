@@ -15,10 +15,17 @@ public class MagicFormatter {
 	private final PercentExpression percentExpression;
 	private final String suffix;
 
+	/**
+	 * TODO: Whether or not the format starts with \b or \010 (^H). Not sure what to do with this. Backing up a
+	 * character does _not_ seem to give proper results.
+	 */
+	@SuppressWarnings("unused")
+	private final boolean backSpace;
+
 	public final static String FINAL_PATTERN_CHARS = "%bcdeEfFgGiosuxX";
 	public final static String PATTERN_MODIFIERS = "lqh";
-	private final static Pattern FORMAT_PATTERN = Pattern.compile("([^%]*)(%[-+0-9# ." + PATTERN_MODIFIERS + "]*["
-			+ FINAL_PATTERN_CHARS + "])?(.*)");
+	private final static Pattern FORMAT_PATTERN = Pattern.compile("(\\b|\010)?([^%]*)(%[-+0-9# ." + PATTERN_MODIFIERS
+			+ "]*[" + FINAL_PATTERN_CHARS + "])?(.*)");
 
 	/**
 	 * This takes a format string, breaks it up into prefix, %-thang, and suffix.
@@ -30,13 +37,20 @@ public class MagicFormatter {
 			prefix = formatString;
 			percentExpression = null;
 			suffix = null;
+			backSpace = false;
 			return;
 		}
 
-		String prefixMatch = matcher.group(1);
-		String percentMatch = matcher.group(2);
-		String suffixMatch = matcher.group(3);
+		String backSpaceMatch = matcher.group(2);
+		String prefixMatch = matcher.group(2);
+		String percentMatch = matcher.group(3);
+		String suffixMatch = matcher.group(4);
 
+		if (backSpaceMatch != null && backSpaceMatch.length() > 0) {
+			backSpace = true;
+		} else {
+			backSpace = false;
+		}
 		if (percentMatch != null && percentMatch.equals("%%")) {
 			// we go recursive trying to find the first true % pattern
 			MagicFormatter formatter = new MagicFormatter(suffixMatch);
