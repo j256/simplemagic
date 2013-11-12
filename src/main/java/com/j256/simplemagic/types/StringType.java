@@ -3,7 +3,7 @@ package com.j256.simplemagic.types;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.j256.simplemagic.entries.Formatter;
+import com.j256.simplemagic.entries.MagicFormatter;
 import com.j256.simplemagic.entries.MagicMatcher;
 
 /**
@@ -85,7 +85,7 @@ public class StringType implements MagicMatcher {
 		return findOffsetMatch((StringTestInfo) testValue, offset, bytes, null);
 	}
 
-	public void renderValue(StringBuilder sb, Object extractedValue, Formatter formatter) {
+	public void renderValue(StringBuilder sb, Object extractedValue, MagicFormatter formatter) {
 		formatter.format(sb, extractedValue);
 	}
 

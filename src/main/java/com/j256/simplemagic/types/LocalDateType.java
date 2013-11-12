@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.j256.simplemagic.endian.EndianType;
-import com.j256.simplemagic.entries.Formatter;
+import com.j256.simplemagic.entries.MagicFormatter;
 
 /**
  * A 4-byte value interpreted as a UNIX-style date, but interpreted as local time rather than UTC.
@@ -25,7 +25,7 @@ public class LocalDateType extends IntegerType {
 	}
 
 	@Override
-	public void renderValue(StringBuilder sb, Object extractedValue, Formatter formatter) {
+	public void renderValue(StringBuilder sb, Object extractedValue, MagicFormatter formatter) {
 		long val = (Long) extractedValue;
 		Date date = dateFromExtractedValue(val);
 		SimpleDateFormat format = dateFormat.get();

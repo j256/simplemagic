@@ -2,7 +2,7 @@ package com.j256.simplemagic.types;
 
 import com.j256.simplemagic.endian.EndianConverter;
 import com.j256.simplemagic.endian.EndianType;
-import com.j256.simplemagic.entries.Formatter;
+import com.j256.simplemagic.entries.MagicFormatter;
 import com.j256.simplemagic.entries.MagicMatcher;
 
 /**
@@ -45,7 +45,7 @@ public class DoubleType implements MagicMatcher {
 		}
 	}
 
-	public void renderValue(StringBuilder sb, Object extractedValue, Formatter formatter) {
+	public void renderValue(StringBuilder sb, Object extractedValue, MagicFormatter formatter) {
 		formatter.format(sb, extractedValue);
 	}
 }
