@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import com.j256.simplemagic.entries.Formatter;
+import com.j256.simplemagic.entries.MagicFormatter;
 
 public class RegexTypeTest {
 
@@ -16,7 +16,7 @@ public class RegexTypeTest {
 		byte[] bytes = "some line with helloa in it".getBytes();
 		Object extracted = type.isMatch(test, null, false, null, 0, bytes);
 		assertNotNull(extracted);
-		assertEquals("helloa", renderValue(extracted, type, new Formatter("%s")));
+		assertEquals("helloa", renderValue(extracted, type, new MagicFormatter("%s")));
 	}
 
 	@Test
@@ -26,7 +26,7 @@ public class RegexTypeTest {
 		byte[] bytes = "some line with helloa in it".getBytes();
 		Object extracted = type.isMatch(test, null, false, null, 0, bytes);
 		assertNotNull(extracted);
-		assertEquals("helloa", renderValue(extracted, type, new Formatter("%s")));
+		assertEquals("helloa", renderValue(extracted, type, new MagicFormatter("%s")));
 	}
 
 	@Test
@@ -34,7 +34,7 @@ public class RegexTypeTest {
 		new RegexType().extractValueFromBytes(0, null);
 	}
 
-	private String renderValue(Object extracted, RegexType type, Formatter formatter) {
+	private String renderValue(Object extracted, RegexType type, MagicFormatter formatter) {
 		StringBuilder sb = new StringBuilder();
 		type.renderValue(sb, extracted, formatter);
 		return sb.toString();

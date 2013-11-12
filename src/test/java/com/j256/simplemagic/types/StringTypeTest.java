@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
-import com.j256.simplemagic.entries.Formatter;
+import com.j256.simplemagic.entries.MagicFormatter;
 
 public class StringTypeTest {
 
@@ -129,14 +129,14 @@ public class StringTypeTest {
 		Object extract = type.isMatch(info, null, false, null, 0, bytes);
 		assertNotNull(extract);
 		StringBuilder sb = new StringBuilder();
-		type.renderValue(sb, extract, new Formatter("%s"));
+		type.renderValue(sb, extract, new MagicFormatter("%s"));
 		assertEquals("h ello", sb.toString());
 
 		bytes = new byte[] { 'h', ' ', ' ', ' ', 'e', 'l', 'l', 'o' };
 		extract = type.isMatch(info, null, false, null, 0, bytes);
 		assertNotNull(extract);
 		sb.setLength(0);
-		type.renderValue(sb, extract, new Formatter("%s"));
+		type.renderValue(sb, extract, new MagicFormatter("%s"));
 		assertEquals("h   ello", sb.toString());
 	}
 }

@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.j256.simplemagic.entries.Formatter;
+import com.j256.simplemagic.entries.MagicFormatter;
 
 public class DefaultTypeTest {
 
@@ -17,7 +17,7 @@ public class DefaultTypeTest {
 		assertTrue(type.isMatch(null, null, false, null, 0, null) != null);
 		String str = "weofjwepfj";
 		StringBuilder sb = new StringBuilder();
-		type.renderValue(sb, null, new Formatter(str));
+		type.renderValue(sb, null, new MagicFormatter(str));
 		assertEquals(str, sb.toString());
 	}
 }

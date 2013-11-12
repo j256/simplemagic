@@ -8,7 +8,7 @@ import java.util.Date;
 import org.junit.Test;
 
 import com.j256.simplemagic.endian.EndianType;
-import com.j256.simplemagic.entries.Formatter;
+import com.j256.simplemagic.entries.MagicFormatter;
 
 public class LocalDateTypeTest {
 
@@ -22,7 +22,7 @@ public class LocalDateTypeTest {
 		Object val = type.extractValueFromBytes(0, integerToBytes(secs));
 		val = type.isMatch(testInfo, null, false, val, 0, null);
 		StringBuilder sb = new StringBuilder();
-		type.renderValue(sb, val, new Formatter("%s"));
+		type.renderValue(sb, val, new MagicFormatter("%s"));
 		assertEquals(dateStr, sb.toString());
 	}
 
