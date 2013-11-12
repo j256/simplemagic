@@ -335,7 +335,7 @@ public class ContentInfoUtil {
 		while (true) {
 			String line = lineReader.readLine();
 			if (line == null) {
-				return;
+				break;
 			}
 			if (line.length() == 0 || line.charAt(0) == '#') {
 				continue;
@@ -358,6 +358,9 @@ public class ContentInfoUtil {
 				entryList.add(entry);
 			}
 			previous = entry;
+		}
+		for (MagicEntry entry : entryList) {
+			entry.parseComplete();
 		}
 	}
 

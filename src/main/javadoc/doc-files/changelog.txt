@@ -1,3 +1,8 @@
+1.3: 11/11/2013
+	* Improved the content matching so partial matches still display information.
+	* Added ContentInfo.isPartial() to designate partial content matching.
+	* Added the ability to load magic information from a resource.
+
 1.2: 05/25/2013
 	* Removed duplicates from the internal list of mime-types and file-extensions.
 	* Added ContentTypeUtil.findExtensionMatch("file.ext") static method for file-extension matching.

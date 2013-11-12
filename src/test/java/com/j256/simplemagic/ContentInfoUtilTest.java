@@ -42,6 +42,8 @@ public class ContentInfoUtilTest {
 					// partial file here
 					new FileType("/files/exif.jpg", ContentType.JPEG, "jpeg", "image/jpeg",
 							"JPEG image data, EXIF standard 2.1"),
+					new FileType("/files/exif2.jpg", ContentType.JPEG, "jpeg", "image/jpeg",
+							"JPEG image data, EXIF standard"),
 					new FileType("/files/x.jp2", ContentType.JPEG_2000, "jp2", "image/jp2", "JPEG 2000 image"),
 					new FileType("/files/x.class", ContentType.JAVA_APPLET, "applet", "application/x-java-applet",
 							"compiled Java class data, version 49.0"),
@@ -79,12 +81,12 @@ public class ContentInfoUtilTest {
 
 	// @Test
 	// public void testSpecial() throws Exception {
-	// ContentInfoUtil util = new ContentInfoUtil("/tmp/x", new ErrorCallBack() {
+	// ContentInfoUtil util = new ContentInfoUtil(new ErrorCallBack() {
 	// public void error(String line, String details, Exception e) {
 	// System.err.println("Error " + details + ": " + line);
 	// }
 	// });
-	// ContentInfo info = contentInfoFromResource(util, "/files/x.nuv");
+	// ContentInfo info = contentInfoFromResource(util, "/files/broken1.jpg");
 	// System.out.println(info);
 	// }
 

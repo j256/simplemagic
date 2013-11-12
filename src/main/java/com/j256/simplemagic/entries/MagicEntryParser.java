@@ -187,7 +187,7 @@ public class MagicEntryParser {
 			name = UNKNOWN_NAME;
 		} else {
 			parts = format.split("[ \t]");
-			if (parts.length == 0) {
+			if (parts.length == 0 || parts[0].length() == 0) {
 				name = UNKNOWN_NAME;
 			} else {
 				name = parts[0];
@@ -316,8 +316,6 @@ public class MagicEntryParser {
 			}
 			return;
 		}
-
-		parent.addExtension(key, parts[1]);
 	}
 
 	private static void handleStrength(MagicEntry parent, String line, String strengthValue, ErrorCallBack errorCallBack) {
