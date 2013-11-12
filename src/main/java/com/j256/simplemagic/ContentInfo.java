@@ -1,20 +1,25 @@
 package com.j256.simplemagic;
 
+import java.io.Serializable;
+
 /**
  * Information associated with some content, returned by the magic matching code in
  * {@link ContentInfoUtil#findMatch(String)} and other methods.
  * 
  * @author graywatson
  */
-public class ContentInfo {
+public class ContentInfo implements Serializable {
+
+	private static final long serialVersionUID = 1342819252130963539L;
 
 	private final ContentType contentType;
 	private final String name;
 	private final String message;
 	private final String mimeType;
 	private final String[] fileExtensions;
+	private final boolean partial;
 
-	public ContentInfo(String name, String mimeType, String message) {
+	public ContentInfo(String name, String mimeType, String message, boolean partial) {
 		this.contentType = ContentType.fromMimeType(mimeType);
 		if (this.contentType == ContentType.OTHER) {
 			this.name = name;
@@ -25,6 +30,7 @@ public class ContentInfo {
 		}
 		this.mimeType = mimeType;
 		this.message = message;
+		this.partial = partial;
 	}
 
 	public ContentInfo(ContentType contentType) {
@@ -33,6 +39,7 @@ public class ContentInfo {
 		this.mimeType = contentType.getMimeType();
 		this.message = null;
 		this.fileExtensions = contentType.getFileExtensions();
+		this.partial = false;
 	}
 
 	/**
@@ -71,6 +78,16 @@ public class ContentInfo {
 	 */
 	public String[] getFileExtensions() {
 		return fileExtensions;
+	}
+
+	/**
+	 * Whether or not this was a partial match. For some of the types, there is a main matching pattern and then more
+	 * specific patterns which detect additional features of the type. A partial match means that none of the more
+	 * specific patterns fully matched the content. It's probably still of the type but just not a variant that the
+	 * library knows about.
+	 */
+	public boolean isPartial() {
+		return partial;
 	}
 
 	@Override
