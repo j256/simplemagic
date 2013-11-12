@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  * 
  * @author graywatson
  */
-public class Formatter {
+public class MagicFormatter {
 
 	private final String prefix;
 	private final PercentExpression percentExpression;
@@ -23,7 +23,7 @@ public class Formatter {
 	/**
 	 * This takes a format string, breaks it up into prefix, %-thang, and suffix.
 	 */
-	public Formatter(String formatString) {
+	public MagicFormatter(String formatString) {
 		Matcher matcher = FORMAT_PATTERN.matcher(formatString);
 		if (!matcher.matches()) {
 			// may never get here
@@ -39,7 +39,7 @@ public class Formatter {
 
 		if (percentMatch != null && percentMatch.equals("%%")) {
 			// we go recursive trying to find the first true % pattern
-			Formatter formatter = new Formatter(suffixMatch);
+			MagicFormatter formatter = new MagicFormatter(suffixMatch);
 			StringBuilder sb = new StringBuilder();
 			if (prefixMatch != null) {
 				sb.append(prefixMatch);
