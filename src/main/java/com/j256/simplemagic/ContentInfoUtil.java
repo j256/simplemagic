@@ -11,13 +11,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.zip.GZIPInputStream;
 
-import com.j256.simplemagic.entries.MagicEntry;
-import com.j256.simplemagic.entries.MagicEntryParser;
+import com.j256.simplemagic.entries.MagicEntries;
 
 /**
  * Class which reads in the magic files and determines the {@link ContentInfo} for files and byte arrays. You use the
@@ -34,9 +31,9 @@ public class ContentInfoUtil {
 	public final static int DEFAULT_READ_SIZE = 10 * 1024;
 
 	/** internal entries loaded once if the {@link ContentInfoUtil#MagicUtil()} constructor is used. */
-	private static List<MagicEntry> internalMagicEntries;
+	private static MagicEntries internalMagicEntries;
 
-	private final List<MagicEntry> magicEntries;
+	private final MagicEntries magicEntries;
 	private int fileReadSize = DEFAULT_READ_SIZE;
 	private ErrorCallBack errorCallBack;
 
@@ -100,7 +97,7 @@ public class ContentInfoUtil {
 	 */
 	public ContentInfoUtil(String fileOrDirectoryOrResourcePath, ErrorCallBack errorCallBack) throws IOException {
 		this.errorCallBack = errorCallBack;
-		List<MagicEntry> magicEntries = readEntriesFromResource(fileOrDirectoryOrResourcePath);
+		MagicEntries magicEntries = readEntriesFromResource(fileOrDirectoryOrResourcePath);
 		if (magicEntries == null) {
 			File file = new File(fileOrDirectoryOrResourcePath);
 			magicEntries = readEntriesFromFile(file);
@@ -203,23 +200,7 @@ public class ContentInfoUtil {
 	 * Return the content type from the associated bytes or null if none of the magic entries matched.
 	 */
 	public ContentInfo findMatch(byte[] bytes) {
-		ContentInfo partialMatch = null;
-		for (MagicEntry entry : magicEntries) {
-			ContentInfo info = entry.processBytes(bytes);
-			if (info == null) {
-				continue;
-			}
-			if (!info.isPartial()) {
-				// first non-partial wins
-				return info;
-			} else if (partialMatch == null) {
-				// first partial match wins
-				partialMatch = info;
-			} else {
-				// first partial match wins
-			}
-		}
-		return partialMatch;
+		return magicEntries.findMatch(bytes);
 	}
 
 	/**
@@ -279,12 +260,11 @@ public class ContentInfoUtil {
 		this.errorCallBack = errorCallBack;
 	}
 
-	private List<MagicEntry> readEntriesFromFile(File fileOrDirectory) throws FileNotFoundException, IOException {
-		List<MagicEntry> entryList = new ArrayList<MagicEntry>();
+	private MagicEntries readEntriesFromFile(File fileOrDirectory) throws FileNotFoundException, IOException {
 		if (fileOrDirectory.isFile()) {
 			FileReader reader = new FileReader(fileOrDirectory);
 			try {
-				readEntries(entryList, reader);
+				return readEntries(reader);
 			} finally {
 				closeQuietly(reader);
 			}
@@ -293,20 +273,18 @@ public class ContentInfoUtil {
 				FileReader reader = null;
 				try {
 					reader = new FileReader(subFile);
-					readEntries(entryList, reader);
+					return readEntries(reader);
 				} catch (IOException e) {
 					// ignore the file
 				} finally {
 					closeQuietly(reader);
 				}
 			}
-		} else {
-			return null;
 		}
-		return entryList;
+		return null;
 	}
 
-	private List<MagicEntry> readEntriesFromResource(String resource) throws IOException {
+	private MagicEntries readEntriesFromResource(String resource) throws IOException {
 		InputStream stream = getClass().getResourceAsStream(resource);
 		if (stream == null) {
 			return null;
@@ -320,47 +298,21 @@ public class ContentInfoUtil {
 				reader = new InputStreamReader(new BufferedInputStream(stream));
 			}
 			stream = null;
-			List<MagicEntry> entryList = new ArrayList<MagicEntry>();
-			readEntries(entryList, reader);
-			return entryList;
+			return readEntries(reader);
 		} finally {
 			closeQuietly(reader);
 			closeQuietly(stream);
 		}
 	}
 
-	private void readEntries(List<MagicEntry> entryList, Reader reader) throws IOException {
+	private MagicEntries readEntries(Reader reader) throws IOException {
+		MagicEntries entries = new MagicEntries();
 		BufferedReader lineReader = new BufferedReader(reader);
-		MagicEntry previous = null;
-		while (true) {
-			String line = lineReader.readLine();
-			if (line == null) {
-				break;
-			}
-			if (line.length() == 0 || line.charAt(0) == '#') {
-				continue;
-			}
-
-			MagicEntry entry;
-			try {
-				entry = MagicEntryParser.parseLine(previous, line, errorCallBack);
-			} catch (IllegalArgumentException e) {
-				if (errorCallBack != null) {
-					errorCallBack.error(line, e.getMessage(), e);
-				}
-				// ignore this entry
-				continue;
-			}
-			if (entry == null) {
-				continue;
-			}
-			if (entry.getLevel() == 0) {
-				entryList.add(entry);
-			}
-			previous = entry;
-		}
-		for (MagicEntry entry : entryList) {
-			entry.parseComplete();
+		try {
+			entries.readEntries(lineReader, errorCallBack);
+			return entries;
+		} finally {
+			closeQuietly(lineReader);
 		}
 	}
 

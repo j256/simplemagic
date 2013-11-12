@@ -16,7 +16,7 @@ public class MagicEntry {
 
 	private static final String UNKNOWN_NAME = "unknown";
 
-	// list is used while parsing entries, array is used while matching on them 
+	// list is used while parsing entries, array is used while matching on them
 	private List<MagicEntry> childrenList;
 	private MagicEntry[] childrenArray;
 
@@ -65,7 +65,7 @@ public class MagicEntry {
 	/**
 	 * Returns the content type associated with the bytes or null if it does not match.
 	 */
-	public ContentInfo processBytes(byte[] bytes) {
+	ContentInfo processBytes(byte[] bytes) {
 		ContentData data = processBytes(bytes, 0, null);
 		if (data == null || data.name == UNKNOWN_NAME) {
 			return null;
@@ -78,7 +78,7 @@ public class MagicEntry {
 	 * Return the "level" of the rule. Level-0 rules start the matching process. Level-1 and above rules are processed
 	 * only when the level-0 matches.
 	 */
-	public int getLevel() {
+	int getLevel() {
 		return level;
 	}
 
@@ -87,6 +87,14 @@ public class MagicEntry {
 	 */
 	public int getStrength() {
 		return strength;
+	}
+
+	Byte getStartsWithByte() {
+		if (offset != 0) {
+			return null;
+		} else {
+			return matcher.getStartingByte(testValue);
+		}
 	}
 
 	void setStrength(int strength) {
@@ -107,7 +115,7 @@ public class MagicEntry {
 	/**
 	 * Called after parsing of an entry has completed. This allows us to tighten up some memory.
 	 */
-	public void parseComplete() {
+	void parseComplete() {
 		if (childrenList != null) {
 			childrenArray = childrenList.toArray(new MagicEntry[childrenList.size()]);
 			// help gc
