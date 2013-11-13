@@ -2,8 +2,6 @@ package com.j256.simplemagic.entries;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil.ErrorCallBack;
@@ -15,14 +13,16 @@ import com.j256.simplemagic.ContentInfoUtil.ErrorCallBack;
  */
 public class MagicEntries {
 
-	private MagicEntry[] entryArray;
-	private MagicEntry previous;
+	private static final int MAX_LEVELS = 20;
+
+	private MagicEntry entryLinkedList;
 
 	/**
 	 * Read the entries so later we can find matches with them.
 	 */
 	public void readEntries(BufferedReader lineReader, ErrorCallBack errorCallBack) throws IOException {
-		List<MagicEntry> entryList = new ArrayList<MagicEntry>();
+		MagicEntry[] levelNexts = new MagicEntry[MAX_LEVELS];
+		MagicEntry previousEntry = null;
 		while (true) {
 			String line = lineReader.readLine();
 			if (line == null) {
@@ -35,7 +35,7 @@ public class MagicEntries {
 
 			MagicEntry entry;
 			try {
-				entry = MagicEntryParser.parseLine(previous, line, errorCallBack);
+				entry = MagicEntryParser.parseLine(previousEntry, line, errorCallBack);
 				if (entry == null) {
 					continue;
 				}
@@ -47,17 +47,28 @@ public class MagicEntries {
 				continue;
 			}
 
-			// is this a top level line?
-			if (entry.getLevel() == 0) {
-				entryList.add(entry);
+			int level = entry.getLevel();
+			if (previousEntry != null) {
+				// if we go down a level, we need to clear the nexts above us
+				for (int levelCount = level + 1; levelCount <= previousEntry.getLevel(); levelCount++) {
+					levelNexts[levelCount] = null;
+				}
 			}
-			previous = entry;
-		}
 
-		this.entryArray = entryList.toArray(new MagicEntry[entryList.size()]);
-		// when we are done, we do some cleanup
-		for (MagicEntry entry : entryArray) {
-			entry.parseComplete();
+			// if this is the first at this level?
+			if (levelNexts[level] == null) {
+				if (level == 0) {
+					// first top level entry
+					entryLinkedList = entry;
+				} else if (levelNexts[level - 1] != null) {
+					levelNexts[level - 1].setChild(entry);
+				}
+			} else {
+				// continue the linked list
+				levelNexts[level].setNext(entry);
+			}
+			levelNexts[level] = entry;
+			previousEntry = entry;
 		}
 	}
 
@@ -66,7 +77,7 @@ public class MagicEntries {
 	 */
 	public ContentInfo findMatch(byte[] bytes) {
 		ContentInfo partialMatch = null;
-		for (MagicEntry entry : entryArray) {
+		for (MagicEntry entry = entryLinkedList; entry != null; entry = entry.getNext()) {
 			ContentInfo info = entry.processBytes(bytes);
 			if (info == null) {
 				continue;

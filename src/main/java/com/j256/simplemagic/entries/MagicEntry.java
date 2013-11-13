@@ -1,8 +1,5 @@
 package com.j256.simplemagic.entries;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.endian.EndianConverter;
 
@@ -16,11 +13,6 @@ public class MagicEntry {
 
 	private static final String UNKNOWN_NAME = "unknown";
 
-	// list is used while parsing entries, array is used while matching on them
-	private List<MagicEntry> childrenList;
-	private MagicEntry[] childrenArray;
-
-	private final MagicEntry parent;
 	private final String name;
 	private final int level;
 	private final boolean addOffset;
@@ -34,16 +26,16 @@ public class MagicEntry {
 	private final boolean formatSpacePrefix;
 	private final MagicFormatter formatter;
 
+	private MagicEntry childrenLinkedList;
 	private int strength;
 	private String mimeType;
+	private MagicEntry next;
 
 	/**
 	 * Package protected constructor.
 	 */
-	MagicEntry(MagicEntry parent, String name, int level, boolean addOffset, int offset, OffsetInfo offsetInfo,
-			MagicMatcher matcher, Long andValue, boolean unsignedType, Object testValue, boolean formatSpacePrefix,
-			String format) {
-		this.parent = parent;
+	MagicEntry(String name, int level, boolean addOffset, int offset, OffsetInfo offsetInfo, MagicMatcher matcher,
+			Long andValue, boolean unsignedType, Object testValue, boolean formatSpacePrefix, MagicFormatter formatter) {
 		this.name = name;
 		this.level = level;
 		this.addOffset = addOffset;
@@ -54,11 +46,7 @@ public class MagicEntry {
 		this.unsignedType = unsignedType;
 		this.testValue = testValue;
 		this.formatSpacePrefix = formatSpacePrefix;
-		if (format == null) {
-			this.formatter = null;
-		} else {
-			this.formatter = new MagicFormatter(format);
-		}
+		this.formatter = formatter;
 		this.strength = 1;
 	}
 
@@ -85,7 +73,7 @@ public class MagicEntry {
 	/**
 	 * Get the strength of the rule. Not well supported right now.
 	 */
-	public int getStrength() {
+	int getStrength() {
 		return strength;
 	}
 
@@ -101,35 +89,20 @@ public class MagicEntry {
 		this.strength = strength;
 	}
 
-	MagicEntry getParent() {
-		return parent;
-	}
-
-	void addChild(MagicEntry child) {
-		if (childrenList == null) {
-			childrenList = new ArrayList<MagicEntry>();
-		}
-		childrenList.add(child);
-	}
-
-	/**
-	 * Called after parsing of an entry has completed. This allows us to tighten up some memory.
-	 */
-	void parseComplete() {
-		if (childrenList != null) {
-			childrenArray = childrenList.toArray(new MagicEntry[childrenList.size()]);
-			// help gc
-			childrenList.clear();
-			childrenList = null;
-			// recurse to complete the children, and the children's children, ...
-			for (MagicEntry entry : childrenArray) {
-				entry.parseComplete();
-			}
-		}
+	void setChild(MagicEntry child) {
+		childrenLinkedList = child;
 	}
 
 	void setMimeType(String mimeType) {
 		this.mimeType = mimeType;
+	}
+
+	MagicEntry getNext() {
+		return next;
+	}
+
+	void setNext(MagicEntry next) {
+		this.next = next;
 	}
 
 	@Override
@@ -186,15 +159,16 @@ public class MagicEntry {
 			matcher.renderValue(contentData.sb, val, formatter);
 		}
 
-		if (childrenArray == null) {
+		if (childrenLinkedList == null) {
 			// no children so we have a full match and can set partial to false
 			contentData.partial = false;
 		} else {
-			for (MagicEntry child : childrenArray) {
+			for (MagicEntry child = childrenLinkedList; child != null; child = child.getNext()) {
 				child.processBytes(bytes, offset, contentData);
 				// NOTE: we continue to match to see if we can add additional information to the name
 			}
 		}
+
 		/*
 		 * Now that we have processed this entry (either with or without children), see if we still need to annotate the
 		 * content information.
