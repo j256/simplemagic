@@ -185,13 +185,13 @@ public class ContentInfoUtil {
 	 */
 	public ContentInfo findMatch(InputStream inputStream) throws IOException {
 		byte[] bytes = new byte[fileReadSize];
-		int read = inputStream.read(bytes);
-		if (read < 0) {
+		int numRead = inputStream.read(bytes);
+		if (numRead < 0) {
 			return null;
 		}
-		if (read < bytes.length) {
+		if (numRead < bytes.length) {
 			// move the bytes into a smaller array
-			bytes = Arrays.copyOf(bytes, read);
+			bytes = Arrays.copyOf(bytes, numRead);
 		}
 		return findMatch(bytes);
 	}
