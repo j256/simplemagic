@@ -163,42 +163,41 @@ public class MagicEntryParser {
 			}
 		}
 
-		String format;
+		MagicFormatter formatter;
+		String name;
 		boolean formatSpacePrefix = true;
 		if (parts.length == 3) {
-			format = null;
+			formatter = null;
+			name = UNKNOWN_NAME;
 		} else {
-			format = parts[3];
+			String format = parts[3];
+			// a starting \\b or ^H means don't prepend a space when chaining content details
 			if (format.startsWith("\\b")) {
 				format = format.substring(2);
 				formatSpacePrefix = false;
+			} else if (format.startsWith("\010")) {
+				// NOTE: sometimes the \b is expressed as a ^H character (grumble)
+				format = format.substring(1);
+				formatSpacePrefix = false;
 			}
-		}
+			formatter = new MagicFormatter(format);
 
-		MagicEntry parent = null;
-		if (level > 0) {
-			// use the previous and then go up until the parent is a level lower than ours
-			for (parent = previous; parent.getLevel() >= level; parent = parent.getParent()) {
-				// none
+			String trimmedFormat = format.trim();
+			int spaceIndex = trimmedFormat.indexOf(' ');
+			if (spaceIndex < 0) {
+				spaceIndex = trimmedFormat.indexOf('\t');
 			}
-		}
-		String name;
-		if (format == null) {
-			name = UNKNOWN_NAME;
-		} else {
-			parts = format.split("[ \t]");
-			if (parts.length == 0 || parts[0].length() == 0) {
+			if (spaceIndex > 0) {
+				name = trimmedFormat.substring(0, spaceIndex);
+			} else if (trimmedFormat.length() == 0) {
 				name = UNKNOWN_NAME;
 			} else {
-				name = parts[0];
+				name = trimmedFormat;
 			}
 		}
 		MagicEntry entry =
-				new MagicEntry(parent, name, level, addOffset, offset, offsetInfo, matcher, andValue, unsignedType,
-						testValue, formatSpacePrefix, format);
-		if (parent != null) {
-			parent.addChild(entry);
-		}
+				new MagicEntry(name, level, addOffset, offset, offsetInfo, matcher, andValue, unsignedType, testValue,
+						formatSpacePrefix, formatter);
 		return entry;
 	}
 
