@@ -116,7 +116,7 @@ public enum ContentType {
 	/** PBM image */
 	PBM("image/x-portable-bitmap", "pbm", "pbm"),
 	/** PDF document */
-	PDF("application/pdf", "pdf"),
+	PDF("application/pdf", "pdf", "pdf"),
 	/** Perl script */
 	PERL("text/x-perl", "perl", "pl"),
 	/** PGM image */
