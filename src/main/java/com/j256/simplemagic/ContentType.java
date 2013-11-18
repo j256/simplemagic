@@ -40,13 +40,13 @@ public enum ContentType {
 	/** Unix core dump output */
 	CORE_DUMP("application/x-coredump", "core-dump"),
 	/** Unix CPIO archive data */
-	CPIO("application/x-cpio", "cpio"),
+	CPIO("application/x-cpio", "cpio", "cpio"),
 	/** Berkeley database file */
 	DBM("application/x-dbm", "dbm"),
 	/** Debian installation package */
 	DEBIAN_PACKAGE("application/x-debian-package", "debian-pkg", "pkg", "deb", "udeb"),
 	/** Unix diff output */
-	DIFF("text/x-diff", "diff"),
+	DIFF("text/x-diff", "diff", "diff"),
 	/** TeX DVI output file */
 	DVI("application/x-dvi", "dvi", "dvi"),
 	/** Macromedia Flash data */
@@ -58,7 +58,7 @@ public enum ContentType {
 	/** FrameMaker document */
 	FRAMEMAKER("application/x-mif", "framemaker", "fm", "frame", "maker", "book"),
 	/** GNU awk script */
-	GAWK("text/x-gawk", "gawk"),
+	GAWK("text/x-gawk", "gawk", "gawk"),
 	/** GNU database file */
 	GDBM("application/x-gdbm", "gdbm"),
 	/** GIF image file */
@@ -90,7 +90,7 @@ public enum ContentType {
 	/** LHA archive data */
 	LHA("application/x-lha", "lha", "lha", "lzh"),
 	/** Lisp program */
-	LISP("text/x-lisp", "lisp"),
+	LISP("text/x-lisp", "lisp", "lisp"),
 	/** Lotus 123 spreadsheet */
 	LOTUS_123("application/x-123", "lotus-123", "123"),
 	/** Microsoft access database */
@@ -108,7 +108,7 @@ public enum ContentType {
 	/** MP4V encoded video */
 	MP4V("video/mp4v-es", "mp4v", "mp4v"),
 	/** New Awk script */
-	NAWK("text/x-nawk", "nawk"),
+	NAWK("text/x-nawk", "nawk", "nawk"),
 	/** Network news message */
 	NEWS("message/news", "news"),
 	/** OGG file container */
@@ -879,11 +879,15 @@ public enum ContentType {
 	static {
 		for (ContentType type : values()) {
 			if (type.mimeType != null) {
-				mimeTypeMap.put(type.mimeType.toLowerCase(), type);
+				if (mimeTypeMap.put(type.mimeType.toLowerCase(), type) != null) {
+					// System.err.println("overriding mime-type " + type.mimeType.toLowerCase());
+				}
 			}
 			if (type.fileExtensions != null) {
 				for (String fileExtension : type.fileExtensions) {
-					fileExtensionMap.put(fileExtension, type);
+					if (fileExtensionMap.put(fileExtension, type) != null) {
+						// System.err.println("overriding file-extension " + fileExtension);
+					}
 				}
 			}
 		}
