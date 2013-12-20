@@ -43,5 +43,5 @@ For example:
     PNG, mime 'image/png', msg 'PNG image, 600 x 371, 8-bit/color RGB, non-interlaced'
     ISO, mime 'audio/mp4', msg 'ISO Media, MPEG v4 system, iTunes AAC-LC'
     Microsoft, mime 'application/msword', msg 'Microsoft Word Document'
-    RIFF, mime 'audio/x-wav', msg 'RIFF (little-endian) data, WAVE audio, Microsoft PCM...'
+    RIFF, mime 'audio/x-wav', msg 'RIFF (little-endian) data, WAVE audio, Microsoft...'
     JPEG, mime 'image/jpeg', msg 'JPEG image data, JFIF standard 1.01'
