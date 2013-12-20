@@ -19,6 +19,16 @@ public class MiddleEndianConverter implements EndianConverter {
 		return convertNumber(offset, bytes, size, 7, 0x7F);
 	}
 
+	public byte[] convertToByteArray(long value, int size) {
+		if (size == 4) {
+			// BADC again
+			return new byte[] { (byte) ((value >> 16) & 0XFF), (byte) ((value >> 24) & 0XFF),
+					(byte) ((value >> 0) & 0XFF), (byte) ((value >> 8) & 0XFF) };
+		} else {
+			return null;
+		}
+	}
+
 	private Long convertNumber(int offset, byte[] bytes, int size, int shift, int mask) {
 		if (size != 4) {
 			throw new UnsupportedOperationException("Middle-endian only supports 4-byte integers");

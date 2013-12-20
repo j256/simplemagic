@@ -8,8 +8,8 @@ package com.j256.simplemagic.entries;
 public interface MagicMatcher {
 
 	/**
-	 * Converts the test-string from the magic line to be an object to be passed into
-	 * {@link #isMatch(Object, Long, boolean, Object, int, byte[])}.
+	 * Converts the test-string from the magic line to be the testValue object to be passed into
+	 * {@link #isMatch(Object, Long, boolean, Object, int, byte[])} and {@link #getStartingBytes(Object)}.
 	 */
 	public Object convertTestString(String typeStr, String testStr, int offset);
 
@@ -35,7 +35,7 @@ public interface MagicMatcher {
 	public void renderValue(StringBuilder sb, Object extractedValue, MagicFormatter formatter);
 
 	/**
-	 * Return the starting byte of the patter or null if none. 
+	 * Return the starting bytes of the patter or null if none.
 	 */
-	public Byte getStartingByte(Object testValue);
+	public byte[] getStartingBytes(Object testValue);
 }

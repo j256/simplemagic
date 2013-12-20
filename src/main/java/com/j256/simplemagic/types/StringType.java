@@ -89,8 +89,8 @@ public class StringType implements MagicMatcher {
 		formatter.format(sb, extractedValue);
 	}
 
-	public Byte getStartingByte(Object testValue) {
-		return ((StringTestInfo) testValue).getStartingByte();
+	public byte[] getStartingBytes(Object testValue) {
+		return ((StringTestInfo) testValue).getStartingBytes();
 	}
 
 	/**
@@ -291,11 +291,12 @@ public class StringType implements MagicMatcher {
 			this.maxOffset = maxOffset;
 		}
 
-		public Byte getStartingByte() {
-			if (pattern.length() == 0) {
+		public byte[] getStartingBytes() {
+			if (pattern.length() < 4) {
 				return null;
 			} else {
-				return (byte) pattern.charAt(0);
+				return new byte[] { (byte) pattern.charAt(0), (byte) pattern.charAt(1), (byte) pattern.charAt(2),
+						(byte) pattern.charAt(3) };
 			}
 		}
 

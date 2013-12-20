@@ -20,4 +20,9 @@ public interface EndianConverter {
 	 * @return The long or null if not enough bytes.
 	 */
 	public Long convertId3(int offset, byte[] bytes, int size);
+
+	/**
+	 * Translate a number into an array of bytes.
+	 */
+	public byte[] convertToByteArray(long value, int size);
 }

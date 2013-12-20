@@ -40,7 +40,7 @@ public class LongType implements MagicMatcher {
 		formatter.format(sb, extractedValue);
 	}
 
-	public Byte getStartingByte(Object testValue) {
-		return null;
+	public byte[] getStartingBytes(Object testValue) {
+		return endianConverter.convertToByteArray(((NumberOperator) testValue).getValue(), 8);
 	}
 }

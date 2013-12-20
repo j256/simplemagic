@@ -49,7 +49,7 @@ public class DoubleType implements MagicMatcher {
 		formatter.format(sb, extractedValue);
 	}
 
-	public Byte getStartingByte(Object testValue) {
+	public byte[] getStartingBytes(Object testValue) {
 		return null;
 	}
 }

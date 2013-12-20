@@ -1,5 +1,7 @@
 package com.j256.simplemagic.entries;
 
+import java.util.Arrays;
+
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.endian.EndianConverter;
 
@@ -26,9 +28,10 @@ public class MagicEntry {
 	private final boolean formatSpacePrefix;
 	private final MagicFormatter formatter;
 
-	private MagicEntry childrenLinkedList;
+	private MagicEntry child;
 	private int strength;
 	private String mimeType;
+	/** pointer to the next entry we should test */
 	private MagicEntry next;
 
 	/**
@@ -77,11 +80,11 @@ public class MagicEntry {
 		return strength;
 	}
 
-	Byte getStartsWithByte() {
+	byte[] getStartsWithByte() {
 		if (offset != 0) {
 			return null;
 		} else {
-			return matcher.getStartingByte(testValue);
+			return matcher.getStartingBytes(testValue);
 		}
 	}
 
@@ -90,7 +93,7 @@ public class MagicEntry {
 	}
 
 	void setChild(MagicEntry child) {
-		childrenLinkedList = child;
+		this.child = child;
 	}
 
 	void setMimeType(String mimeType) {
@@ -159,11 +162,11 @@ public class MagicEntry {
 			matcher.renderValue(contentData.sb, val, formatter);
 		}
 
-		if (childrenLinkedList == null) {
+		if (child == null) {
 			// no children so we have a full match and can set partial to false
 			contentData.partial = false;
 		} else {
-			for (MagicEntry child = childrenLinkedList; child != null; child = child.getNext()) {
+			for (MagicEntry entry = child; entry != null; entry = entry.getNext()) {
 				child.processBytes(bytes, offset, contentData);
 				// NOTE: we continue to match to see if we can add additional information to the name
 			}
@@ -211,6 +214,28 @@ public class MagicEntry {
 			} else {
 				return sb.toString();
 			}
+		}
+	}
+
+	/**
+	 * Wrapper around an array of bytes to provide a hashcode and equals.
+	 */
+	static class ByteArray {
+		final byte[] bytes;
+		public ByteArray(byte[] bytes) {
+			this.bytes = bytes;
+		}
+		@Override
+		public int hashCode() {
+			return Arrays.hashCode(bytes);
+		}
+		@Override
+		public boolean equals(Object obj) {
+			if (obj == null || obj.getClass() != getClass()) {
+				return false;
+			}
+			ByteArray other = (ByteArray) obj;
+			return Arrays.equals(bytes, other.bytes);
 		}
 	}
 

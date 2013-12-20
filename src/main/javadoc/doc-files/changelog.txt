@@ -1,3 +1,9 @@
+1.4: 11/??/2013
+	* Some internal refactoring to better encapsulate a collection of magic entries for matching.
+	* Added initial support for optimization around starting strings.  Order of magnitude improvement.
+	* Fixed a problem with the no-space indicator being a ^H character instead of the \b string.
+	* Added missing .pdf extension.  Thanks to Ali.
+
 1.3: 11/12/2013
 	* Improved the content matching so partial matches still display information.
 	* Added ContentInfo.isPartial() to designate partial content matching.

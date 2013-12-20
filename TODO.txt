@@ -8,7 +8,6 @@ Used to maintain requested features or future work.
 - need to handle the indirect type?
 - need more tests on floating point numbers, find magics that use them
 - is the quad date in seconds or millis?? find a magic that uses them
-- looks like unix gzip files are showing up as DOS FAT?  WTF?
 
 ------------------------------------------------------------------------------------------------------------
 

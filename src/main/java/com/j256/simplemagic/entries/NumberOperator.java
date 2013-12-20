@@ -38,6 +38,10 @@ public class NumberOperator {
 		return operator.doTest(extractedValue, value);
 	}
 
+	public long getValue() {
+		return value;
+	}
+
 	@Override
 	public String toString() {
 		return operator + ", value " + value;

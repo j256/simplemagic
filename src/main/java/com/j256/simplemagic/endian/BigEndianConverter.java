@@ -20,6 +20,15 @@ public class BigEndianConverter implements EndianConverter {
 		return convertNumber(offset, bytes, size, 7, 0x7F);
 	}
 
+	public byte[] convertToByteArray(long value, int size) {
+		byte[] result = new byte[size];
+		for (int i = size - 1; i >= 0; i--) {
+			result[i] = (byte) (value & 0xFF);
+			value >>= 8;
+		}
+		return result;
+	}
+
 	private Long convertNumber(int offset, byte[] bytes, int size, int shift, int mask) {
 		if (offset + size > bytes.length) {
 			return null;
