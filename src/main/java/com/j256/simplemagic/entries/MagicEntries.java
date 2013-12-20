@@ -24,7 +24,7 @@ public class MagicEntries {
 	 */
 	public void readEntries(BufferedReader lineReader, ErrorCallBack errorCallBack) throws IOException {
 		MagicEntry[] levelNexts = new MagicEntry[MAX_LEVELS];
-		MagicEntry previousNonStartEntry = null;
+		MagicEntry previousEntry = null;
 		while (true) {
 			String line = lineReader.readLine();
 			if (line == null) {
@@ -37,7 +37,7 @@ public class MagicEntries {
 
 			MagicEntry entry;
 			try {
-				entry = MagicEntryParser.parseLine(previousNonStartEntry, line, errorCallBack);
+				entry = MagicEntryParser.parseLine(previousEntry, line, errorCallBack);
 				if (entry == null) {
 					continue;
 				}
@@ -50,7 +50,7 @@ public class MagicEntries {
 			}
 
 			int level = entry.getLevel();
-			if (previousNonStartEntry == null) {
+			if (previousEntry == null) {
 				if (level != 0) {
 					if (errorCallBack != null) {
 						errorCallBack.error(line, "first entry of the file but the leve (" + level + ") should be 0",
@@ -60,7 +60,7 @@ public class MagicEntries {
 				}
 			} else {
 				// if we go down a level, we need to clear the nexts above us
-				for (int levelCount = level + 1; levelCount <= previousNonStartEntry.getLevel(); levelCount++) {
+				for (int levelCount = level + 1; levelCount <= previousEntry.getLevel(); levelCount++) {
 					levelNexts[levelCount] = null;
 				}
 			}
@@ -78,25 +78,27 @@ public class MagicEntries {
 				levelNexts[level].setNext(entry);
 			}
 			levelNexts[level] = entry;
-			previousNonStartEntry = entry;
+			previousEntry = entry;
 		}
 
-//		 if (true) {
-//		 return;
-//		 }
+		// here to compare performance improvements in the first-byte stuff
+		// if (true) {
+		// return;
+		// }
 		// now we post process the entries and remove the first byte ones we can optimize
 		MagicEntry[] firstByteNexts = new MagicEntry[firstByteLinkedLists.length];
-		previousNonStartEntry = null;
-		for (MagicEntry entry = entryLinkedList; entry != null; entry = entry.getNext()) {
+		MagicEntry previousNonFirstByteEntry = null;
+		MagicEntry next;
+		for (MagicEntry entry = entryLinkedList; entry != null; entry = next) {
 			byte[] startingBytes = entry.getStartsWithByte();
 			if (startingBytes == null || startingBytes.length == 0) {
 				// continue the entry linked list
-				if (previousNonStartEntry == null) {
+				if (previousNonFirstByteEntry == null) {
 					entryLinkedList = entry;
 				} else {
-					previousNonStartEntry.setNext(entry);
+					previousNonFirstByteEntry.setNext(entry);
 				}
-				previousNonStartEntry = entry;
+				previousNonFirstByteEntry = entry;
 			} else {
 				int index = (0xFF & startingBytes[0]);
 				if (firstByteNexts[index] == null) {
@@ -106,14 +108,8 @@ public class MagicEntries {
 				}
 				firstByteNexts[index] = entry;
 			}
-		}
-		if (previousNonStartEntry != null) {
-			previousNonStartEntry.setNext(null);
-		}
-		for (int i = 0; i < firstByteNexts.length; i++) {
-			if (firstByteNexts[i] != null) {
-				firstByteNexts[i].setNext(null);
-			}
+			next = entry.getNext();
+			entry.setNext(null);
 		}
 	}
 
@@ -129,7 +125,7 @@ public class MagicEntries {
 		int index = (0xFF & bytes[0]);
 		if (index < firstByteLinkedLists.length && firstByteLinkedLists[index] != null) {
 			for (MagicEntry entry = firstByteLinkedLists[index]; entry != null; entry = entry.getNext()) {
-				ContentInfo info = entry.processBytes(bytes);
+				ContentInfo info = entry.matchBytes(bytes);
 				if (info == null) {
 					continue;
 				}
@@ -149,7 +145,7 @@ public class MagicEntries {
 			}
 		}
 		for (MagicEntry entry = entryLinkedList; entry != null; entry = entry.getNext()) {
-			ContentInfo info = entry.processBytes(bytes);
+			ContentInfo info = entry.matchBytes(bytes);
 			if (info == null) {
 				continue;
 			}

@@ -28,6 +28,7 @@ public class MagicEntry {
 	private final boolean formatSpacePrefix;
 	private final MagicFormatter formatter;
 
+	/** if this entry matches then check the child entry which may provide more content type details */
 	private MagicEntry child;
 	private int strength;
 	private String mimeType;
@@ -56,8 +57,8 @@ public class MagicEntry {
 	/**
 	 * Returns the content type associated with the bytes or null if it does not match.
 	 */
-	ContentInfo processBytes(byte[] bytes) {
-		ContentData data = processBytes(bytes, 0, null);
+	ContentInfo matchBytes(byte[] bytes) {
+		ContentData data = matchBytes(bytes, 0, null);
 		if (data == null || data.name == UNKNOWN_NAME) {
 			return null;
 		} else {
@@ -130,7 +131,7 @@ public class MagicEntry {
 	/**
 	 * Main processing method which can go recursive.
 	 */
-	private ContentData processBytes(byte[] bytes, int prevOffset, ContentData contentData) {
+	private ContentData matchBytes(byte[] bytes, int prevOffset, ContentData contentData) {
 		int offset = this.offset;
 		if (offsetInfo != null) {
 			offset = offsetInfo.getOffset(bytes);
@@ -166,8 +167,9 @@ public class MagicEntry {
 			// no children so we have a full match and can set partial to false
 			contentData.partial = false;
 		} else {
+			// run through the children to add more content-type details
 			for (MagicEntry entry = child; entry != null; entry = entry.getNext()) {
-				child.processBytes(bytes, offset, contentData);
+				entry.matchBytes(bytes, offset, contentData);
 				// NOTE: we continue to match to see if we can add additional information to the name
 			}
 		}
@@ -180,7 +182,7 @@ public class MagicEntry {
 		 * specific.
 		 */
 		if (name != UNKNOWN_NAME && contentData.name == UNKNOWN_NAME) {
-			contentData.setName(name);
+			contentData.name = name;
 		}
 		if (mimeType != null && contentData.mimeType == null) {
 			contentData.mimeType = mimeType;
@@ -200,19 +202,14 @@ public class MagicEntry {
 			this.name = name;
 			this.mimeType = mimeType;
 		}
-		public void setName(String name) {
-			this.name = name;
-		}
 		@Override
 		public String toString() {
-			if (sb.length() == 0) {
-				if (name == null) {
-					return super.toString();
-				} else {
-					return name;
-				}
-			} else {
+			if (sb.length() != 0) {
 				return sb.toString();
+			} else if (name == null) {
+				return super.toString();
+			} else {
+				return name;
 			}
 		}
 	}
