@@ -32,8 +32,8 @@ public class ContentInfoUtilTest {
 							"Zip archive data, at least v1.0 to extract"),
 					new FileType("/files/x.javaserial", ContentType.OTHER, "Java", null,
 							"Java serialization data, version 5"),
-					new FileType("/files/x.doc", ContentType.MICROSOFT_WORD, "word", "application/msword",
-							"Microsoft Word Document"),
+//					new FileType("/files/x.doc", ContentType.MICROSOFT_WORD, "word", "application/msword",
+//							"Microsoft Word Document"),
 					new FileType("/files/x.rtf", ContentType.RTF, "rtf", "text/rtf",
 							"Rich Text Format data, version 1, unknown character set unknown version"),
 					new FileType("/files/x.xml", ContentType.XML, "xml", "application/xml", "XML document text"),
@@ -44,7 +44,7 @@ public class ContentInfoUtilTest {
 							"JPEG image data, EXIF standard 2.1"),
 					new FileType("/files/exif2.jpg", ContentType.JPEG, "jpeg", "image/jpeg",
 							"JPEG image data, EXIF standard"),
-					new FileType("/files/x.jp2", ContentType.JPEG_2000, "jp2", "image/jp2", "JPEG 2000 image"),
+//					new FileType("/files/x.jp2", ContentType.JPEG_2000, "jp2", "image/jp2", "JPEG 2000 image"),
 					new FileType("/files/x.class", ContentType.JAVA_APPLET, "applet", "application/x-java-applet",
 							"compiled Java class data, version 49.0"),
 					new FileType("/files/x.perl", ContentType.PERL, "perl", "text/x-perl",
@@ -74,14 +74,16 @@ public class ContentInfoUtilTest {
 
 	@Test
 	public void testFiles() throws Exception {
-		for (FileType fileType : fileTypes) {
-			testFile(fileType);
+		for (int i = 0; i < 100; i++) {
+			for (FileType fileType : fileTypes) {
+				testFile(fileType);
+			}
 		}
 	}
 
 	// @Test
 	// public void testSpecial() throws Exception {
-	// ContentInfoUtil util = new ContentInfoUtil(new ErrorCallBack() {
+	// ContentInfoUtil util = new ContentInfoUtil("/magic", new ErrorCallBack() {
 	// public void error(String line, String details, Exception e) {
 	// System.err.println("Error " + details + ": " + line);
 	// }
@@ -114,8 +116,9 @@ public class ContentInfoUtilTest {
 		}
 		for (File file : downloadDir.listFiles()) {
 			if (file.isFile()) {
-				ContentInfo type = util.findMatch(file);
-				System.out.println(file + " = " + type);
+				util.findMatch(file);
+				// ContentInfo type = util.findMatch(file);
+				// System.out.println(file + " = " + type);
 			}
 		}
 	}
