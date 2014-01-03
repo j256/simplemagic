@@ -92,15 +92,15 @@
 0	string	TADS2\ save/g	TADS
 >12	belong	!0x0A0D1A00	saved game data, CORRUPTED
 >12	belong	 0x0A0D1A00
->>(16.s+32) string >\0		%s saved game data
+>>(16.s+32)  string  >\0		%s saved game data
 0	string	TADS2\ save	TADS
 >10	belong	!0x0A0D1A00	saved game data, CORRUPTED
 >10	belong	 0x0A0D1A00
 >>14	string	>\0		%s saved game data
 
-0 belong 0x736C6821   Allegro datafile (packed)
-0 belong 0x736C682E   Allegro datafile (not packed/autodetect)
-0 belong 0x736C682B   Allegro datafile (appended exe data)
+0  belong  0x736C6821   Allegro datafile (packed)
+0  belong  0x736C682E   Allegro datafile (not packed/autodetect)
+0  belong  0x736C682B   Allegro datafile (appended exe data)
 
 0	short		0420		0420 Alliant virtual executable
 >2	short		&0x0020		common library
@@ -345,20 +345,20 @@
 >>>>140  belong             0x000001B8     \b, v1, progressive Y'CbCr 4:2:0 video
 >>>>140  belong             0x000001B2     \b, v1, progressive Y'CbCr 4:2:0 video
 >>>>140  belong             0x000001B5     \b, v2,
->>>>>144 byte&0x0F          1              \b HP
->>>>>144 byte&0x0F          2              \b Spt
->>>>>144 byte&0x0F          3              \b SNR
->>>>>144 byte&0x0F          4              \b MP
->>>>>144 byte&0x0F          5              \b SP
->>>>>145 byte&0xF0          64             \b@HL
->>>>>145 byte&0xF0          96             \b@H-14
->>>>>145 byte&0xF0          128            \b@ML
->>>>>145 byte&0xF0          160            \b@LL
->>>>>145 byte               &0x08          \b progressive
->>>>>145 byte               ^0x08          \b interlaced
->>>>>145 byte&0x06          2              \b Y'CbCr 4:2:0 video
->>>>>145 byte&0x06          4              \b Y'CbCr 4:2:2 video
->>>>>145 byte&0x06          6              \b Y'CbCr 4:4:4 video
+>>>>>144  byte&0x0F          1              \b HP
+>>>>>144  byte&0x0F          2              \b Spt
+>>>>>144  byte&0x0F          3              \b SNR
+>>>>>144  byte&0x0F          4              \b MP
+>>>>>144  byte&0x0F          5              \b SP
+>>>>>145  byte&0xF0          64             \b@HL
+>>>>>145  byte&0xF0          96             \b@H-14
+>>>>>145  byte&0xF0          128            \b@ML
+>>>>>145  byte&0xF0          160            \b@LL
+>>>>>145  byte               &0x08          \b progressive
+>>>>>145  byte               ^0x08          \b interlaced
+>>>>>145  byte&0x06          2              \b Y'CbCr 4:2:0 video
+>>>>>145  byte&0x06          4              \b Y'CbCr 4:2:2 video
+>>>>>145  byte&0x06          6              \b Y'CbCr 4:4:4 video
 >>76    belong             0x000001B8     \b, v1, progressive Y'CbCr 4:2:0 video
 >>76    belong             0x000001B2     \b, v1, progressive Y'CbCr 4:2:0 video
 >>76    belong             0x000001B5     \b, v2,
@@ -818,7 +818,7 @@
 
 
 
-0       belong&0xff00ff 0x80000 Applesoft BASIC program data
+0       belong&0xff00ff  0x80000  Applesoft BASIC program data
 
 
 
@@ -887,7 +887,7 @@
 >8	belong		>1			(%d elements)
 >4	belong		x			- %d bytes
 
-4	string innotek\ VirtualBox\ Disk\ Image %s
+4	string  innotek\ VirtualBox\ Disk\ Image  %s
 
 0	string		*BEGIN		Applixware
 >7	string		WORDS			Words Document
@@ -991,7 +991,7 @@
 3	string	LH5 SAR archive data
 0	string	\212\3SB \0 BSArc/BS2 archive data
 2	string	=-ah MAR archive data
-0	belong&0x00f800ff	0x00800000 ACB archive data
+0	belong&0x00f800ff	0x00800000  ACB archive data
 0	string	JRchive JRC archive data
 0	string	DS\0 Quantum archive data
 0	string	PK\3\6 ReSOF archive data
@@ -999,7 +999,7 @@
 14	string	YC YAC archive data
 0	string	X1 X1 archive data
 0	string	XhDr X1 archive data
-0	belong&0xffffe000	0x76ff2000 CDC Codec archive data
+0	belong&0xffffe000	0x76ff2000  CDC Codec archive data
 0	string	\xad6" AMGC archive data
 0	string	NõFélå NuLIB archive data
 0	string	LEOLZW PAKLeo archive data
@@ -1045,7 +1045,7 @@
 0	string	ULEB\xa RAX archive data
 0	string	ULEB\0 Xtreme archive data
 0	string	@â\1\0 Pack Magic archive data
-0	belong&0xfeffffff	0x1a034465 BTS archive data
+0	belong&0xfeffffff	0x1a034465  BTS archive data
 0	string	Ora\  ELI 5750 archive data
 0	string	\x1aFC\x1a QFC archive data
 0	string	\x1aQF\x1a QFC archive data
@@ -1061,7 +1061,7 @@
 0	string	PHILIPP Par archive data
 0	string	PAR Par archive data
 0	string	UB HIT archive data
-0	belong&0xfffff000	0x53423000 SBX archive data
+0	belong&0xfffff000	0x53423000  SBX archive data
 0	string	NSK NaShrink archive data
 0	string	#\ CAR\ archive\ header SAPCAR archive data
 0	string	CAR\ 2.00RG SAPCAR archive data
@@ -1082,8 +1082,8 @@
 0	string	SEM SemOne archive data
 0	string	\x8f\xaf\xac\x84 PPMD archive data
 0	string	FIZ FIZ archive data
-0	belong&0xfffff0f0	0x4d530000 MSXiE archive data
-0	belong&0xfffffff0	0x797a3030 DeepFreezer archive data
+0	belong&0xfffff0f0	0x4d530000  MSXiE archive data
+0	belong&0xfffffff0	0x797a3030  DeepFreezer archive data
 0	string	=<DC- DC archive data
 0	string	\4TPAC\3 TPac archive data
 0	string	Ai\1\1\0 Ai archive data
@@ -1121,14 +1121,14 @@
 
 
 0	string	DZ Dzip archive data
->2	byte	x \b, version %i
->3	byte	x \b.%i
+>2	byte	x  \b, version %i
+>3	byte	x  \b.%i
 0	string	ZZ\ \0\0 ZZip archive data
 0	string	ZZ0 ZZip archive data
 0	string	\xaa\x40\x5f\x77\x1f\xe5\x82\x0d PAQ archive data
 0	string	PAQ PAQ archive data
 >3	byte&0xf0	0x30
->>3	byte	x (v%c)
+>>3	byte	x  (v%c)
 0xe	string	\x1aJar\x1b JAR (ARJ Software, Inc.) archive data
 0	string	JARCS JAR (ARJ Software, Inc.) archive data
 
@@ -1152,7 +1152,7 @@
 >3	byte		>0		%d]
 2	leshort		0xea60		ARJ archive data
 
-0  belong&0xffff00fc 0x48410000 HA archive data
+0  belong&0xffff00fc  0x48410000  HA archive data
 >2	leshort		=1		1 file,
 >2	leshort		>1		%u files,
 >4	byte&0x0f	=0		first is type CPY
@@ -1322,12 +1322,12 @@
 0	string	d8:announce	BitTorrent file
 !:mime	application/x-bittorrent
 
-0       beshort 0x0e0f          Atari MSA archive data
->2      beshort x       	\b, %d sectors per track
->4      beshort 0       	\b, 1 sided
->4      beshort 1       	\b, 2 sided
->6      beshort x       	\b, starting track: %d
->8      beshort x       	\b, ending track: %d
+0       beshort  0x0e0f          Atari MSA archive data
+>2      beshort  x       	\b, %d sectors per track
+>4      beshort  0       	\b, 1 sided
+>4      beshort  1       	\b, 2 sided
+>6      beshort  x       	\b, starting track: %d
+>8      beshort  x       	\b, ending track: %d
 
 0	string	PK00PK\003\004	Zip archive data
 
@@ -1346,17 +1346,17 @@
 >16	byte	=0x0A		\b, from Amiga
 >16	byte	=0x0B		\b, from Next
 >14	byte	x		\b, version %d to extract
->5	leshort &0x0080		\b, multiple volumes,
+>5	leshort  &0x0080		\b, multiple volumes,
 >>17	byte	x		\b (part %d),
->5	leshort &0x0002		\b, contains comment
->5	leshort	&0x0200		\b, sfx
->5	leshort	&0x0400		\b, small dictionary
->5	leshort	&0x0800		\b, multi-volume
->5	leshort	&0x1000		\b, contains AV-String
+>5	leshort  &0x0002		\b, contains comment
+>5	leshort 	&0x0200		\b, sfx
+>5	leshort 	&0x0400		\b, small dictionary
+>5	leshort 	&0x0800		\b, multi-volume
+>5	leshort	 &0x1000		\b, contains AV-String
 >>30	string	\x16*UNREGISTERED\x20VERSION*	(unregistered)
->5	leshort &0x2000		\b, with recovery record
->5	leshort &0x4000		\b, locked
->5	leshort &0x8000		\b, solid
+>5	leshort  &0x2000		\b, with recovery record
+>5	leshort  &0x4000		\b, locked
+>5	leshort  &0x8000		\b, solid
 
 0x1A	string	sfArk		sfArk compressed Soundfont
 >0x15	string	2
