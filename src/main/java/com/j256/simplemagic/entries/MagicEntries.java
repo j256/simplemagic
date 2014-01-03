@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil.ErrorCallBack;
+import com.j256.simplemagic.logger.Logger;
+import com.j256.simplemagic.logger.LoggerFactory;
 
 /**
  * Class which encompasses a set of entries and allows us to optimize their use.
@@ -15,6 +17,7 @@ public class MagicEntries {
 
 	private static final int MAX_LEVELS = 20;
 	private static final int FIRST_BYTE_LINKED_LIST_SIZE = 256;
+	private static Logger logger = LoggerFactory.getLogger(MagicEntries.class);
 
 	private MagicEntry entryLinkedList;
 	private final MagicEntry[] firstByteLinkedLists = new MagicEntry[FIRST_BYTE_LINKED_LIST_SIZE];
@@ -85,6 +88,7 @@ public class MagicEntries {
 		// if (true) {
 		// return;
 		// }
+
 		// now we post process the entries and remove the first byte ones we can optimize
 		MagicEntry[] firstByteNexts = new MagicEntry[firstByteLinkedLists.length];
 		MagicEntry previousNonFirstByteEntry = null;
@@ -120,30 +124,20 @@ public class MagicEntries {
 		if (bytes.length == 0) {
 			return null;
 		}
-		ContentInfo partialMatch = null;
 		// first do the start byte ones
 		int index = (0xFF & bytes[0]);
 		if (index < firstByteLinkedLists.length && firstByteLinkedLists[index] != null) {
-			for (MagicEntry entry = firstByteLinkedLists[index]; entry != null; entry = entry.getNext()) {
-				ContentInfo info = entry.matchBytes(bytes);
-				if (info == null) {
-					continue;
-				}
-				if (!info.isPartial()) {
-					// first non-partial wins
-					return info;
-				} else if (partialMatch == null) {
-					// first partial match wins
-					partialMatch = info;
-				} else {
-					// first partial match wins
-				}
-			}
-			// XXX: not sure if this is right, maybe if we only have a partial here we should try all of the rest
-			if (partialMatch != null) {
-				return partialMatch;
+			ContentInfo info = findMatch(bytes, firstByteLinkedLists[index]);
+			if (info != null) {
+				// XXX: not sure if it is right to return if only a partial match here
+				return info;
 			}
 		}
+		return findMatch(bytes, entryLinkedList);
+	}
+
+	private ContentInfo findMatch(byte[] bytes, MagicEntry entryLinkedList) {
+		ContentInfo partialMatchInfo = null;
 		for (MagicEntry entry = entryLinkedList; entry != null; entry = entry.getNext()) {
 			ContentInfo info = entry.matchBytes(bytes);
 			if (info == null) {
@@ -151,14 +145,23 @@ public class MagicEntries {
 			}
 			if (!info.isPartial()) {
 				// first non-partial wins
+				logger.trace("found full match {}", entry);
+				logger.trace("returning full match {}", info);
 				return info;
-			} else if (partialMatch == null) {
+			} else if (partialMatchInfo == null) {
 				// first partial match wins
-				partialMatch = info;
+				logger.trace("found partial match {}", entry);
+				partialMatchInfo = info;
 			} else {
 				// first partial match wins
 			}
 		}
-		return partialMatch;
+		if (partialMatchInfo == null) {
+			logger.trace("returning no match");
+			return null;
+		} else {
+			logger.trace("returning partial match {}", partialMatchInfo);
+			return partialMatchInfo;
+		}
 	}
 }
