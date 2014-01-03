@@ -20,32 +20,24 @@ public class StringType implements MagicMatcher {
 
 	private final static Pattern TYPE_PATTERN = Pattern.compile("[^/]+(/\\d+)?(/[BbcwWt]*)?");
 	private static final String EMPTY = "";
-	private static final int MAX_NUM_LINES = 20;
 
-	public Object convertTestString(String typeStr, String testStr, int offset) {
+	public Object convertTestString(String typeStr, String testStr) {
 		Matcher matcher = TYPE_PATTERN.matcher(typeStr);
 		if (!matcher.matches()) {
 			// may not be able to get here
-			return new StringTestInfo(preProcessPattern(testStr), false, false, false, 0);
+			return new TestInfo(preProcessPattern(testStr), false, false, false, 0);
 		}
-		// max-offset is ignored by the search type
-		int maxOffset = 1;
+		// max-offset is ignored by the string type
+		int maxOffset = 0;
 		String lengthStr = matcher.group(1);
 		if (lengthStr != null && lengthStr.length() > 1) {
-			// default is 1 line
-			int numLines = 1;
 			try {
 				// skip the '/'
-				numLines = Integer.decode(lengthStr.substring(1));
+				maxOffset = Integer.decode(lengthStr.substring(1));
 			} catch (NumberFormatException e) {
 				// may not be able to get here
 				throw new IllegalArgumentException("Invalid format for search length: " + testStr);
 			}
-			if (numLines > MAX_NUM_LINES) {
-				numLines = MAX_NUM_LINES;
-			}
-			// numLines gets added to offset to get max-offset
-			maxOffset = offset + numLines;
 		}
 		boolean compactWhiteSpace = false;
 		boolean optionalWhiteSpace = false;
@@ -72,17 +64,17 @@ public class StringType implements MagicMatcher {
 			}
 		}
 		String processedPattern = preProcessPattern(testStr);
-		return new StringTestInfo(processedPattern, compactWhiteSpace, optionalWhiteSpace, caseInsensitive, maxOffset);
+		return new TestInfo(processedPattern, compactWhiteSpace, optionalWhiteSpace, caseInsensitive, maxOffset);
 	}
 
 	public Object extractValueFromBytes(int offset, byte[] bytes) {
 		return EMPTY;
 	}
 
-	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue, int offset,
-			byte[] bytes) {
+	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue,
+			MutableOffset mutableOffset, byte[] bytes) {
 		// find the match in the array of bytes
-		return findOffsetMatch((StringTestInfo) testValue, offset, bytes, null);
+		return findOffsetMatch((TestInfo) testValue, mutableOffset.offset, mutableOffset, bytes);
 	}
 
 	public void renderValue(StringBuilder sb, Object extractedValue, MagicFormatter formatter) {
@@ -90,33 +82,22 @@ public class StringType implements MagicMatcher {
 	}
 
 	public byte[] getStartingBytes(Object testValue) {
-		return ((StringTestInfo) testValue).getStartingBytes();
+		return ((TestInfo) testValue).getStartingBytes();
 	}
 
 	/**
 	 * Called from the string and search types to see if a string or byte array matches our pattern.
 	 */
-	protected String findOffsetMatch(StringTestInfo info, int offset, byte[] bytes, String line) {
+	protected String findOffsetMatch(TestInfo info, int offset, MutableOffset mutableOffset, byte[] bytes) {
 		int targetPos = offset;
-		int length;
-		if (bytes == null) {
-			length = line.length();
-		} else {
-			length = bytes.length;
-		}
 		boolean lastMagicCompactWhitespace = false;
 		for (int magicPos = 0; magicPos < info.pattern.length(); magicPos++) {
 			char magicCh = info.pattern.charAt(magicPos);
 			// did we reach the end?
-			if (targetPos >= length) {
+			if (targetPos >= bytes.length) {
 				return null;
 			}
-			char targetCh;
-			if (bytes == null) {
-				targetCh = line.charAt(targetPos);
-			} else {
-				targetCh = (char) (bytes[targetPos] & 0xFF);
-			}
+			char targetCh = (char) (bytes[targetPos] & 0xFF);
 			targetPos++;
 
 			// if it matches, we can continue
@@ -130,14 +111,10 @@ public class StringType implements MagicMatcher {
 			// if it doesn't match, maybe the target is a whitespace
 			if ((lastMagicCompactWhitespace || info.optionalWhiteSpace) && Character.isWhitespace(targetCh)) {
 				do {
-					if (targetPos >= length) {
+					if (targetPos >= bytes.length) {
 						break;
 					}
-					if (bytes == null) {
-						targetCh = line.charAt(targetPos);
-					} else {
-						targetCh = (char) (bytes[targetPos] & 0xFF);
-					}
+					targetCh = (char) (bytes[targetPos] & 0xFF);
 					targetPos++;
 				} while (Character.isWhitespace(targetCh));
 				// now that we get to the first non-whitespace, it must match
@@ -162,15 +139,12 @@ public class StringType implements MagicMatcher {
 			return null;
 		}
 
-		if (bytes == null) {
-			return line.substring(offset, targetPos);
-		} else {
-			char[] chars = new char[targetPos - offset];
-			for (int i = 0; i < chars.length; i++) {
-				chars[i] = (char) (bytes[offset + i] & 0xFF);
-			}
-			return new String(chars);
+		char[] chars = new char[targetPos - offset];
+		for (int i = 0; i < chars.length; i++) {
+			chars[i] = (char) (bytes[offset + i] & 0xFF);
 		}
+		mutableOffset.offset = targetPos;
+		return new String(chars);
 	}
 
 	/**
@@ -274,16 +248,16 @@ public class StringType implements MagicMatcher {
 	/**
 	 * Internal holder for test information about strings.
 	 */
-	protected static class StringTestInfo {
+	protected static class TestInfo {
 		final String pattern;
 		final boolean compactWhiteSpace;
 		final boolean optionalWhiteSpace;
 		final boolean caseInsensitive;
-		// ignored by the search type
+		// ignored by the string type
 		final int maxOffset;
 
-		public StringTestInfo(String pattern, boolean compactWhiteSpace, boolean optionalWhiteSpace,
-				boolean caseInsensitive, int maxOffset) {
+		public TestInfo(String pattern, boolean compactWhiteSpace, boolean optionalWhiteSpace, boolean caseInsensitive,
+				int maxOffset) {
 			this.pattern = pattern;
 			this.compactWhiteSpace = compactWhiteSpace;
 			this.optionalWhiteSpace = optionalWhiteSpace;

@@ -5,45 +5,69 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
+import com.j256.simplemagic.entries.MagicMatcher.MutableOffset;
+
 public class SearchTypeTest {
 
 	@Test
 	public void testBasicMatch() {
 		SearchType type = new SearchType();
 		String str = "hello";
-		Object info = type.convertTestString("search", str, 0);
+		Object info = type.convertTestString("search/5", str);
 		byte[] bytes = new byte[] { 'h', 'e', 'l', 'l', 'o', '2' };
-		assertEquals(str, type.isMatch(info, null, false, null, 0, bytes));
+		assertEquals(str, type.isMatch(info, null, false, null, new MutableOffset(0), bytes));
 		bytes = new byte[] { ' ', 'e', 'l', 'l', 'o', '2' };
-		assertNull(type.isMatch(info, null, false, null, 0, bytes));
+		assertNull(type.isMatch(info, null, false, null, new MutableOffset(0), bytes));
+	}
+
+	@Test
+	public void testHitMaxOffset() {
+		SearchType type = new SearchType();
+		String str = "hello";
+		Object info = type.convertTestString("search/4", str);
+		byte[] bytes = new byte[] { '1', 'h', 'e', 'l', 'l', 'o', '2' };
+		assertEquals(str, type.isMatch(info, null, false, null, new MutableOffset(0), bytes));
+		bytes = new byte[] { ' ', 'e', 'l', 'l', 'o', '2' };
+		assertNull(type.isMatch(info, null, false, null, new MutableOffset(0), bytes));
 	}
 
 	@Test
 	public void testSubLineMatch() {
 		SearchType type = new SearchType();
 		String str = "hello";
-		Object info = type.convertTestString("search", str, 0);
+		Object info = type.convertTestString("search/7", str);
 		byte[] bytes = new byte[] { '1', '2', 'h', 'e', 'l', 'l', 'o', '2', '4' };
-		assertEquals(str, type.isMatch(info, null, false, null, 0, bytes));
+		assertEquals(str, type.isMatch(info, null, false, null, new MutableOffset(0), bytes));
 		bytes = new byte[] { ' ', 'e', 'l', 'l', 'o', '2' };
-		assertNull(type.isMatch(info, null, false, null, 0, bytes));
+		assertNull(type.isMatch(info, null, false, null, new MutableOffset(0), bytes));
+	}
+
+	@Test
+	public void testSubLineOffsetInfoMatch() {
+		SearchType type = new SearchType();
+		String str = "hello";
+		Object info = type.convertTestString("search/7", str);
+		byte[] bytes = new byte[] { '1', '2', 'h', 'e', 'l', 'l', 'o', '2', '4' };
+		assertEquals(str, type.isMatch(info, null, false, null, new MutableOffset(2), bytes));
+		bytes = new byte[] { ' ', 'e', 'l', 'l', 'o', '2' };
+		assertNull(type.isMatch(info, null, false, null, new MutableOffset(2), bytes));
 	}
 
 	@Test
 	public void testNoMatch() {
 		SearchType type = new SearchType();
 		String str = "hello";
-		Object info = type.convertTestString("search/10", str, 0);
+		Object info = type.convertTestString("search/10", str);
 		byte[] bytes = new byte[] { '1', '2', 'h', 'e', 'l', 'l', '2', '4' };
-		assertNull(type.isMatch(info, null, false, null, 0, bytes));
+		assertNull(type.isMatch(info, null, false, null, new MutableOffset(0), bytes));
 		// no match after offset
-		info = type.convertTestString("search/10", str, 1);
-		bytes = new byte[] { '1', '2', '\n', 'h', 'e', '\n', 'l', 'l', '2', '4' };
-		assertNull(type.isMatch(info, null, false, null, 1, bytes));
+		info = type.convertTestString("search/10", str);
+		bytes = new byte[] { '1', '2', 'h', 'e', '\n', 'l', 'l', '2', '4' };
+		assertNull(type.isMatch(info, null, false, null, new MutableOffset(1), bytes));
 		// EOF before offset reached
-		info = type.convertTestString("search", str, 10);
-		bytes = new byte[] { '1', '2', '\n', 'h', 'e', '\n', 'l', 'l', '2', '4' };
-		assertNull(type.isMatch(info, null, false, null, 10, bytes));
+		info = type.convertTestString("search/10", str);
+		bytes = new byte[] { '1', '2', 'h', 'e', '\n', 'l', 'l', '2', '4' };
+		assertNull(type.isMatch(info, null, false, null, new MutableOffset(10), bytes));
 	}
 
 	@Test
@@ -52,34 +76,13 @@ public class SearchTypeTest {
 	}
 
 	@Test
-	public void testMultipleLines() {
+	public void testOptionalWhitespace() {
 		SearchType type = new SearchType();
 		String str = "hello";
-		Object info = type.convertTestString("search/1", str, 0);
-		byte[] bytes = new byte[] { '1', '2', '\n', '1', '2', 'h', 'e', 'l', 'l', 'o', '2', '4' };
-		// no match on the first line
-		assertNull(type.isMatch(info, null, false, null, 0, bytes));
-		// match on the second line started at offset 1
-		info = type.convertTestString("search/1", str, 1);
-		assertEquals(str, type.isMatch(info, null, false, null, 1, bytes));
-		// match on the second line with 2 lines looked at
-		info = type.convertTestString("search/2", str, 0);
-		assertEquals(str, type.isMatch(info, null, false, null, 0, bytes));
-	}
-
-	@Test
-	public void testMultipleLinesOptionalWhitespace() {
-		SearchType type = new SearchType();
-		String str = "hello";
-		Object info = type.convertTestString("search/1/b", str, 0);
-		byte[] bytes = new byte[] { '1', '2', '\n', '1', '2', 'h', 'e', 'l', ' ', 'l', ' ', 'o', ' ', '2', '4' };
-		// no match on the first line
-		assertNull(type.isMatch(info, null, false, null, 0, bytes));
-		// match on the second line started at offset 1
-		info = type.convertTestString("search/1/b", str, 1);
-		assertEquals("hel l o", type.isMatch(info, null, false, null, 1, bytes));
-		// match on the second line with 2 lines looked at
-		info = type.convertTestString("search/2/b", str, 0);
-		assertEquals("hel l o", type.isMatch(info, null, false, null, 0, bytes));
+		Object info = type.convertTestString("search/10/b", str);
+		byte[] bytes = new byte[] { '1', '2', 'h', 'e', 'l', ' ', 'l', ' ', 'o', ' ', '2', '4' };
+		// match on the line started at offset 1
+		info = type.convertTestString("search/9/b", str);
+		assertEquals("hel l o", type.isMatch(info, null, false, null, new MutableOffset(1), bytes));
 	}
 }
