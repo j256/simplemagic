@@ -154,7 +154,7 @@ public class MagicEntryParser {
 			testValue = null;
 		} else {
 			try {
-				testValue = matcher.convertTestString(typeStr, testStr, offset);
+				testValue = matcher.convertTestString(typeStr, testStr);
 			} catch (Exception e) {
 				if (errorCallBack != null) {
 					errorCallBack.error(line, "could not convert magic test string: " + testStr, e);
