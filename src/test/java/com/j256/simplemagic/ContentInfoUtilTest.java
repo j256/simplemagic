@@ -33,7 +33,9 @@ public class ContentInfoUtilTest {
 					new FileType("/files/x.javaserial", ContentType.OTHER, "Java", null,
 							"Java serialization data, version 5"),
 					new FileType("/files/x.doc", ContentType.MICROSOFT_WORD, "word", "application/msword",
-							"Microsoft Word Document"),
+							"Microsoft Office Document Microsoft Word Document"),
+					new FileType("/files/x.docx", ContentType.MICROSOFT_OFFICE, "office",
+							"application/vnd.openxmlformats-officedocument", "Microsoft Office Open XML"),
 					new FileType("/files/x.rtf", ContentType.RTF, "rtf", "text/rtf",
 							"Rich Text Format data, version 1, unknown character set unknown version"),
 					new FileType("/files/x.xml", ContentType.XML, "xml", "application/xml", "XML document text"),
@@ -56,8 +58,8 @@ public class ContentInfoUtilTest {
 					new FileType("/files/x.m4v", ContentType.MP4A, "mp4a", "video/mp4",
 							"ISO Media, MPEG v4 system, iTunes AVC-LC"),
 					new FileType("/files/x.xls", ContentType.OTHER, "OLE", null, "OLE 2 Compound Document"),
-					new FileType("/files/x.xlsx", ContentType.ZIP, "zip", "application/zip",
-							"Zip archive data, at least v2.0 to extract"),
+					new FileType("/files/x.xlsx", ContentType.MICROSOFT_OFFICE, "office",
+							"application/vnd.openxmlformats-officedocument", "Microsoft Office Open XML"),
 					new FileType("/files/x.odt", ContentType.OPENDOCUMENT_TEXT, "opendocument-text",
 							"application/vnd.oasis.opendocument.text", "OpenDocument Text"),
 					new FileType("/files/x.html", ContentType.HTML, "html", "text/html", "HTML document text"),
@@ -74,6 +76,13 @@ public class ContentInfoUtilTest {
 
 	@Test
 	public void testFiles() throws Exception {
+		for (FileType fileType : fileTypes) {
+			testFile(fileType);
+		}
+	}
+
+	@Test
+	public void testPerformanceRun() throws Exception {
 		for (int i = 0; i < 100; i++) {
 			for (FileType fileType : fileTypes) {
 				testFile(fileType);
@@ -81,16 +90,11 @@ public class ContentInfoUtilTest {
 		}
 	}
 
-	// @Test
-	// public void testSpecial() throws Exception {
-	// ContentInfoUtil util = new ContentInfoUtil("/magic", new ErrorCallBack() {
-	// public void error(String line, String details, Exception e) {
-	// System.err.println("Error " + details + ": " + line);
-	// }
-	// });
-	// ContentInfo info = contentInfoFromResource(util, "/files/broken1.jpg");
-	// System.out.println(info);
-	// }
+	@Test
+	public void testGif() throws Exception {
+		testFile(new FileType("/files/x.gif", ContentType.GIF, "gif", "image/gif",
+				"GIF image data, version 89a, 32 x 32"));
+	}
 
 	@Test
 	public void testExtensions() {
