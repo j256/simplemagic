@@ -24,11 +24,17 @@ public class ContentInfoInputStreamWrapper extends InputStream {
 
 	private static ContentInfoUtil staticContentInfoUtil;
 
+	/**
+	 * Create a stream wrapper while specifying your own ContentInfoUtil.
+	 */
 	public ContentInfoInputStreamWrapper(InputStream delegate, ContentInfoUtil contentInfoUtil) {
 		this.delegate = delegate;
 		this.contentInfoUtil = contentInfoUtil;
 	}
 
+	/**
+	 * Create a stream wrapper while using the internal, static ContentInfoUtil.
+	 */
 	public ContentInfoInputStreamWrapper(InputStream delegate) {
 		this(delegate, getStaticContentInfoUtil());
 	}
@@ -103,12 +109,12 @@ public class ContentInfoInputStreamWrapper extends InputStream {
 	}
 
 	@Override
-	public synchronized void mark(int readlimit) {
+	public void mark(int readlimit) {
 		delegate.mark(readlimit);
 	}
 
 	@Override
-	public synchronized void reset() throws IOException {
+	public void reset() throws IOException {
 		delegate.reset();
 	}
 
