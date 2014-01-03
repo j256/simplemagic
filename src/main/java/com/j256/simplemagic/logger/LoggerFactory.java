@@ -81,13 +81,9 @@ public class LoggerFactory {
 	}
 
 	/**
-	 * Type of internal logs supported. This is package permissions for testing.
+	 * Type of internal logs supported.
 	 */
-	public enum LogType {
-		SLF4J("org.slf4j.LoggerFactory", "com.j256.ormlite.logger.Slf4jLoggingLog"),
-		COMMONS_LOGGING("org.apache.commons.logging.LogFactory", "com.j256.ormlite.logger.CommonsLoggingLog"),
-		LOG4J2("org.apache.logging.log4j.LogManager", "com.j256.ormlite.logger.Log4j2Log"),
-		LOG4J("org.apache.log4j.Logger", "com.j256.ormlite.logger.Log4jLog"),
+	private enum LogType {
 		// this should always be at the end, arguments are unused
 		LOCAL(LocalLog.class.getName(), LocalLog.class.getName()) {
 			@Override
