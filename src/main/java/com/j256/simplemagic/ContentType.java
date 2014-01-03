@@ -96,9 +96,11 @@ public enum ContentType {
 	/** Microsoft access database */
 	MICROSOFT_ACCESS("application/x-msaccess", "access", "mdb"),
 	/** Microsoft excel spreadsheet */
-	MICROSOFT_EXCEL("application/vnd.ms-excel", "excel", "xls", "xlm", "xla", "xlc", "xlt", "xlw"),
+	MICROSOFT_EXCEL("application/vnd.ms-excel", "excel", "xls", "xlm", "xla", "xlc", "xlt", "xlw", "xlsx"),
 	/** Microsoft word document */
-	MICROSOFT_WORD("application/msword", "word", "doc", "dot"),
+	MICROSOFT_WORD("application/msword", "word", "doc", "dot", "docx"),
+	/** Microsoft office document */
+	MICROSOFT_OFFICE("application/vnd.openxmlformats-officedocument", "office"),
 	/** MIDI audio */
 	MIDI("audio/midi", "midi", "mid", "midi", "kar", "rmi"),
 	/** MNG video */
