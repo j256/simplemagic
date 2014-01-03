@@ -1231,9 +1231,13 @@
 !:mime	application/zip
 >0x161	string		WINZIP          Zip archive data, WinZIP self-extracting
 !:mime	application/zip
+
 >4	byte		0x14
 >>30	ubelong		!0x6d696d65	Zip archive data, at least v2.0 to extract
 !:mime	application/zip
+# look for a special content-types file which means that it is a microsoft office file
+>>>0x1E	string	[Content_Types].xml	\rMicrosoft Office Open XML
+!:mime application/vnd.openxmlformats-officedocument
 
 >4	byte		0x14
 >>30	string		mimetype
@@ -5939,7 +5943,8 @@
 
 0	string		hsi1		JPEG image data, HSI proprietary
 
-0	string		\x00\x00\x00\x0C\x6A\x50\x20\x20\x0D\x0A\x87\x0A	JPEG 2000 image data
+0	string		\x00\x00\x00\x0C\x6A\x50\x20\x20\x0D\x0A\x87\x0A	JPEG 2000 image
+!:mime	image/jp2
 
 0	belong		0xff4fff51						JPEG 2000 codestream
 45	beshort		0xff52
