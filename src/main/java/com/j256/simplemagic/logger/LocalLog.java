@@ -24,14 +24,11 @@ import java.util.regex.Pattern;
  * </p>
  * 
  * <p>
- * It also supports a file ormliteLocalLog.properties file which contains lines such as:
+ * It also supports a file simplemagicLocalLog.properties file which contains lines such as:
  * 
  * <pre>
  * # regex-pattern = Level
- * log4j\.logger\.com\.j256\.ormlite.*=DEBUG
- * log4j\.logger\.com\.j256\.ormlite\.stmt\.mapped.BaseMappedStatement=TRACE
- * log4j\.logger\.com\.j256\.ormlite\.stmt\.mapped.MappedCreate=TRACE
- * log4j\.logger\.com\.j256\.ormlite\.stmt\.StatementExecutor=TRACE
+ * log4j\.logger\.com\.j256\.simplemagic.*=TRACE
  * </pre>
  * 
  * </p>
@@ -40,9 +37,9 @@ import java.util.regex.Pattern;
  */
 public class LocalLog implements Log {
 
-	public static final String LOCAL_LOG_LEVEL_PROPERTY = "com.j256.ormlite.logger.level";
-	public static final String LOCAL_LOG_FILE_PROPERTY = "com.j256.ormlite.logger.file";
-	public static final String LOCAL_LOG_PROPERTIES_FILE = "/ormliteLocalLog.properties";
+	public static final String LOCAL_LOG_LEVEL_PROPERTY = "com.j256.simplemagic.logger.level";
+	public static final String LOCAL_LOG_FILE_PROPERTY = "com.j256.simplemagic.logger.file";
+	public static final String LOCAL_LOG_PROPERTIES_FILE = "/simplemagicLocalLog.properties";
 
 	private static final Level DEFAULT_LEVEL = Level.DEBUG;
 	private static final ThreadLocal<DateFormat> dateFormatThreadLocal = new ThreadLocal<DateFormat>() {
