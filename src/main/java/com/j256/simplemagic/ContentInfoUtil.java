@@ -142,7 +142,7 @@ public class ContentInfoUtil {
 	}
 
 	/**
-	 * Return the content type for the file or null if none of the magic entries matched.
+	 * Return the content type for the file-path or null if none of the magic entries matched.
 	 * 
 	 * @throws IOException
 	 *             If there was a problem reading from the file.
@@ -218,7 +218,7 @@ public class ContentInfoUtil {
 			return new ContentInfo(type);
 		}
 
-		// now find the .ext part
+		// now find the .ext part, if any
 		int index = name.lastIndexOf('.');
 		if (index < 0 || index == name.length() - 1) {
 			return null;
