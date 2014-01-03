@@ -4,6 +4,8 @@ import java.util.Arrays;
 
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.endian.EndianConverter;
+import com.j256.simplemagic.logger.Logger;
+import com.j256.simplemagic.logger.LoggerFactory;
 
 /**
  * Representation of a line of information from the magic (5) format. A number of methods are package protected because
@@ -14,6 +16,7 @@ import com.j256.simplemagic.endian.EndianConverter;
 public class MagicEntry {
 
 	private static final String UNKNOWN_NAME = "unknown";
+	private static Logger logger = LoggerFactory.getLogger(MagicEntry.class);
 
 	private final String name;
 	private final int level;
@@ -26,6 +29,7 @@ public class MagicEntry {
 	// the testValue object is defined by the particular matcher
 	private final Object testValue;
 	private final boolean formatSpacePrefix;
+	private final boolean clearFormat;
 	private final MagicFormatter formatter;
 
 	/** if this entry matches then check the child entry which may provide more content type details */
@@ -39,7 +43,8 @@ public class MagicEntry {
 	 * Package protected constructor.
 	 */
 	MagicEntry(String name, int level, boolean addOffset, int offset, OffsetInfo offsetInfo, MagicMatcher matcher,
-			Long andValue, boolean unsignedType, Object testValue, boolean formatSpacePrefix, MagicFormatter formatter) {
+			Long andValue, boolean unsignedType, Object testValue, boolean formatSpacePrefix, boolean clearFormat,
+			MagicFormatter formatter) {
 		this.name = name;
 		this.level = level;
 		this.addOffset = addOffset;
@@ -50,6 +55,7 @@ public class MagicEntry {
 		this.unsignedType = unsignedType;
 		this.testValue = testValue;
 		this.formatSpacePrefix = formatSpacePrefix;
+		this.clearFormat = clearFormat;
 		this.formatter = formatter;
 		this.strength = 1;
 	}
@@ -156,12 +162,16 @@ public class MagicEntry {
 			contentData.partial = true;
 		}
 		if (formatter != null) {
+			if (clearFormat) {
+				contentData.sb.setLength(0);
+			}
 			// if we are appending and need a space then prepend one
 			if (formatSpacePrefix && contentData.sb.length() > 0) {
 				contentData.sb.append(' ');
 			}
 			matcher.renderValue(contentData.sb, val, formatter);
 		}
+		logger.trace("matched data: {}: {}", this, contentData);
 
 		if (child == null) {
 			// no children so we have a full match and can set partial to false
