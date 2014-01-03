@@ -19,15 +19,18 @@ import com.j256.simplemagic.entries.MagicEntries;
 /**
  * Class which reads in the magic files and determines the {@link ContentInfo} for files and byte arrays. You use the
  * default constructor {@link #ContentInfoUtil()} to use the internal rules file or load in a local file from the
- * file-system using {@link #ContentInfoUtil(String)}. Once the rules are loaded, you use {@link #findMatch(String)} or
- * other such methods to get the content-type of a file or bytes.
+ * file-system using {@link #ContentInfoUtil(String)}. Once the rules are loaded, you can use {@link #findMatch(String)}
+ * or other such methods to get the content-type of a file or bytes.
  * 
  * @author graywatson
  */
 public class ContentInfoUtil {
 
 	private final static String INTERNAL_MAGIC_FILE = "/magic.gz";
-	// if this changes, fixed the javadocs for setFileReadSize() below
+
+	/**
+	 * Number of bytes that the utility class by default reads to determine the content type information.
+	 */
 	public final static int DEFAULT_READ_SIZE = 10 * 1024;
 
 	/** internal entries loaded once if the {@link ContentInfoUtil#MagicUtil()} constructor is used. */
@@ -75,7 +78,7 @@ public class ContentInfoUtil {
 	/**
 	 * Construct a magic utility using the magic files from a file or a directory of files.
 	 * 
-	 * @param fileOrDirectoryOrResourcePath
+	 * @param fileOrDirectoryPath
 	 *            A path which can be a magic file, or a directory of magic files, or a magic file in a resource path.
 	 * @throws IOException
 	 *             If there was a problem reading the magic entries from the internal magic file.
@@ -182,6 +185,7 @@ public class ContentInfoUtil {
 	 * 
 	 * @throws IOException
 	 *             If there was a problem reading from the input-stream.
+	 * @see ContentInfoInputStreamWrapper
 	 */
 	public ContentInfo findMatch(InputStream inputStream) throws IOException {
 		byte[] bytes = new byte[fileReadSize];
@@ -247,7 +251,9 @@ public class ContentInfoUtil {
 	}
 
 	/**
-	 * Set the default size that will be read if we are getting the content from a file. The default is most likely 10k.
+	 * Set the default size that will be read if we are getting the content from a file.
+	 * 
+	 * @see #DEFAULT_READ_SIZE
 	 */
 	public void setFileReadSize(int fileReadSize) {
 		this.fileReadSize = fileReadSize;
@@ -327,8 +333,8 @@ public class ContentInfoUtil {
 	}
 
 	/**
-	 * While we are parsing the magic configuration files, there are usually tons of badly formed lines and other
-	 * errors. This class defines the call-back which will be made whenever we discover an error.
+	 * Optional call-back which will be made whenever we discover an error while parsing the magic configuration files.
+	 * There are usually tons of badly formed lines and other errors.
 	 */
 	public interface ErrorCallBack {
 
