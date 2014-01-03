@@ -19,7 +19,7 @@ public class LongType implements MagicMatcher {
 		this.endianConverter = endianType.getConverter();
 	}
 
-	public Object convertTestString(String typeStr, String testStr, int offset) {
+	public Object convertTestString(String typeStr, String testStr) {
 		return new NumberOperator(testStr);
 	}
 
@@ -27,9 +27,10 @@ public class LongType implements MagicMatcher {
 		return endianConverter.convertNumber(offset, bytes, 8);
 	}
 
-	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue, int offset,
-			byte[] bytes) {
-		if (((NumberOperator) testValue).isMatch(andValue, unsignedType, (Long) extractedValue, offset, bytes)) {
+	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue,
+			MutableOffset mutableOffset, byte[] bytes) {
+		if (((NumberOperator) testValue).isMatch(andValue, unsignedType, (Long) extractedValue)) {
+			mutableOffset.offset += 8;
 			return extractedValue;
 		} else {
 			return null;

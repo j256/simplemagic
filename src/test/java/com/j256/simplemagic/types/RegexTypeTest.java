@@ -6,15 +6,16 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 import com.j256.simplemagic.entries.MagicFormatter;
+import com.j256.simplemagic.entries.MagicMatcher.MutableOffset;
 
 public class RegexTypeTest {
 
 	@Test
 	public void testBasic() {
 		RegexType type = new RegexType();
-		Object test = type.convertTestString("regex", "hello[abc]", 0);
+		Object test = type.convertTestString("regex", "hello[abc]");
 		byte[] bytes = "some line with helloa in it".getBytes();
-		Object extracted = type.isMatch(test, null, false, null, 0, bytes);
+		Object extracted = type.isMatch(test, null, false, null, new MutableOffset(0), bytes);
 		assertNotNull(extracted);
 		assertEquals("helloa", renderValue(extracted, type, new MagicFormatter("%s")));
 	}
@@ -22,9 +23,9 @@ public class RegexTypeTest {
 	@Test
 	public void testCaseInsensitive() {
 		RegexType type = new RegexType();
-		Object test = type.convertTestString("regex/c", "hello[ABC]", 0);
+		Object test = type.convertTestString("regex/c", "hello[ABC]");
 		byte[] bytes = "some line with helloa in it".getBytes();
-		Object extracted = type.isMatch(test, null, false, null, 0, bytes);
+		Object extracted = type.isMatch(test, null, false, null, new MutableOffset(0), bytes);
 		assertNotNull(extracted);
 		assertEquals("helloa", renderValue(extracted, type, new MagicFormatter("%s")));
 	}

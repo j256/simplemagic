@@ -31,7 +31,7 @@ public class NumberOperator {
 		this.value = value;
 	}
 
-	public boolean isMatch(Long andValue, boolean unsignedType, long extractedValue, int offset, byte[] bytes) {
+	public boolean isMatch(Long andValue, boolean unsignedType, long extractedValue) {
 		if (andValue != null) {
 			extractedValue &= andValue;
 		}

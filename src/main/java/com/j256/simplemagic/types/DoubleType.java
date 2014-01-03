@@ -18,7 +18,7 @@ public class DoubleType implements MagicMatcher {
 		this.endianConverter = endianType.getConverter();
 	}
 
-	public Object convertTestString(String typeStr, String testStr, int offset) {
+	public Object convertTestString(String typeStr, String testStr) {
 		try {
 			return Double.parseDouble(testStr);
 		} catch (NumberFormatException e) {
@@ -35,10 +35,11 @@ public class DoubleType implements MagicMatcher {
 		}
 	}
 
-	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue, int offset,
-			byte[] bytes) {
+	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue,
+			MutableOffset mutableOffset, byte[] bytes) {
 		// not sure how to do the & here
 		if (testValue.equals(extractedValue)) {
+			mutableOffset.offset += 8;
 			return extractedValue;
 		} else {
 			return null;

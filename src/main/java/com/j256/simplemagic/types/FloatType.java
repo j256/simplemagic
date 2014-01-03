@@ -18,7 +18,7 @@ public class FloatType implements MagicMatcher {
 		this.endianConverter = endianType.getConverter();
 	}
 
-	public Object convertTestString(String typeStr, String testStr, int offset) {
+	public Object convertTestString(String typeStr, String testStr) {
 		try {
 			return Float.parseFloat(testStr);
 		} catch (NumberFormatException e) {
@@ -35,10 +35,11 @@ public class FloatType implements MagicMatcher {
 		}
 	}
 
-	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue, int offset,
-			byte[] bytes) {
+	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue,
+			MutableOffset mutableOffset, byte[] bytes) {
 		// not sure how to do the & here
 		if (testValue.equals(extractedValue)) {
+			mutableOffset.offset += 4;
 			return extractedValue;
 		} else {
 			return null;

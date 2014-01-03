@@ -10,20 +10,21 @@ import org.junit.Test;
 
 import com.j256.simplemagic.endian.EndianType;
 import com.j256.simplemagic.entries.MagicFormatter;
+import com.j256.simplemagic.entries.MagicMatcher.MutableOffset;
 
 public class UtcDateTypeTest {
 
 	@Test
 	public void testBasic() {
 		LocalDateType type = new UtcDateType(EndianType.BIG);
-		Object testInfo = type.convertTestString(null, ">0", 0);
+		Object testInfo = type.convertTestString(null, ">0");
 		int secs = 1367982937;
 		Date date = new Date(secs * 1000L);
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 		format.setTimeZone(TimeZone.getTimeZone("UTC"));
 		String dateStr = format.format(date);
 		Object val = type.extractValueFromBytes(0, integerToBytes(secs));
-		val = type.isMatch(testInfo, null, false, val, 0, null);
+		val = type.isMatch(testInfo, null, false, val, new MutableOffset(0), null);
 		StringBuilder sb = new StringBuilder();
 		type.renderValue(sb, val, new MagicFormatter("%s"));
 		assertEquals(dateStr, sb.toString());

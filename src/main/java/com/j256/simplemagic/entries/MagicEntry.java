@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.endian.EndianConverter;
+import com.j256.simplemagic.entries.MagicMatcher.MutableOffset;
 import com.j256.simplemagic.logger.Logger;
 import com.j256.simplemagic.logger.LoggerFactory;
 
@@ -150,10 +151,12 @@ public class MagicEntry {
 			return null;
 		}
 		if (testValue != null) {
-			val = matcher.isMatch(testValue, andValue, unsignedType, val, offset, bytes);
+			MutableOffset mutableOffset = new MutableOffset(offset);
+			val = matcher.isMatch(testValue, andValue, unsignedType, val, mutableOffset, bytes);
 			if (val == null) {
 				return null;
 			}
+			offset = mutableOffset.offset;
 		}
 
 		if (contentData == null) {

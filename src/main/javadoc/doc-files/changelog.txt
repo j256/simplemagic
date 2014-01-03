@@ -1,3 +1,8 @@
+1.5: 1/??/2014
+	* Fixed the search/## pattern which was extremely broken.
+	* Added better support for Microsoft Office OOXML document types.  Thanks again to zAlbee.
+	* Renamed types: PPTX to MICROSOFT_POWERPOINT_XML, XLSX to MICROSOFT_EXCEL_XML, DOCX to MICROSOFT_WORD_XML
+
 1.4: 1/3/2014
 	* Added initial support for optimization around starting strings.  Order of magnitude performance improvement.
 	* Added missing .pdf extension.  Thanks to Ali.

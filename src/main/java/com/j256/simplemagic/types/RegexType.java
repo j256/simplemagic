@@ -26,7 +26,7 @@ public class RegexType implements MagicMatcher {
 	private final static Pattern TYPE_PATTERN = Pattern.compile("[^/]+(/[cs]*)?");
 	private static final String EMPTY = "";
 
-	public Object convertTestString(String typeStr, String testStr, int offset) {
+	public Object convertTestString(String typeStr, String testStr) {
 		Matcher matcher = TYPE_PATTERN.matcher(typeStr);
 		PatternInfo patternInfo = new PatternInfo();
 		if (matcher.matches()) {
@@ -49,16 +49,21 @@ public class RegexType implements MagicMatcher {
 		return EMPTY;
 	}
 
-	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue, int offset,
-			byte[] bytes) {
+	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue,
+			MutableOffset mutableOffset, byte[] bytes) {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes)));
 		String line = null;
-		for (int i = 0; i <= offset; i++) {
+		int bytesOffset = 0;
+		for (int i = 0; i <= mutableOffset.offset; i++) {
 			try {
 				line = reader.readLine();
 				// if eof then no match
 				if (line == null) {
 					return null;
+				}
+				// TODO: this doesn't take into account multiple line-feeds and multi-byte chars
+				if (i < mutableOffset.offset) {
+					bytesOffset += line.length() + 1;
 				}
 			} catch (IOException e) {
 				// probably won't get here
@@ -72,12 +77,13 @@ public class RegexType implements MagicMatcher {
 		PatternInfo patternInfo = (PatternInfo) testValue;
 		Matcher matcher = patternInfo.pattern.matcher(line);
 		if (matcher.matches()) {
+			// TODO: need to time this
+			mutableOffset.offset = bytesOffset + matcher.end(1);
 			return matcher.group(1);
 		} else {
 			return null;
 		}
 	}
-
 	public void renderValue(StringBuilder sb, Object extractedValue, MagicFormatter formatter) {
 		formatter.format(sb, extractedValue);
 	}
