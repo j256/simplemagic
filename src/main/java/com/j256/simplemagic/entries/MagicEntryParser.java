@@ -166,6 +166,7 @@ public class MagicEntryParser {
 		MagicFormatter formatter;
 		String name;
 		boolean formatSpacePrefix = true;
+		boolean clearFormat = false;
 		if (parts.length == 3) {
 			formatter = null;
 			name = UNKNOWN_NAME;
@@ -179,6 +180,9 @@ public class MagicEntryParser {
 				// NOTE: sometimes the \b is expressed as a ^H character (grumble)
 				format = format.substring(1);
 				formatSpacePrefix = false;
+			} else if (format.startsWith("\\r")) {
+				format = format.substring(2);
+				clearFormat = true;
 			}
 			formatter = new MagicFormatter(format);
 
@@ -197,7 +201,7 @@ public class MagicEntryParser {
 		}
 		MagicEntry entry =
 				new MagicEntry(name, level, addOffset, offset, offsetInfo, matcher, andValue, unsignedType, testValue,
-						formatSpacePrefix, formatter);
+						formatSpacePrefix, clearFormat, formatter);
 		return entry;
 	}
 
