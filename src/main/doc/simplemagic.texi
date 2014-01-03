@@ -6,7 +6,7 @@
 @c %**end of header
 
 @c ----------------------------------------------------------------
-@set simplemagic_version 1.4
+@set simplemagic_version 1.5
 @set simplemagic_year 2014
 @set simplemagic_date January @value{simplemagic_year}
 @set package SimpleMagic
