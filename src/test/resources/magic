@@ -1218,26 +1218,16 @@
 >4	byte		0x14
 >>30	ubelong		!0x6d696d65	Zip archive data, at least v2.0 to extract
 !:mime	application/zip
-# look for a special content-types file which means that it is a microsoft office file
->>>0x1E	string	[Content_Types].xml
-# skip to the second local file header
-#   since some documents include a 520-byte extra field following the file
-#   header,  we need to scan for the next header
+>>>0x1E	string	[Content_Types].xml	\rMicrosoft Office Open XML
+!:mime application/vnd.openxmlformats-officedocument
 >>>>(18.l+49)	search/2000	PK\003\004
-# now skip to the *third* local file header; again, we need to scan due to a
-#   520-byte extra field following the file header
 >>>>>&26	search/1000	PK\003\004
-# and check the subdirectory name to determine which type of OOXML
-#   file we have
-#   Correct the mimetype with the registered ones:
-#     http://technet.microsoft.com/en-us/library/cc179224.aspx
 >>>>>>&26	string	word/	\rMicrosoft Word 2007+
 !:mime application/vnd.openxmlformats-officedocument.wordprocessingml.document
 >>>>>>&26	string	ppt/	\rMicrosoft PowerPoint 2007+
 !:mime application/vnd.openxmlformats-officedocument.presentationml.presentation
 >>>>>>&26	string	xl/	\rMicrosoft Excel 2007+
 !:mime application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
->>>>>>&26	default	x	Microsoft Office Open XML
 !:strength +10
 
 >4	byte		0x14

@@ -36,7 +36,7 @@ public class ContentInfoUtilTest {
 							"Microsoft Office Document Microsoft Word Document"),
 					new FileType("/files/x.docx", ContentType.MICROSOFT_WORD_XML, "word",
 							"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-							"Microsoft Word 2007+ Microsoft Office Open XML"),
+							"Microsoft Word 2007+"),
 					new FileType("/files/x.rtf", ContentType.RTF, "rtf", "text/rtf",
 							"Rich Text Format data, version 1, unknown character set unknown version"),
 					new FileType("/files/x.xml", ContentType.XML, "xml", "application/xml", "XML document text"),
@@ -61,7 +61,7 @@ public class ContentInfoUtilTest {
 					new FileType("/files/x.xls", ContentType.OTHER, "OLE", null, "OLE 2 Compound Document"),
 					new FileType("/files/x.xlsx", ContentType.MICROSOFT_EXCEL_XML, "excel",
 							"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-							"Microsoft Excel 2007+ Microsoft Office Open XML"),
+							"Microsoft Excel 2007+"),
 					new FileType("/files/x.odt", ContentType.OPENDOCUMENT_TEXT, "opendocument-text",
 							"application/vnd.oasis.opendocument.text", "OpenDocument Text"),
 					new FileType("/files/x.html", ContentType.HTML, "html", "text/html", "HTML document text"),
@@ -80,15 +80,6 @@ public class ContentInfoUtilTest {
 	public void testFiles() throws Exception {
 		for (FileType fileType : fileTypes) {
 			testFile(fileType);
-		}
-	}
-
-	@Test
-	public void testPerformanceRun() throws Exception {
-		for (int i = 0; i < 100; i++) {
-			for (FileType fileType : fileTypes) {
-				testFile(fileType);
-			}
 		}
 	}
 
@@ -123,8 +114,15 @@ public class ContentInfoUtilTest {
 		for (File file : downloadDir.listFiles()) {
 			if (file.isFile()) {
 				util.findMatch(file);
-				// ContentInfo type = util.findMatch(file);
-				// System.out.println(file + " = " + type);
+			}
+		}
+	}
+
+	@Test
+	public void testPerformanceRun() throws Exception {
+		for (int i = 0; i < 100; i++) {
+			for (FileType fileType : fileTypes) {
+				testFile(fileType);
 			}
 		}
 	}
