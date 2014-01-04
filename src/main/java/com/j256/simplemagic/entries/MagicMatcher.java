@@ -9,15 +9,15 @@ public interface MagicMatcher {
 
 	/**
 	 * Converts the test-string from the magic line to be the testValue object to be passed into
-	 * {@link #isMatch(Object, Long, boolean, Object, int, byte[])} and {@link #getStartingBytes(Object)}.
+	 * {@link #isMatch(Object, Long, boolean, Object, MutableOffset, byte[])} and {@link #getStartingBytes(Object)}.
 	 */
 	public Object convertTestString(String typeStr, String testStr);
 
 	/**
 	 * Extract the value from the bytes.
 	 * 
-	 * @return The object to be passed to {@link #isMatch(Object, Long, boolean, Object, int, byte[])} or null if not
-	 *         enough bytes.
+	 * @return The object to be passed to {@link #isMatch(Object, Long, boolean, Object, MutableOffset, byte[])} or null
+	 *         if not enough bytes.
 	 */
 	public Object extractValueFromBytes(int offset, byte[] bytes);
 
