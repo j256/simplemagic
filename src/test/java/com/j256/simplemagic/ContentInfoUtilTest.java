@@ -70,6 +70,11 @@ public class ContentInfoUtilTest {
 							"MPEG ADTS, layer III, v1, 128 kbps, 44.1 kHz, Stereo"),
 					new FileType("/files/x.wav", ContentType.WAV, "wav", "audio/x-wav",
 							"RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, stereo 44100 Hz"),
+					// NOTE: this seems to be somewhat valid since powerpoint uses this format
+					new FileType("/files/x.ppt", ContentType.OTHER, "OLE", null, "OLE 2 Compound Document"),
+					new FileType("/files/x.pptx", ContentType.MICROSOFT_POWERPOINT_XML, "powerpoint",
+							"application/vnd.openxmlformats-officedocument.presentationml.presentation",
+							"Microsoft PowerPoint 2007+"),
 					// truncated file
 					new FileType("/files/x.nuv", ContentType.OTHER, "MythTV", null,
 							"MythTV NuppelVideo v (640x480),progressive,aspect:1.00,fps:29.97"),
