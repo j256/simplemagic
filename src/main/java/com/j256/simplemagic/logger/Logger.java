@@ -66,10 +66,6 @@ public class Logger {
 
 	/**
 	 * Log a trace message. Should be protected with a:
-	 * 
-	 * <pre>
-	 * if (logger.isLevelEnabled(Level...)) ...
-	 * </pre>
 	 */
 	public void trace(String msg, Object[] argArray) {
 		innerLog(Level.TRACE, null, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, argArray);
@@ -105,10 +101,6 @@ public class Logger {
 
 	/**
 	 * Log a trace message with a throwable.
-	 * 
-	 * <pre>
-	 * if (logger.isLevelEnabled(Level...)) ...
-	 * </pre>
 	 */
 	public void trace(Throwable throwable, String msg, Object[] argArray) {
 		innerLog(Level.TRACE, throwable, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, argArray);
@@ -144,10 +136,6 @@ public class Logger {
 
 	/**
 	 * Log a debug message.
-	 * 
-	 * <pre>
-	 * if (logger.isLevelEnabled(Level...)) ...
-	 * </pre>
 	 */
 	public void debug(String msg, Object[] argArray) {
 		innerLog(Level.DEBUG, null, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, argArray);
@@ -183,10 +171,6 @@ public class Logger {
 
 	/**
 	 * Log a debug message with a throwable.
-	 * 
-	 * <pre>
-	 * if (logger.isLevelEnabled(Level...)) ...
-	 * </pre>
 	 */
 	public void debug(Throwable throwable, String msg, Object[] argArray) {
 		innerLog(Level.DEBUG, throwable, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, argArray);
