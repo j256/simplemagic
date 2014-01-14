@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<!-- simplemagic pom configuration file for Maven (http://maven.apache.org/) -->
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.j256.simplemagic</groupId>
@@ -7,7 +8,7 @@
 	<version>1.6-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Simple Magic</name>
-	<url>http://sourceforge.net/projects/simplemagic/</url>
+	<url>http://256.com/sources/simplemagic/</url>
 	<description>Simple Magic Classes</description>
 	<licenses>
 		<license>
@@ -40,21 +41,6 @@
 		</developer>
 	</developers>
 	<profiles>
-		<profile>
-			<id>sf</id>
-			<distributionManagement>
-				<repository>
-					<id>sourceforge</id>
-					<name>SourceForge</name>
-					<url>sftp://graywatson,simplemagic@frs.sourceforge.net:/home/frs/project/simplemagic/releases</url>
-				</repository>
-				<snapshotRepository>
-					<id>sourceforge</id>
-					<name>SourceForge</name>
-					<url>sftp://graywatson,simplemagic@frs.sourceforge.net:/home/frs/project/simplemagic/snapshots</url>
-				</snapshotRepository>
-			</distributionManagement>
-		</profile>
 		<profile>
 			<id>st</id>
 			<distributionManagement>
