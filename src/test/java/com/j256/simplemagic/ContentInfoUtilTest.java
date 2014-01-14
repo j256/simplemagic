@@ -75,6 +75,8 @@ public class ContentInfoUtilTest {
 					new FileType("/files/x.pptx", ContentType.MICROSOFT_POWERPOINT_XML, "powerpoint",
 							"application/vnd.openxmlformats-officedocument.presentationml.presentation",
 							"Microsoft PowerPoint 2007+"),
+					new FileType("/files/x.7z", ContentType.SEVEN_Z, "7zip", "application/x-7z-compressed",
+							"7-zip archive data, version 0.3"),
 					// truncated file
 					new FileType("/files/x.nuv", ContentType.OTHER, "MythTV", null,
 							"MythTV NuppelVideo v (640x480),progressive,aspect:1.00,fps:29.97"),

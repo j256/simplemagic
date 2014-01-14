@@ -629,7 +629,7 @@ public enum ContentType {
 	HLP("application/winhlp", "hlp", "hlp"),
 	WSDL("application/wsdl+xml", "wsdl", "wsdl"),
 	WSPOLICY("application/wspolicy+xml", "wspolicy", "wspolicy"),
-	SEVEN_Z("application/x-7z-compressed", "7z", "7z"),
+	SEVEN_Z("application/x-7z-compressed", "7zip", "7z"),
 	ABIWORD("application/x-abiword", "abiword", "abw"),
 	ACE("application/x-ace-compressed", "ace", "ace"),
 	DMG("application/x-apple-diskimage", "dmg", "dmg"),

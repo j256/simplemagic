@@ -1,3 +1,6 @@
+1.6: 1/??/2014
+	* Added support for the 7zip file format.  Changed the name from 7z to 7zip.  Thanks to nfx.
+
 1.5: 1/3/2014
 	* Fixed the search/## pattern which was extremely broken.
 	* Added better support for Microsoft Office OOXML document types.  Thanks again to zAlbee.

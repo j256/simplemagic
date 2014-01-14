@@ -2420,9 +2420,9 @@
 >4	belong		0x090A0C0D	best compression
 
 0	string		7z\274\257\047\034	7-zip archive data,
+!:mime	application/x-7z-compressed
 >6	byte		x			version %d
 >7	byte		x			\b.%d
-
 
 2	string		-afx-		AFX compressed file data
 
