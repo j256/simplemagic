@@ -275,19 +275,22 @@ public class ContentInfoUtil {
 				closeQuietly(reader);
 			}
 		} else if (fileOrDirectory.isDirectory()) {
+			MagicEntries entries = new MagicEntries();
 			for (File subFile : fileOrDirectory.listFiles()) {
-				FileReader reader = null;
+				FileReader fr = new FileReader(subFile);
 				try {
-					reader = new FileReader(subFile);
-					return readEntries(reader);
+					readEntries(entries, fr);
 				} catch (IOException e) {
 					// ignore the file
 				} finally {
-					closeQuietly(reader);
+					closeQuietly(fr);
 				}
 			}
+			entries.optimizeFirstBytes();
+			return entries;
+		} else {
+			return null;
 		}
-		return null;
 	}
 
 	private MagicEntries readEntriesFromResource(String resource) throws IOException {
@@ -313,10 +316,15 @@ public class ContentInfoUtil {
 
 	private MagicEntries readEntries(Reader reader) throws IOException {
 		MagicEntries entries = new MagicEntries();
+		readEntries(entries, reader);
+		entries.optimizeFirstBytes();
+		return entries;
+	}
+
+	private void readEntries(MagicEntries entries, Reader reader) throws IOException {
 		BufferedReader lineReader = new BufferedReader(reader);
 		try {
 			entries.readEntries(lineReader, errorCallBack);
-			return entries;
 		} finally {
 			closeQuietly(lineReader);
 		}

@@ -86,13 +86,13 @@ public class ContentInfoUtilTest {
 	@Test
 	public void testFiles() throws Exception {
 		for (FileType fileType : fileTypes) {
-			testFile(fileType);
+			testFile(getContentInfoUtil(), fileType);
 		}
 	}
 
 	@Test
 	public void testGif() throws Exception {
-		testFile(new FileType("/files/x.gif", ContentType.GIF, "gif", "image/gif",
+		testFile(getContentInfoUtil(), new FileType("/files/x.gif", ContentType.GIF, "gif", "image/gif",
 				"GIF image data, version 89a, 32 x 32"));
 	}
 
@@ -126,22 +126,36 @@ public class ContentInfoUtilTest {
 	}
 
 	@Test
+	public void testMultipleMagicFiles() throws Exception {
+		ContentInfoUtil util = new ContentInfoUtil(new File("target/test-classes/magicFiles"));
+		testFile(util, new FileType("/files/x.gif", ContentType.GIF, "gif", "image/gif",
+				"GIF image data, version 89a, 32 x 32"));
+		testFile(util, new FileType("/files/jfif.jpg", ContentType.JPEG, "jpeg", "image/jpeg",
+				"JPEG image data, JFIF standard 1.01"));
+	}
+
+	@Test
 	public void testPerformanceRun() throws Exception {
+		ContentInfoUtil util = getContentInfoUtil();
 		for (int i = 0; i < 100; i++) {
 			for (FileType fileType : fileTypes) {
-				testFile(fileType);
+				testFile(util, fileType);
 			}
 		}
 	}
 
-	private void testFile(FileType fileType) throws IOException {
-		if (contentInfoUtil == null) {
-			contentInfoUtil = new ContentInfoUtil();
-		}
+	private void testFile(ContentInfoUtil contentInfoUtil, FileType fileType) throws IOException {
 		ContentInfo details = contentInfoFromResource(contentInfoUtil, fileType.fileName);
 		checkInfo(fileType, details);
 		details = contentInfoFromStreamWrapper(contentInfoUtil, fileType.fileName);
 		checkInfo(fileType, details);
+	}
+
+	private ContentInfoUtil getContentInfoUtil() {
+		if (contentInfoUtil == null) {
+			contentInfoUtil = new ContentInfoUtil();
+		}
+		return contentInfoUtil;
 	}
 
 	private ContentInfo contentInfoFromResource(ContentInfoUtil util, String resource) throws IOException {

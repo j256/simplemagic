@@ -21,12 +21,12 @@ public class MagicEntries {
 
 	private MagicEntry entryLinkedList;
 	private final MagicEntry[] firstByteLinkedLists = new MagicEntry[FIRST_BYTE_LINKED_LIST_SIZE];
+	private MagicEntry[] levelNexts = new MagicEntry[MAX_LEVELS];
 
 	/**
 	 * Read the entries so later we can find matches with them.
 	 */
 	public void readEntries(BufferedReader lineReader, ErrorCallBack errorCallBack) throws IOException {
-		MagicEntry[] levelNexts = new MagicEntry[MAX_LEVELS];
 		MagicEntry previousEntry = null;
 		while (true) {
 			String line = lineReader.readLine();
@@ -56,7 +56,7 @@ public class MagicEntries {
 			if (previousEntry == null) {
 				if (level != 0) {
 					if (errorCallBack != null) {
-						errorCallBack.error(line, "first entry of the file but the leve (" + level + ") should be 0",
+						errorCallBack.error(line, "first entry of the file but the level (" + level + ") should be 0",
 								null);
 					}
 					continue;
@@ -74,6 +74,7 @@ public class MagicEntries {
 					// first top level entry
 					entryLinkedList = entry;
 				} else if (levelNexts[level - 1] != null) {
+					// if the level-next is null then we know that we are a child of the one above us
 					levelNexts[level - 1].setChild(entry);
 				}
 			} else {
@@ -84,11 +85,18 @@ public class MagicEntries {
 			previousEntry = entry;
 		}
 
-		// here to compare performance improvements in the first-byte stuff
-		// if (true) {
-		// return;
-		// }
+		// if we are done reading this file then we clear the level-nexts above 0
+		for (int levelCount = 1; levelCount < levelNexts.length; levelCount++) {
+			levelNexts[levelCount] = null;
+		}
+	}
 
+	/**
+	 * Optimize the magic entries by removing the first-bytes information into their own lists
+	 */
+	public void optimizeFirstBytes() {
+		// no reason toe keep that array around
+		levelNexts = null;
 		// now we post process the entries and remove the first byte ones we can optimize
 		MagicEntry[] firstByteNexts = new MagicEntry[firstByteLinkedLists.length];
 		MagicEntry previousNonFirstByteEntry = null;
