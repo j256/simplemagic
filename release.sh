@@ -6,6 +6,16 @@
 LOCAL_DIR="$HOME/svn/local/simplemagic"
 
 #############################################################
+# check ChangeLog
+
+head -1 src/main/javadoc/doc-files/changelog.txt | fgrep '?' > /dev/null 2>&1
+if [ $? -ne 1 ]; then
+	echo "No question-marks (?) can be in the ChangeLog top line."
+	head -1 src/main/javadoc/doc-files/changelog.txt
+	exit 1
+fi
+
+#############################################################
 # check for not commited files:
 
 cd $LOCAL_DIR
