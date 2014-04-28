@@ -88,7 +88,6 @@ fi
 read cont
 if [ "$cont" = "" -o "$cont" = "y" ]; then
     cd $LOCAL_DIR
-    svn -m cp delete svn+ssh://svn.code.sf.net/p/simplemagic/code/tags/simplemagic-$release
     mvn -P st release:clean || exit 1
     mvn $GPG_ARGS -P st release:prepare || exit 1
     mvn $GPG_ARGS -P st release:perform || exit 1
