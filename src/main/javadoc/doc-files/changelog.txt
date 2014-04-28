@@ -1,4 +1,4 @@
-1.6: 1/??/2014
+1.6: 4/27/2014
 	* Added support for the 7zip file format.  Changed the name from 7z to 7zip.  Thanks to nfx.
 	* Fixed the processing of a directory of magic files which was very broken.  Thanks to nfx.
 

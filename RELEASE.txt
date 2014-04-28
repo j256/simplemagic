@@ -8,6 +8,13 @@ To release SimpleMagic:
 
 2) Add section to ~/svn/local/simplemagic/src/main/javadoc/doc-files/changelog.txt.  Commit it.
 
+3) Update the version in the simplemagic.texi, build/install the docs, commit them.
+
+        cd $HOME/svn/local/simplemagic/src/main/doc
+        make install
+        cd ..
+        git commit -a -m 'X.X docs' 
+
 3) Run the release.sh script
 
 	cd $HOME/svn/local/simplemagic

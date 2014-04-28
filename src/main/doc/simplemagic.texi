@@ -6,9 +6,9 @@
 @c %**end of header
 
 @c ----------------------------------------------------------------
-@set simplemagic_version 1.5
+@set simplemagic_version 1.6
 @set simplemagic_year 2014
-@set simplemagic_date January @value{simplemagic_year}
+@set simplemagic_date April @value{simplemagic_year}
 @set package SimpleMagic
 @c ----------------------------------------------------------------
 
@@ -45,7 +45,7 @@ Version @value{simplemagic_version} -- @value{simplemagic_date}
 @cindex simple magic
 This package provides some simple magic value features that simulate the Unix file(1) command to determine the type of a file
 or of @code{bytes} from the content.  It has an internal set of magic number information or it can process the magic files from
-local ~Unix system configuration
+local ~Unix system configuration.
 
 To get started quickly using SimpleMagic, @pxref{Quick Start}.
 @ifhtml
@@ -108,10 +108,10 @@ Here are some examples of @code{ContentInfo} output:
 
 @itemize @bullet
 @item HTML, mime 'text/html', msg 'HTML document text'
-@item Java, msg 'Java serialization data, version 5'
 @item PDF, mime 'application/pdf', msg 'PDF document, version 1.4'
 @item GIF, mime 'image/gif', msg 'GIF image data, version 89a, 16 x 16'
 @item JPEG, mime 'image/jpeg', msg 'JPEG image data, JFIF standard 1.01'
+@item Java, msg 'Java serialization data, version 5'
 @end itemize
 
 For somewhat more extensive instructions, @pxref{Using}.
