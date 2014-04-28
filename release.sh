@@ -50,7 +50,7 @@ fi
 /bin/echo -n "Enter the GPG pass-phrase: "
 read gpgpass
 
-GPG_ARGS="-Darguments=-Dgpg.passphrase=$gpgpass -Dgpg.passphrase=$gpgpass"
+GPG_ARGS="-Darguments=-Dgpg.passphrase=$gpgpass -Dgpg.passphrase=$gpgpass -DgpgPhase=verify"
 
 tmp="/tmp/release.sh.$$.t"
 touch $tmp
