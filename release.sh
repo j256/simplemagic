@@ -27,6 +27,15 @@ if [ $? -ne 0 ]; then
 fi
 
 #############################################################
+# check maven settings
+
+grep sonatype-nexus-snapshots $HOME/.m2/settings.xml > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    /bin/echo "Can't find sonatype info in the maven settings.xml file"
+    exit 1
+fi
+
+#############################################################
 # run tests
 
 cd $LOCAL_DIR
