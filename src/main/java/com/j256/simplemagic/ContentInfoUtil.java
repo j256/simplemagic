@@ -20,7 +20,25 @@ import com.j256.simplemagic.entries.MagicEntries;
  * Class which reads in the magic files and determines the {@link ContentInfo} for files and byte arrays. You use the
  * default constructor {@link #ContentInfoUtil()} to use the internal rules file or load in a local file from the
  * file-system using {@link #ContentInfoUtil(String)}. Once the rules are loaded, you can use {@link #findMatch(String)}
- * or other such methods to get the content-type of a file or bytes.
+ * or other {@code findMatch(...)} methods to get the content-type of a file or bytes.
+ * 
+ * <p>
+ * 
+ * <pre>
+ * // create a magic utility using the internal magic file
+ * ContentInfoUtil util = new ContentInfoUtil();
+ * // get the content info for this file-path or null if no match
+ * ContentInfo info = util.findMatch(&quot;/tmp/upload.tmp&quot;);
+ * // display content type information
+ * if (info == null) {
+ * 	System.out.println(&quot;Unknown content-type&quot;);
+ * } else {
+ * 	// other information in ContentInfo type
+ * 	System.out.println(&quot;Content-type is: &quot; + info.getName());
+ * }
+ * </pre>
+ * 
+ * </p>
  * 
  * @author graywatson
  */
@@ -177,7 +195,9 @@ public class ContentInfoUtil {
 	}
 
 	/**
-	 * Return the content type for the input-stream or null if none of the magic entries matched.
+	 * Return the content type for the input-stream or null if none of the magic entries matched. You might want to use
+	 * the {@link ContentInfoInputStreamWrapper} class to delegate to an input-stream and determine content information
+	 * at the same time.
 	 * 
 	 * <p>
 	 * <b>NOTE:</b> The caller is responsible for closing the input-stream.

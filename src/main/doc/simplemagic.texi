@@ -88,7 +88,13 @@ ContentInfoUtil util = new ContentInfoUtil();
 ContentInfo info = util.findMatch("/tmp/upload.tmp");
 // or   ContentInfo info = util.findMatch(inputStream);
 // or   ContentInfo info = util.findMatch(contentByteArray);
-System.out.println("Content-type is: " + info.getName());
+// display content type information
+if (info == null) @{
+   System.out.println("Unknown content-type");
+@} else @{
+   // other information in ContentInfo type
+   System.out.println("Content-type is: " + info.getName());
+@}
 @end example
 
 @end enumerate

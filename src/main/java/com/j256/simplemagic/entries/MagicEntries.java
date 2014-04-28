@@ -157,17 +157,19 @@ public class MagicEntries {
 				logger.trace("returning full match {}", info);
 				return info;
 			} else if (partialMatchInfo == null) {
-				// first partial match wins
+				// first partial match may win
 				logger.trace("found partial match {}", entry);
 				partialMatchInfo = info;
+				// continue to look for non-partial
 			} else {
-				// first partial match wins
+				// already have a partial match
 			}
 		}
 		if (partialMatchInfo == null) {
 			logger.trace("returning no match");
 			return null;
 		} else {
+			// returning first partial match
 			logger.trace("returning partial match {}", partialMatchInfo);
 			return partialMatchInfo;
 		}

@@ -12,5 +12,19 @@ fixes in each version. </p>
 
 <p> <a target="_top" href="http://256.com/sources/simplemagic/" >SimpleMagic home page</a>. </p>
 
+<p><pre>
+// create a magic utility using the internal magic file
+ContentInfoUtil util = new ContentInfoUtil();
+// get the content info for this file-path or null if no match
+ContentInfo info = util.findMatch(&quot;/tmp/upload.tmp&quot;);
+// display content type information
+if (info == null) {
+	System.out.println(&quot;Unknown content-type&quot;);
+} else {
+	// other information in ContentInfo type
+	System.out.println(&quot;Content-type is: &quot; + info.getName());
+}
+</pre></p>
+
 </body>
 </html>
