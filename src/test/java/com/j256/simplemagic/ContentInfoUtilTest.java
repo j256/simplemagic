@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -142,6 +143,11 @@ public class ContentInfoUtilTest {
 				testFile(util, fileType);
 			}
 		}
+	}
+
+	@Test(expected = FileNotFoundException.class)
+	public void testMagicNotFound() throws Exception {
+		new ContentInfoUtil("some-unknown-resource", null);
 	}
 
 	private void testFile(ContentInfoUtil contentInfoUtil, FileType fileType) throws IOException {
