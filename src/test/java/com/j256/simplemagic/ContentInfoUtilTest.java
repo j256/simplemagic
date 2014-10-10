@@ -81,6 +81,8 @@ public class ContentInfoUtilTest {
 					// truncated file
 					new FileType("/files/x.nuv", ContentType.OTHER, "MythTV", null,
 							"MythTV NuppelVideo v (640x480),progressive,aspect:1.00,fps:29.97"),
+					new FileType("/files/x.webp", ContentType.WEBP, "webp", "image/webp",
+							"RIFF (little-endian) data, WEBP image"),
 			// end
 			};
 
