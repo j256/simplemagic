@@ -8213,6 +8213,8 @@
 >>22	leshort		=2		\b, stereo
 >>22	leshort		>2		\b, %d channels
 >>24	lelong		>0		%d Hz
+>8	string		WEBP		\b, WEBP image
+!:mime image/webp
 >8	string		CDRA		\b, Corel Draw Picture
 !:mime	image/x-coreldraw
 >8	string		AVI\040		\b, AVI
