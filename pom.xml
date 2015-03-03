@@ -26,6 +26,14 @@
 		<connection>scm:git:ssh://git@github.com/j256/simplemagic.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/j256/simplemagic.git</developerConnection>
 	</scm>
+	<properties>
+		<!-- optional dependency versions -->
+		<log4j-version>1.2.12</log4j-version>
+		<log4j2-version>2.0-beta4</log4j2-version>
+		<!-- test dependency versions -->
+		<easymock-version>2.3</easymock-version>
+		<junit-version>4.8.1</junit-version>
+	</properties>
 	<developers>
 		<developer>
 			<id>gray</id>
@@ -219,14 +227,20 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	<properties>
-		<!-- external package versions -->
-		<easymock-version>2.3</easymock-version>
-		<junit-version>4.8.1</junit-version>
-		<!-- optional dependency -->
-		<spring-version>3.1.0.RELEASE</spring-version>
-	</properties>
 	<dependencies>
+		<!-- optional dependencies -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j-version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>${log4j2-version}</version>
+			<scope>provided</scope>
+		</dependency>
 		<!-- test dependencies -->
 		<dependency>
 			<groupId>junit</groupId>

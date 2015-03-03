@@ -25,13 +25,12 @@ import java.util.regex.Pattern;
  * 
  * <p>
  * It also supports a file simplemagicLocalLog.properties file which contains lines such as:
+ * </p>
  * 
  * <pre>
  * # regex-pattern = Level
  * log4j\.logger\.com\.j256\.simplemagic.*=TRACE
  * </pre>
- * 
- * </p>
  * 
  * @author graywatson
  */

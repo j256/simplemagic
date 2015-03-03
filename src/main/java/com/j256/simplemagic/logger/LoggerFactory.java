@@ -84,6 +84,8 @@ public class LoggerFactory {
 	 * Type of internal logs supported.
 	 */
 	private enum LogType {
+		LOG4J2("org.apache.logging.log4j.LogManager", "com.j256.simplemagic.logger.Log4j2Log"),
+		LOG4J("org.apache.log4j.Logger", "com.j256.simplemagic.logger.Log4jLog"),
 		// this should always be at the end, arguments are unused
 		LOCAL(LocalLog.class.getName(), LocalLog.class.getName()) {
 			@Override
@@ -142,7 +144,7 @@ public class LoggerFactory {
 		/**
 		 * Try to create the log from the class name which may throw.
 		 */
-		Log createLogFromClassName(String classLabel) throws Exception {
+		private Log createLogFromClassName(String classLabel) throws Exception {
 			Class<?> clazz = Class.forName(logClassName);
 			@SuppressWarnings("unchecked")
 			Constructor<Log> constructor = (Constructor<Log>) clazz.getConstructor(String.class);
