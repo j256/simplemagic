@@ -17,12 +17,12 @@ import java.util.zip.GZIPInputStream;
 import com.j256.simplemagic.entries.MagicEntries;
 
 /**
+ * <p>
  * Class which reads in the magic files and determines the {@link ContentInfo} for files and byte arrays. You use the
  * default constructor {@link #ContentInfoUtil()} to use the internal rules file or load in a local file from the
  * file-system using {@link #ContentInfoUtil(String)}. Once the rules are loaded, you can use {@link #findMatch(String)}
  * or other {@code findMatch(...)} methods to get the content-type of a file or bytes.
- * 
- * <p>
+ * </p>
  * 
  * <pre>
  * // create a magic utility using the internal magic file
@@ -37,8 +37,6 @@ import com.j256.simplemagic.entries.MagicEntries;
  * 	System.out.println(&quot;Content-type is: &quot; + info.getName());
  * }
  * </pre>
- * 
- * </p>
  * 
  * @author graywatson
  */
