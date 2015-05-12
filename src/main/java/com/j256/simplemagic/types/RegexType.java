@@ -26,6 +26,7 @@ public class RegexType implements MagicMatcher {
 	private final static Pattern TYPE_PATTERN = Pattern.compile("[^/]+(/[cs]*)?");
 	private static final String EMPTY = "";
 
+	@Override
 	public Object convertTestString(String typeStr, String testStr) {
 		Matcher matcher = TYPE_PATTERN.matcher(typeStr);
 		PatternInfo patternInfo = new PatternInfo();
@@ -45,10 +46,12 @@ public class RegexType implements MagicMatcher {
 		return patternInfo;
 	}
 
+	@Override
 	public Object extractValueFromBytes(int offset, byte[] bytes) {
 		return EMPTY;
 	}
 
+	@Override
 	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue,
 			MutableOffset mutableOffset, byte[] bytes) {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes)));
@@ -84,10 +87,12 @@ public class RegexType implements MagicMatcher {
 			return null;
 		}
 	}
+	@Override
 	public void renderValue(StringBuilder sb, Object extractedValue, MagicFormatter formatter) {
 		formatter.format(sb, extractedValue);
 	}
 
+	@Override
 	public byte[] getStartingBytes(Object testValue) {
 		return null;
 	}

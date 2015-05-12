@@ -13,6 +13,7 @@ public class Log4j2Log implements Log {
 		this.logger = org.apache.logging.log4j.LogManager.getLogger(className);
 	}
 
+	@Override
 	public boolean isLevelEnabled(Level level) {
 		switch (level) {
 			case TRACE :
@@ -32,6 +33,7 @@ public class Log4j2Log implements Log {
 		}
 	}
 
+	@Override
 	public void log(Level level, String msg) {
 		switch (level) {
 			case TRACE :
@@ -58,6 +60,7 @@ public class Log4j2Log implements Log {
 		}
 	}
 
+	@Override
 	public void log(Level level, String msg, Throwable t) {
 		switch (level) {
 			case TRACE :

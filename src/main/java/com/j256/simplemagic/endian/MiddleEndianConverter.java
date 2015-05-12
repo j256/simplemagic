@@ -11,14 +11,17 @@ public class MiddleEndianConverter implements EndianConverter {
 		// only EndiaType should construct this
 	}
 
+	@Override
 	public Long convertNumber(int offset, byte[] bytes, int size) {
 		return convertNumber(offset, bytes, size, 8, 0xFF);
 	}
 
+	@Override
 	public Long convertId3(int offset, byte[] bytes, int size) {
 		return convertNumber(offset, bytes, size, 7, 0x7F);
 	}
 
+	@Override
 	public byte[] convertToByteArray(long value, int size) {
 		if (size == 4) {
 			// BADC again

@@ -13,14 +13,17 @@ public class Log4jLog implements Log {
 		this.logger = org.apache.log4j.Logger.getLogger(className);
 	}
 
+	@Override
 	public boolean isLevelEnabled(Level level) {
 		return logger.isEnabledFor(levelToLog4jLevel(level));
 	}
 
+	@Override
 	public void log(Level level, String msg) {
 		logger.log(levelToLog4jLevel(level), msg);
 	}
 
+	@Override
 	public void log(Level level, String msg, Throwable t) {
 		logger.log(levelToLog4jLevel(level), msg, t);
 	}

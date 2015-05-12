@@ -17,25 +17,30 @@ public class DefaultType implements MagicMatcher {
 
 	private static final String EMPTY = "";
 
+	@Override
 	public Object convertTestString(String typeStr, String testStr) {
 		// null is an error so we just return junk
 		return EMPTY;
 	}
 
+	@Override
 	public Object extractValueFromBytes(int offset, byte[] bytes) {
 		return EMPTY;
 	}
 
+	@Override
 	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue,
 			MutableOffset offset, byte[] bytes) {
 		// always matches
 		return EMPTY;
 	}
 
+	@Override
 	public void renderValue(StringBuilder sb, Object extractedValue, MagicFormatter formatter) {
 		formatter.format(sb, extractedValue);
 	}
 
+	@Override
 	public byte[] getStartingBytes(Object testValue) {
 		return null;
 	}

@@ -21,6 +21,7 @@ public class StringType implements MagicMatcher {
 	private final static Pattern TYPE_PATTERN = Pattern.compile("[^/]+(/\\d+)?(/[BbcwWt]*)?");
 	private static final String EMPTY = "";
 
+	@Override
 	public Object convertTestString(String typeStr, String testStr) {
 		Matcher matcher = TYPE_PATTERN.matcher(typeStr);
 		if (!matcher.matches()) {
@@ -67,20 +68,24 @@ public class StringType implements MagicMatcher {
 		return new TestInfo(processedPattern, compactWhiteSpace, optionalWhiteSpace, caseInsensitive, maxOffset);
 	}
 
+	@Override
 	public Object extractValueFromBytes(int offset, byte[] bytes) {
 		return EMPTY;
 	}
 
+	@Override
 	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue,
 			MutableOffset mutableOffset, byte[] bytes) {
 		// find the match in the array of bytes
 		return findOffsetMatch((TestInfo) testValue, mutableOffset.offset, mutableOffset, bytes);
 	}
 
+	@Override
 	public void renderValue(StringBuilder sb, Object extractedValue, MagicFormatter formatter) {
 		formatter.format(sb, extractedValue);
 	}
 
+	@Override
 	public byte[] getStartingBytes(Object testValue) {
 		return ((TestInfo) testValue).getStartingBytes();
 	}

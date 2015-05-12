@@ -6986,6 +6986,8 @@
 >>49824 leshort		=1			\b, 1 file
 >>49824 leshort		>1			\b, %u files
 
+0		byte	0xe9		DOS executable (COM)
+>0x1FE	leshort	0xAA55		\b, boot code
 >6	string		SFX\ of\ LHarc	(%s)
 0	belong	0xffffffff		DOS executable (device driver)
 >10	string	>\x23			
