@@ -133,6 +133,7 @@ For somewhat more extensive instructions, @pxref{Using}.
 * Loading Magic Entries ::      Loading in the magic entries from files.
 * Finding Content Info ::       Finding the content type from data.
 * Content Info ::               Content type information returned.
+@ Maven ::                      How to use with Maven.
 @end menu
 
 @c ----------------------------------------------------------------
@@ -146,7 +147,7 @@ To get started with SimpleMagic, you will need to download the jar file.  The @u
 release page} is the default repository but the jars are also available from the @uref{http://repo1.maven.org/maven2/com/j256/simplemagic/,
 central maven repository}.
 
-The code works with Java 5 or later.
+The code works with Java 6 or later.
 
 @c ----------------------------------------------------------------
 @node Loading Magic Entries, Finding Content Info, Downloading, Using
@@ -297,7 +298,23 @@ Here are some examples of @code{ContentInfo} output:
 @end itemize
 
 @c ----------------------------------------------------------------
-@node License, Index of Concepts, Content Info, Top
+@node Maven, License, Content Info, Using
+@section Using With Maven
+
+@cindex Maven, use with
+@cindex pom.xml dependency
+To use SimpleMagic with maven, include the following dependency in your @file{pom.xml} file:
+
+@example
+<dependency>
+	<groupId>com.j256.simplemagic</groupId>
+	<artifactId>simplemagic</artifactId>
+	<version>@value{simplemagic_version}</version>
+</dependency>
+@end example 
+
+@c ----------------------------------------------------------------
+@node License, Index of Concepts, Maven, Top
 @chapter Open Source License
 
 @cindex license
