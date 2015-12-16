@@ -37,12 +37,6 @@ if [ $? -ne 0 ]; then
 fi
 
 #############################################################
-# run tests
-
-cd $LOCAL_DIR
-mvn test || exit 1
-
-#############################################################
 
 release=`grep version pom.xml | grep SNAPSHOT | head -1 | cut -f2 -d\> | cut -f1 -d\-`
 
@@ -71,9 +65,15 @@ ver=`grep '^@set $LIBRARY_version' src/main/doc/$LIBRARY.texi | cut -f3 -d' '`
 if [ "$release" != "$ver" ]; then
 	/bin/echo "$LIBRARY.texi version seems wrong:"
 	grep '^@set $LIBRARY_version' src/main/doc/$LIBRARY.texi
-	/bin/echo "Press control-c to quit otherwise return.  [ok] "
+	/bin/echo -n "Press control-c to quit otherwise return.  [ok] "
 	read cont
 fi
+
+#############################################################
+# run tests
+
+cd $LOCAL_DIR
+mvn test || exit 1
 
 #############################################################
 
