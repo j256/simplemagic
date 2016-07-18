@@ -908,21 +908,32 @@ public enum ContentType {
 
 	/**
 	 * Get simple name of the type.
+	 * @return the simple name of the type.
 	 */
 	public String getSimpleName() {
 		return simpleName;
 	}
 
+	/**
+	 * Get the mime type
+	 * @return the mime type
+	 */
 	public String getMimeType() {
 		return mimeType;
 	}
 
+	/**
+	 * Get the file extensions for this content type
+	 * @return possible file extensions
+	 */
 	public String[] getFileExtensions() {
 		return fileExtensions;
 	}
 
 	/**
 	 * Return the type associated with the mime-type string or {@link #OTHER} if not found.
+	 * @param mimeType the mime type to be searched for
+	 * @return the type associated with the mime-type string or {@link #OTHER} if not found.
 	 */
 	public static ContentType fromMimeType(String mimeType) {
 		// NOTE: mimeType can be null
@@ -940,6 +951,8 @@ public enum ContentType {
 
 	/**
 	 * Return the type associated with the file-extension string or {@link #OTHER} if not found.
+	 * @param fileExtension the extension to be searched for
+	 * @return the type associated with the file-extension string or {@link #OTHER} if not found.
 	 */
 	public static ContentType fromFileExtension(String fileExtension) {
 		// NOTE: mimeType can be null

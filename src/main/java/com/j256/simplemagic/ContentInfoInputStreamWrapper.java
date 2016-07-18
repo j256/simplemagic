@@ -26,6 +26,9 @@ public class ContentInfoInputStreamWrapper extends InputStream {
 
 	/**
 	 * Create a stream wrapper while specifying your own ContentInfoUtil.
+	 * 
+	 * @param delegate An input stream to be wrapped
+	 * @param contentInfoUtil The content to be used as context
 	 */
 	public ContentInfoInputStreamWrapper(InputStream delegate, ContentInfoUtil contentInfoUtil) {
 		this.delegate = delegate;
@@ -34,6 +37,8 @@ public class ContentInfoInputStreamWrapper extends InputStream {
 
 	/**
 	 * Create a stream wrapper while using the internal, static ContentInfoUtil.
+	 * 
+	 * @param delegate An input stream to be wrapped
 	 */
 	public ContentInfoInputStreamWrapper(InputStream delegate) {
 		this(delegate, getStaticContentInfoUtil());
@@ -41,6 +46,8 @@ public class ContentInfoInputStreamWrapper extends InputStream {
 
 	/**
 	 * Find a match from the bytes that have been read from the stream using {@link ContentInfoUtil#findMatch(byte[])}.
+	 * 
+	 * @return A content info representing a match from the bytes that have been read
 	 */
 	public ContentInfo findMatch() {
 		byte[] readBytes;

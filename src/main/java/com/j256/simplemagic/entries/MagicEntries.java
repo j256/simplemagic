@@ -25,6 +25,9 @@ public class MagicEntries {
 
 	/**
 	 * Read the entries so later we can find matches with them.
+	 * @param lineReader A line reader for a magic file
+	 * @param errorCallBack A callback handler for errors
+	 * @throws IOException In the event of an IO error
 	 */
 	public void readEntries(BufferedReader lineReader, ErrorCallBack errorCallBack) throws IOException {
 		MagicEntry previousEntry = null;
@@ -127,6 +130,8 @@ public class MagicEntries {
 
 	/**
 	 * Find and return a match for the associated bytes.
+	 * @param bytes The bytes to be introspected
+	 * @return A ContentInfo representation of the result
 	 */
 	public ContentInfo findMatch(byte[] bytes) {
 		if (bytes.length == 0) {

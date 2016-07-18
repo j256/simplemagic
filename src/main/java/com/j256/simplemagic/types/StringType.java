@@ -92,6 +92,12 @@ public class StringType implements MagicMatcher {
 
 	/**
 	 * Called from the string and search types to see if a string or byte array matches our pattern.
+	 * 
+	 * @param info    information about strings.
+	 * @param offset  The offset to begin at
+	 * @param mutableOffset A mutable offset to be changed as calculation proceeds
+	 * @param bytes   The bytes to be checked
+	 * @return		  The string found
 	 */
 	protected String findOffsetMatch(TestInfo info, int offset, MutableOffset mutableOffset, byte[] bytes) {
 		int targetPos = offset;

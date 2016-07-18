@@ -66,6 +66,10 @@ public class LocalLog implements Log {
 		openLogFile(logPath);
 	}
 
+	/**
+	 * Create a new local log with the given class name
+	 * @param className A class to be used for logging
+	 */
 	public LocalLog(String className) {
 		// get the last part of the class name
 		this.className = LoggerFactory.getSimpleClassName(className);
@@ -102,6 +106,7 @@ public class LocalLog implements Log {
 
 	/**
 	 * Reopen the associated static logging stream. Set to null to redirect to System.out.
+	 * @param logPath the path of the log file
 	 */
 	public static void openLogFile(String logPath) {
 		if (logPath == null) {

@@ -31,6 +31,16 @@ public class LittleEndianConverter implements EndianConverter {
 		return result;
 	}
 
+	/**
+	 * Convert the number found at the given offset
+	 * 
+	 * @param offset  The offset to begin searching
+	 * @param bytes   The bytes to introspect
+	 * @param size    The size / number of bytes to read
+	 * @param shift   The shift (+/-) to be applied after
+	 * @param mask    The mask to be applied
+	 * @return A long representation of the read number
+	 */
 	public Long convertNumber(int offset, byte[] bytes, int size, int shift, int mask) {
 		if (offset + size > bytes.length) {
 			return null;
