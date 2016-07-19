@@ -160,6 +160,39 @@ public class ContentInfoUtil {
 		}
 	}
 
+	
+
+	/**
+	 * Construct a magic utility using the magic entries from an inputstream
+	 * 
+	 * @param magicFile An inputstream representing a magic file
+	 * @throws IOException
+	 *             If there was a problem reading the magic entries from the internal magic file.
+	 */
+	public ContentInfoUtil(InputStream magicFile) throws IOException {
+		this(magicFile, null);
+	}
+
+	
+	/**
+	 * Construct a magic utility using the magic entries from an inputstream. 
+	 * This also allows the caller to log any errors discovered in the file(s).
+
+	 * @param magicFile An inputstream representing a magic file
+	 * @param errorCallBack
+	 *            Call back which shows any problems with the magic entries loaded.
+	 * @throws IOException
+	 *             If there was a problem reading the magic entries from the internal magic file.
+	 */
+	public ContentInfoUtil(InputStream magicFile, ErrorCallBack errorCallBack) throws IOException {
+		this.errorCallBack = errorCallBack;
+		this.magicEntries = readEntriesFromStream(magicFile);
+		if (this.magicEntries == null) {
+			throw new IllegalArgumentException("Error reading magic file from provided stream.");
+		}
+	}
+
+	
 	/**
 	 * Return the content type for the file-path or null if none of the magic entries matched.
 	 * 
@@ -311,6 +344,21 @@ public class ContentInfoUtil {
 		}
 	}
 
+	private MagicEntries readEntriesFromStream(InputStream stream) throws FileNotFoundException, IOException {
+		if (stream != null) {
+			InputStreamReader reader = new InputStreamReader(stream);
+			try {
+				return readEntries(reader);
+			} finally {
+				closeQuietly(reader);
+			}
+		} else {
+			return null;
+		}
+	}
+
+	
+	
 	private MagicEntries readEntriesFromResource(String resource) throws IOException {
 		InputStream stream = getClass().getResourceAsStream(resource);
 		if (stream == null) {
