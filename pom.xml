@@ -21,11 +21,6 @@
 		<artifactId>oss-parent</artifactId>
 		<version>7</version>
 	</parent>
-	<scm>
-		<url>https://github.com/j256/simplemagic</url>
-		<connection>scm:git:ssh://git@github.com/j256/simplemagic.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com/j256/simplemagic.git</developerConnection>
-	</scm>
 	<properties>
 		<!-- optional dependency versions -->
 		<log4j-version>1.2.12</log4j-version>
@@ -34,6 +29,11 @@
 		<easymock-version>2.3</easymock-version>
 		<junit-version>4.8.1</junit-version>
 	</properties>
+	<scm>
+		<url>https://github.com/j256/simplemagic</url>
+		<connection>scm:git:ssh://git@github.com/j256/simplemagic.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/j256/simplemagic.git</developerConnection>
+	</scm>
 	<developers>
 		<developer>
 			<id>gray</id>
@@ -101,18 +101,12 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.6</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 				<version>2.2.1</version>
 				<executions>
 					<execution>
 						<goals>
 							<goal>jar</goal>
-							<goal>test-jar</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -146,32 +140,8 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.4</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<version>2.9</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<archive>
-						<manifestEntries>
-							<Application-Version>${appVersion}</Application-Version>
-						</manifestEntries>
-					</archive>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>test-jar</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -190,11 +160,6 @@
 					<!-- j256 Releases (Code releases for j256.com) <j256@256.com> -->
 					<keyname>D3412AC1</keyname>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.5.2</version>
 			</plugin>
 		</plugins>
 		<pluginManagement>

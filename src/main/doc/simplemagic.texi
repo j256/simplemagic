@@ -133,7 +133,7 @@ For somewhat more extensive instructions, @pxref{Using}.
 * Loading Magic Entries ::      Loading in the magic entries from files.
 * Finding Content Info ::       Finding the content type from data.
 * Content Info ::               Content type information returned.
-@ Maven ::                      How to use with Maven.
+* Maven ::                      How to use with Maven.
 @end menu
 
 @c ----------------------------------------------------------------
