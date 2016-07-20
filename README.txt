@@ -1,7 +1,7 @@
 This package provides some simple Java classes to read the magic files from Unix to simulate the file(1) command.
 
 For more information, visit the home page:
-	http://256.com/sources/simplemagic/
+	http://256stuff.com/sources/simplemagic/
 
 The git repository is:
 	https://github.com/j256/simplemagic
