@@ -26,6 +26,9 @@ public class LoggerFactory {
 
 	/**
 	 * Return a logger associated with a particular class.
+	 * 
+	 * @param clazz A class to be used for logging
+	 * @return A logger to use
 	 */
 	public static Logger getLogger(Class<?> clazz) {
 		return getLogger(clazz.getName());
@@ -33,6 +36,9 @@ public class LoggerFactory {
 
 	/**
 	 * Return a logger associated with a particular class name.
+	 * 
+	 * @param className A class to be used for logging
+	 * @return A logger to use
 	 */
 	public static Logger getLogger(String className) {
 		if (logType == null) {
@@ -43,6 +49,9 @@ public class LoggerFactory {
 
 	/**
 	 * Return the single class name from a class-name string.
+	 * 
+	 * @param className a fully-qualified classname
+	 * @return The simple classname
 	 */
 	public static String getSimpleClassName(String className) {
 		// get the last part of the class name
@@ -111,6 +120,8 @@ public class LoggerFactory {
 
 		/**
 		 * Create and return a Log class for this type.
+		 * @param classLabel A classname to be used for logging
+		 * @return A log
 		 */
 		public Log createLog(String classLabel) {
 			try {

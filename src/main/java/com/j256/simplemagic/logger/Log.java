@@ -9,16 +9,23 @@ public interface Log {
 
 	/**
 	 * Returns true if the log mode is in trace or higher.
+	 * @param level A level to be checked
+	 * @return true if the log mode is in trace or higher.
 	 */
 	public boolean isLevelEnabled(Level level);
 
 	/**
 	 * Log a trace message.
+	 * @param level A level to log with
+	 * @param message A message
 	 */
 	public void log(Level level, String message);
 
 	/**
 	 * Log a trace message with a throwable.
+	 * @param level A level to log with
+	 * @param message A message
+	 * @param t An error or exception 
 	 */
 	public void log(Level level, String message, Throwable t);
 
@@ -50,6 +57,9 @@ public interface Log {
 		/**
 		 * Return whether or not a level argument is enabled for this level value. So, Level.INFO.isEnabled(Level.WARN)
 		 * returns true but Level.INFO.isEnabled(Level.DEBUG) returns false.
+		 * 
+		 * @param otherLevel a level to be compared against
+		 * @return whether this level is enabled
 		 */
 		public boolean isEnabled(Level otherLevel) {
 			return level <= otherLevel.level;

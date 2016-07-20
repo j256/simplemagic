@@ -10,6 +10,8 @@ public class NumberOperator {
 
 	/**
 	 * Preprocess the test string into an operator and a value class.
+	 * 
+	 * @param test  The test as defined in the magic file
 	 */
 	public NumberOperator(String test) {
 		TestOperator op = TestOperator.fromTest(test);

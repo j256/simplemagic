@@ -27,6 +27,7 @@ public enum EndianType {
 
 	/**
 	 * Returns the converter associated with this endian-type.
+	 * @return the converter associated with this endian-type.
 	 */
 	public EndianConverter getConverter() {
 		return converter;

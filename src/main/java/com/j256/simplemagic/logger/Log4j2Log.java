@@ -1,7 +1,7 @@
 package com.j256.simplemagic.logger;
 
 /**
- * Class which implements our {@link com.j256.ormlite.logger.Log} interface by delegating to Apache Log4j2.
+ * Class which implements our {@link com.j256.simplemagic.logger.Log} interface by delegating to Apache Log4j2.
  * 
  * @author graywatson
  */
@@ -9,6 +9,11 @@ public class Log4j2Log implements Log {
 
 	private final org.apache.logging.log4j.Logger logger;
 
+	/**
+	 * Instantiate a Log4j2Log
+	 * 
+	 * @param className A classname of a logger to use
+	 */
 	public Log4j2Log(String className) {
 		this.logger = org.apache.logging.log4j.LogManager.getLogger(className);
 	}

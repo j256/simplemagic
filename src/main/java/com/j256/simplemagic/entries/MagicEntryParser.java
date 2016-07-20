@@ -24,6 +24,11 @@ public class MagicEntryParser {
 
 	/**
 	 * Parse a line from the magic configuration file into an entry.
+	 * 
+	 * @param previous The previous entry
+	 * @param line     The line to be converted
+	 * @param errorCallBack The callback handler for errors
+	 * @return MagicEntry The resultant magic entry that is created from the line
 	 */
 	public static MagicEntry parseLine(MagicEntry previous, String line, ErrorCallBack errorCallBack) {
 		if (line.startsWith("!:")) {

@@ -137,6 +137,9 @@ public enum MagicType {
 
 	/**
 	 * Find the associated matcher to the string.
+	 * 
+	 * @param typeString a type to find a matcher for
+	 * @return A matcher for the given type
 	 */
 	public static MagicMatcher matcherfromString(String typeString) {
 		MagicMatcher matcher = typeMap.get(typeString);

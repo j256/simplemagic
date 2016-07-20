@@ -23,6 +23,7 @@ public class MagicFormatter {
 
 	/**
 	 * This takes a format string, breaks it up into prefix, %-thang, and suffix.
+	 * @param formatString A format string for outputs
 	 */
 	public MagicFormatter(String formatString) {
 		Matcher matcher = FORMAT_PATTERN.matcher(formatString);
@@ -74,6 +75,8 @@ public class MagicFormatter {
 
 	/**
 	 * Formats the extracted value assigned and returns the associated string
+	 * @param sb A string builder 
+	 * @param value The value to format and append to the stringbuilder
 	 */
 	public void format(StringBuilder sb, Object value) {
 		if (prefix != null) {

@@ -38,6 +38,9 @@ public class Logger {
 
 	/**
 	 * Return if logging level is enabled.
+	 * 
+	 * @param level  The log level
+	 * @return if logging level is enabled.
 	 */
 	public boolean isLevelEnabled(Level level) {
 		return log.isLevelEnabled(level);
@@ -45,6 +48,8 @@ public class Logger {
 
 	/**
 	 * Log a trace message.
+	 * 
+	 * @param msg The message to log
 	 */
 	public void trace(String msg) {
 		logIfEnabled(Level.TRACE, null, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -52,6 +57,9 @@ public class Logger {
 
 	/**
 	 * Log a trace message.
+	 * 
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
 	 */
 	public void trace(String msg, Object arg0) {
 		logIfEnabled(Level.TRACE, null, msg, arg0, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -59,6 +67,10 @@ public class Logger {
 
 	/**
 	 * Log a trace message.
+	 * 
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
 	 */
 	public void trace(String msg, Object arg0, Object arg1) {
 		logIfEnabled(Level.TRACE, null, msg, arg0, arg1, UNKNOWN_ARG, null);
@@ -66,6 +78,11 @@ public class Logger {
 
 	/**
 	 * Log a trace message.
+	 * 
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
+	 * @param arg2 	A parameter for string replacement
 	 */
 	public void trace(String msg, Object arg0, Object arg1, Object arg2) {
 		logIfEnabled(Level.TRACE, null, msg, arg0, arg1, arg2, null);
@@ -73,6 +90,9 @@ public class Logger {
 
 	/**
 	 * Log a trace message.
+	 * 
+	 * @param msg 	The message to log
+	 * @param argArray Further string replacement values
 	 */
 	public void trace(String msg, Object[] argArray) {
 		logIfEnabled(Level.TRACE, null, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, argArray);
@@ -80,6 +100,9 @@ public class Logger {
 
 	/**
 	 * Log a trace message with a throwable.
+	 * 
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
 	 */
 	public void trace(Throwable throwable, String msg) {
 		logIfEnabled(Level.TRACE, throwable, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -87,6 +110,9 @@ public class Logger {
 
 	/**
 	 * Log a trace message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
 	 */
 	public void trace(Throwable throwable, String msg, Object arg0) {
 		logIfEnabled(Level.TRACE, throwable, msg, arg0, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -94,6 +120,10 @@ public class Logger {
 
 	/**
 	 * Log a trace message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
 	 */
 	public void trace(Throwable throwable, String msg, Object arg0, Object arg1) {
 		logIfEnabled(Level.TRACE, throwable, msg, arg0, arg1, UNKNOWN_ARG, null);
@@ -101,6 +131,11 @@ public class Logger {
 
 	/**
 	 * Log a trace message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
+	 * @param arg2 	A parameter for string replacement
 	 */
 	public void trace(Throwable throwable, String msg, Object arg0, Object arg1, Object arg2) {
 		logIfEnabled(Level.TRACE, throwable, msg, arg0, arg1, arg2, null);
@@ -108,6 +143,9 @@ public class Logger {
 
 	/**
 	 * Log a trace message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param argArray Further string replacement values
 	 */
 	public void trace(Throwable throwable, String msg, Object[] argArray) {
 		logIfEnabled(Level.TRACE, throwable, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, argArray);
@@ -115,6 +153,7 @@ public class Logger {
 
 	/**
 	 * Log a debug message.
+	 * @param msg 	The message to log
 	 */
 	public void debug(String msg) {
 		logIfEnabled(Level.DEBUG, null, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -122,6 +161,8 @@ public class Logger {
 
 	/**
 	 * Log a debug message.
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
 	 */
 	public void debug(String msg, Object arg0) {
 		logIfEnabled(Level.DEBUG, null, msg, arg0, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -129,6 +170,9 @@ public class Logger {
 
 	/**
 	 * Log a debug message.
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
 	 */
 	public void debug(String msg, Object arg0, Object arg1) {
 		logIfEnabled(Level.DEBUG, null, msg, arg0, arg1, UNKNOWN_ARG, null);
@@ -136,6 +180,10 @@ public class Logger {
 
 	/**
 	 * Log a debug message.
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
+	 * @param arg2 	A parameter for string replacement
 	 */
 	public void debug(String msg, Object arg0, Object arg1, Object arg2) {
 		logIfEnabled(Level.DEBUG, null, msg, arg0, arg1, arg2, null);
@@ -143,6 +191,8 @@ public class Logger {
 
 	/**
 	 * Log a debug message.
+	 * @param msg 	The message to log
+	 * @param argArray String replacement values
 	 */
 	public void debug(String msg, Object[] argArray) {
 		logIfEnabled(Level.DEBUG, null, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, argArray);
@@ -150,6 +200,8 @@ public class Logger {
 
 	/**
 	 * Log a debug message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
 	 */
 	public void debug(Throwable throwable, String msg) {
 		logIfEnabled(Level.DEBUG, throwable, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -157,6 +209,9 @@ public class Logger {
 
 	/**
 	 * Log a debug message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
 	 */
 	public void debug(Throwable throwable, String msg, Object arg0) {
 		logIfEnabled(Level.DEBUG, throwable, msg, arg0, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -164,6 +219,10 @@ public class Logger {
 
 	/**
 	 * Log a debug message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
 	 */
 	public void debug(Throwable throwable, String msg, Object arg0, Object arg1) {
 		logIfEnabled(Level.DEBUG, throwable, msg, arg0, arg1, UNKNOWN_ARG, null);
@@ -171,6 +230,11 @@ public class Logger {
 
 	/**
 	 * Log a debug message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
+	 * @param arg2 	A parameter for string replacement
 	 */
 	public void debug(Throwable throwable, String msg, Object arg0, Object arg1, Object arg2) {
 		logIfEnabled(Level.DEBUG, throwable, msg, arg0, arg1, arg2, null);
@@ -178,6 +242,9 @@ public class Logger {
 
 	/**
 	 * Log a debug message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param argArray String replacement values
 	 */
 	public void debug(Throwable throwable, String msg, Object[] argArray) {
 		logIfEnabled(Level.DEBUG, throwable, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, argArray);
@@ -185,6 +252,7 @@ public class Logger {
 
 	/**
 	 * Log a info message.
+	 * @param msg 	The message to log
 	 */
 	public void info(String msg) {
 		logIfEnabled(Level.INFO, null, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -192,6 +260,8 @@ public class Logger {
 
 	/**
 	 * Log a info message.
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
 	 */
 	public void info(String msg, Object arg0) {
 		logIfEnabled(Level.INFO, null, msg, arg0, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -199,6 +269,9 @@ public class Logger {
 
 	/**
 	 * Log a info message.
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
 	 */
 	public void info(String msg, Object arg0, Object arg1) {
 		logIfEnabled(Level.INFO, null, msg, arg0, arg1, UNKNOWN_ARG, null);
@@ -206,6 +279,10 @@ public class Logger {
 
 	/**
 	 * Log a info message.
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
+	 * @param arg2 	A parameter for string replacement
 	 */
 	public void info(String msg, Object arg0, Object arg1, Object arg2) {
 		logIfEnabled(Level.INFO, null, msg, arg0, arg1, arg2, null);
@@ -213,6 +290,8 @@ public class Logger {
 
 	/**
 	 * Log a info message.
+	 * @param msg 	The message to log
+	 * @param argArray Further string replacement values
 	 */
 	public void info(String msg, Object[] argArray) {
 		logIfEnabled(Level.INFO, null, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, argArray);
@@ -220,6 +299,8 @@ public class Logger {
 
 	/**
 	 * Log a info message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
 	 */
 	public void info(Throwable throwable, String msg) {
 		logIfEnabled(Level.INFO, throwable, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -227,6 +308,9 @@ public class Logger {
 
 	/**
 	 * Log a info message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
 	 */
 	public void info(Throwable throwable, String msg, Object arg0) {
 		logIfEnabled(Level.INFO, throwable, msg, arg0, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -234,6 +318,10 @@ public class Logger {
 
 	/**
 	 * Log a info message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
 	 */
 	public void info(Throwable throwable, String msg, Object arg0, Object arg1) {
 		logIfEnabled(Level.INFO, throwable, msg, arg0, arg1, UNKNOWN_ARG, null);
@@ -241,6 +329,11 @@ public class Logger {
 
 	/**
 	 * Log a info message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
+	 * @param arg2 	A parameter for string replacement
 	 */
 	public void info(Throwable throwable, String msg, Object arg0, Object arg1, Object arg2) {
 		logIfEnabled(Level.INFO, throwable, msg, arg0, arg1, arg2, null);
@@ -248,6 +341,9 @@ public class Logger {
 
 	/**
 	 * Log a info message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param argArray String replacement values
 	 */
 	public void info(Throwable throwable, String msg, Object[] argArray) {
 		logIfEnabled(Level.INFO, throwable, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, argArray);
@@ -255,6 +351,7 @@ public class Logger {
 
 	/**
 	 * Log a warning message.
+	 * @param msg 	The message to log
 	 */
 	public void warn(String msg) {
 		logIfEnabled(Level.WARNING, null, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -262,6 +359,8 @@ public class Logger {
 
 	/**
 	 * Log a warning message.
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
 	 */
 	public void warn(String msg, Object arg0) {
 		logIfEnabled(Level.WARNING, null, msg, arg0, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -269,6 +368,9 @@ public class Logger {
 
 	/**
 	 * Log a warning message.
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
 	 */
 	public void warn(String msg, Object arg0, Object arg1) {
 		logIfEnabled(Level.WARNING, null, msg, arg0, arg1, UNKNOWN_ARG, null);
@@ -276,6 +378,10 @@ public class Logger {
 
 	/**
 	 * Log a warning message.
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
+	 * @param arg2 	A parameter for string replacement
 	 */
 	public void warn(String msg, Object arg0, Object arg1, Object arg2) {
 		logIfEnabled(Level.WARNING, null, msg, arg0, arg1, arg2, null);
@@ -283,6 +389,8 @@ public class Logger {
 
 	/**
 	 * Log a warning message.
+	 * @param msg 	The message to log
+	 * @param argArray String replacement values
 	 */
 	public void warn(String msg, Object[] argArray) {
 		logIfEnabled(Level.WARNING, null, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, argArray);
@@ -290,6 +398,8 @@ public class Logger {
 
 	/**
 	 * Log a warning message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
 	 */
 	public void warn(Throwable throwable, String msg) {
 		logIfEnabled(Level.WARNING, throwable, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -297,6 +407,9 @@ public class Logger {
 
 	/**
 	 * Log a warning message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
 	 */
 	public void warn(Throwable throwable, String msg, Object arg0) {
 		logIfEnabled(Level.WARNING, throwable, msg, arg0, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -304,6 +417,10 @@ public class Logger {
 
 	/**
 	 * Log a warning message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
 	 */
 	public void warn(Throwable throwable, String msg, Object arg0, Object arg1) {
 		logIfEnabled(Level.WARNING, throwable, msg, arg0, arg1, UNKNOWN_ARG, null);
@@ -311,6 +428,11 @@ public class Logger {
 
 	/**
 	 * Log a warning message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
+	 * @param arg2 	A parameter for string replacement
 	 */
 	public void warn(Throwable throwable, String msg, Object arg0, Object arg1, Object arg2) {
 		logIfEnabled(Level.WARNING, throwable, msg, arg0, arg1, arg2, null);
@@ -318,6 +440,9 @@ public class Logger {
 
 	/**
 	 * Log a warning message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param argArray String replacement values
 	 */
 	public void warn(Throwable throwable, String msg, Object[] argArray) {
 		logIfEnabled(Level.WARNING, throwable, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, argArray);
@@ -325,6 +450,7 @@ public class Logger {
 
 	/**
 	 * Log a error message.
+	 * @param msg 	The message to log
 	 */
 	public void error(String msg) {
 		logIfEnabled(Level.ERROR, null, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -332,6 +458,8 @@ public class Logger {
 
 	/**
 	 * Log a error message.
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
 	 */
 	public void error(String msg, Object arg0) {
 		logIfEnabled(Level.ERROR, null, msg, arg0, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -339,6 +467,9 @@ public class Logger {
 
 	/**
 	 * Log a error message.
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
 	 */
 	public void error(String msg, Object arg0, Object arg1) {
 		logIfEnabled(Level.ERROR, null, msg, arg0, arg1, UNKNOWN_ARG, null);
@@ -346,6 +477,10 @@ public class Logger {
 
 	/**
 	 * Log a error message.
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
+	 * @param arg2 	A parameter for string replacement
 	 */
 	public void error(String msg, Object arg0, Object arg1, Object arg2) {
 		logIfEnabled(Level.ERROR, null, msg, arg0, arg1, arg2, null);
@@ -353,6 +488,8 @@ public class Logger {
 
 	/**
 	 * Log a error message.
+	 * @param msg 	The message to log
+	 * @param argArray String replacement values
 	 */
 	public void error(String msg, Object[] argArray) {
 		logIfEnabled(Level.ERROR, null, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, argArray);
@@ -360,6 +497,8 @@ public class Logger {
 
 	/**
 	 * Log a error message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
 	 */
 	public void error(Throwable throwable, String msg) {
 		logIfEnabled(Level.ERROR, throwable, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -367,6 +506,9 @@ public class Logger {
 
 	/**
 	 * Log a error message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
 	 */
 	public void error(Throwable throwable, String msg, Object arg0) {
 		logIfEnabled(Level.ERROR, throwable, msg, arg0, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -374,6 +516,10 @@ public class Logger {
 
 	/**
 	 * Log a error message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
 	 */
 	public void error(Throwable throwable, String msg, Object arg0, Object arg1) {
 		logIfEnabled(Level.ERROR, throwable, msg, arg0, arg1, UNKNOWN_ARG, null);
@@ -381,6 +527,11 @@ public class Logger {
 
 	/**
 	 * Log a error message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
+	 * @param arg2 	A parameter for string replacement
 	 */
 	public void error(Throwable throwable, String msg, Object arg0, Object arg1, Object arg2) {
 		logIfEnabled(Level.ERROR, throwable, msg, arg0, arg1, arg2, null);
@@ -388,6 +539,9 @@ public class Logger {
 
 	/**
 	 * Log a error message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param argArray String replacement values
 	 */
 	public void error(Throwable throwable, String msg, Object[] argArray) {
 		logIfEnabled(Level.ERROR, throwable, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, argArray);
@@ -395,6 +549,7 @@ public class Logger {
 
 	/**
 	 * Log a fatal message.
+	 * @param msg 	The message to log
 	 */
 	public void fatal(String msg) {
 		logIfEnabled(Level.FATAL, null, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -402,6 +557,8 @@ public class Logger {
 
 	/**
 	 * Log a fatal message.
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
 	 */
 	public void fatal(String msg, Object arg0) {
 		logIfEnabled(Level.FATAL, null, msg, arg0, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -409,6 +566,9 @@ public class Logger {
 
 	/**
 	 * Log a fatal message.
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
 	 */
 	public void fatal(String msg, Object arg0, Object arg1) {
 		logIfEnabled(Level.FATAL, null, msg, arg0, arg1, UNKNOWN_ARG, null);
@@ -416,6 +576,10 @@ public class Logger {
 
 	/**
 	 * Log a fatal message.
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
+	 * @param arg2 	A parameter for string replacement
 	 */
 	public void fatal(String msg, Object arg0, Object arg1, Object arg2) {
 		logIfEnabled(Level.FATAL, null, msg, arg0, arg1, arg2, null);
@@ -423,6 +587,8 @@ public class Logger {
 
 	/**
 	 * Log a fatal message.
+	 * @param msg 	The message to log
+	 * @param argArray String replacement values
 	 */
 	public void fatal(String msg, Object[] argArray) {
 		logIfEnabled(Level.FATAL, null, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, argArray);
@@ -430,6 +596,8 @@ public class Logger {
 
 	/**
 	 * Log a fatal message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
 	 */
 	public void fatal(Throwable throwable, String msg) {
 		logIfEnabled(Level.FATAL, throwable, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -437,6 +605,9 @@ public class Logger {
 
 	/**
 	 * Log a fatal message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
 	 */
 	public void fatal(Throwable throwable, String msg, Object arg0) {
 		logIfEnabled(Level.FATAL, throwable, msg, arg0, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -444,6 +615,10 @@ public class Logger {
 
 	/**
 	 * Log a fatal message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
 	 */
 	public void fatal(Throwable throwable, String msg, Object arg0, Object arg1) {
 		logIfEnabled(Level.FATAL, throwable, msg, arg0, arg1, UNKNOWN_ARG, null);
@@ -451,6 +626,11 @@ public class Logger {
 
 	/**
 	 * Log a fatal message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
+	 * @param arg2 	A parameter for string replacement
 	 */
 	public void fatal(Throwable throwable, String msg, Object arg0, Object arg1, Object arg2) {
 		logIfEnabled(Level.FATAL, throwable, msg, arg0, arg1, arg2, null);
@@ -458,6 +638,9 @@ public class Logger {
 
 	/**
 	 * Log a fatal message with a throwable.
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param argArray String replacement values
 	 */
 	public void fatal(Throwable throwable, String msg, Object[] argArray) {
 		logIfEnabled(Level.FATAL, throwable, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, argArray);
@@ -465,6 +648,9 @@ public class Logger {
 
 	/**
 	 * Log a message at the provided level.
+	 * 
+	 * @param level The log level
+	 * @param msg 	The message to log
 	 */
 	public void log(Level level, String msg) {
 		logIfEnabled(level, null, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -472,6 +658,10 @@ public class Logger {
 
 	/**
 	 * Log a message at the provided level.
+	 * 
+	 * @param level The log level
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
 	 */
 	public void log(Level level, String msg, Object arg0) {
 		logIfEnabled(level, null, msg, arg0, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -479,6 +669,11 @@ public class Logger {
 
 	/**
 	 * Log a message at the provided level.
+	 * 
+	 * @param level The log level
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
 	 */
 	public void log(Level level, String msg, Object arg0, Object arg1) {
 		logIfEnabled(level, null, msg, arg0, arg1, UNKNOWN_ARG, null);
@@ -486,6 +681,12 @@ public class Logger {
 
 	/**
 	 * Log a message at the provided level.
+	 * 
+	 * @param level The log level
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
+	 * @param arg2 	A parameter for string replacement
 	 */
 	public void log(Level level, String msg, Object arg0, Object arg1, Object arg2) {
 		logIfEnabled(level, null, msg, arg0, arg1, arg2, null);
@@ -493,6 +694,10 @@ public class Logger {
 
 	/**
 	 * Log a message at the provided level.
+	 * 
+	 * @param level The log level
+	 * @param msg 	The message to log
+	 * @param argArray String replacement values
 	 */
 	public void log(Level level, String msg, Object[] argArray) {
 		logIfEnabled(level, null, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, argArray);
@@ -500,6 +705,10 @@ public class Logger {
 
 	/**
 	 * Log a message with a throwable at the provided level.
+	 * 
+	 * @param level The log level
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
 	 */
 	public void log(Level level, Throwable throwable, String msg) {
 		logIfEnabled(level, throwable, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -507,6 +716,11 @@ public class Logger {
 
 	/**
 	 * Log a message with a throwable at the provided level.
+	 * 
+	 * @param level The log level
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
 	 */
 	public void log(Level level, Throwable throwable, String msg, Object arg0) {
 		logIfEnabled(level, throwable, msg, arg0, UNKNOWN_ARG, UNKNOWN_ARG, null);
@@ -514,6 +728,12 @@ public class Logger {
 
 	/**
 	 * Log a message with a throwable at the provided level.
+	 * 
+	 * @param level The log level
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
 	 */
 	public void log(Level level, Throwable throwable, String msg, Object arg0, Object arg1) {
 		logIfEnabled(level, throwable, msg, arg0, arg1, UNKNOWN_ARG, null);
@@ -521,6 +741,13 @@ public class Logger {
 
 	/**
 	 * Log a message with a throwable at the provided level.
+	 * 
+	 * @param level The log level
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param arg0 	A parameter for string replacement
+	 * @param arg1  A parameter for string replacement
+	 * @param arg2 	A parameter for string replacement
 	 */
 	public void log(Level level, Throwable throwable, String msg, Object arg0, Object arg1, Object arg2) {
 		logIfEnabled(level, throwable, msg, arg0, arg1, arg2, null);
@@ -528,6 +755,11 @@ public class Logger {
 
 	/**
 	 * Log a message with a throwable at the provided level.
+	 * 
+	 * @param level The log level
+	 * @param throwable The error to log
+	 * @param msg 	The message to log
+	 * @param argArray String replacement values
 	 */
 	public void log(Level level, Throwable throwable, String msg, Object[] argArray) {
 		logIfEnabled(level, throwable, msg, UNKNOWN_ARG, UNKNOWN_ARG, UNKNOWN_ARG, argArray);

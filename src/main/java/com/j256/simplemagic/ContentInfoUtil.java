@@ -163,6 +163,8 @@ public class ContentInfoUtil {
 	/**
 	 * Return the content type for the file-path or null if none of the magic entries matched.
 	 * 
+	 * @param filePath The path of the file to be introspected
+	 * @return A ContentInfo representing the result
 	 * @throws IOException
 	 *             If there was a problem reading from the file.
 	 */
@@ -172,7 +174,8 @@ public class ContentInfoUtil {
 
 	/**
 	 * Return the content type for the file or null if none of the magic entries matched.
-	 * 
+	 * @param file The file to be introspected
+	 * @return A ContentInfo representing the result
 	 * @throws IOException
 	 *             If there was a problem reading from the file.
 	 */
@@ -200,7 +203,8 @@ public class ContentInfoUtil {
 	 * <p>
 	 * <b>NOTE:</b> The caller is responsible for closing the input-stream.
 	 * </p>
-	 * 
+	 * @param inputStream An inputstream to be introspected and matched
+	 * @return A ContentInfo representing the result
 	 * @throws IOException
 	 *             If there was a problem reading from the input-stream.
 	 * @see ContentInfoInputStreamWrapper
@@ -220,6 +224,8 @@ public class ContentInfoUtil {
 
 	/**
 	 * Return the content type from the associated bytes or null if none of the magic entries matched.
+	 * @param bytes The bytes to be introspected
+	 * @return A ContentInfo representing the result
 	 */
 	public ContentInfo findMatch(byte[] bytes) {
 		return magicEntries.findMatch(bytes);
@@ -229,6 +235,7 @@ public class ContentInfoUtil {
 	 * Return the content type if the extension from the file-name matches our internal list. This can either be just
 	 * the extension part or it will look for the last period and take the string after that as the extension.
 	 * 
+	 * @param name The name of a file 
 	 * @return The matching content-info or null if no matches.
 	 */
 	public static ContentInfo findExtensionMatch(String name) {
@@ -257,6 +264,7 @@ public class ContentInfoUtil {
 	/**
 	 * Return the content type if the mime-type matches our internal list.
 	 * 
+	 * @param mimeType A ContentInfo representing types that match the given mimetype
 	 * @return The matching content-info or null if no matches.
 	 */
 	public static ContentInfo findMimeTypeMatch(String mimeType) {
@@ -271,6 +279,7 @@ public class ContentInfoUtil {
 	/**
 	 * Set the default size that will be read if we are getting the content from a file.
 	 * 
+	 * @param fileReadSize the size to read
 	 * @see #DEFAULT_READ_SIZE
 	 */
 	public void setFileReadSize(int fileReadSize) {
@@ -279,6 +288,7 @@ public class ContentInfoUtil {
 
 	/**
 	 * Set our class which will get called whenever we get a configuration error.
+	 * @param errorCallBack the error callback to be used
 	 */
 	public void setErrorCallBack(ErrorCallBack errorCallBack) {
 		this.errorCallBack = errorCallBack;
