@@ -81,8 +81,8 @@ public class ContentInfoUtil {
 			try {
 				internalMagicEntries = readEntriesFromResource(INTERNAL_MAGIC_FILE);
 			} catch (IOException e) {
-				throw new IllegalStateException("Could not load entries from internal magic file: "
-						+ INTERNAL_MAGIC_FILE, e);
+				throw new IllegalStateException(
+						"Could not load entries from internal magic file: " + INTERNAL_MAGIC_FILE, e);
 			}
 			if (internalMagicEntries == null) {
 				throw new IllegalStateException("Internal magic file not found in class-path: " + INTERNAL_MAGIC_FILE);
@@ -122,8 +122,8 @@ public class ContentInfoUtil {
 			magicEntries = readEntriesFromFile(file);
 		}
 		if (magicEntries == null) {
-			throw new IllegalArgumentException("Magic path specified is not a file, directory, or resource: "
-					+ fileOrDirectoryOrResourcePath);
+			throw new IllegalArgumentException(
+					"Magic path specified is not a file, directory, or resource: " + fileOrDirectoryOrResourcePath);
 		}
 		this.magicEntries = magicEntries;
 	}
@@ -155,9 +155,36 @@ public class ContentInfoUtil {
 		this.errorCallBack = errorCallBack;
 		this.magicEntries = readEntriesFromFile(fileOrDirectory);
 		if (this.magicEntries == null) {
-			throw new IllegalArgumentException("Magic path specified is not a file, directory, or resource: "
-					+ fileOrDirectory);
+			throw new IllegalArgumentException(
+					"Magic path specified is not a file, directory, or resource: " + fileOrDirectory);
 		}
+	}
+
+	/**
+	 * Construct a magic utility using the magic file entries from a reader.
+	 * 
+	 * @param reader
+	 *            A reader from which we will read the magic file entries.
+	 * @throws IOException
+	 *             If there was a problem reading the magic entries from the reader.
+	 */
+	public ContentInfoUtil(Reader reader) throws IOException {
+		this(reader, null);
+	}
+
+	/**
+	 * Construct a magic utility using the magic file entries from a reader.
+	 * 
+	 * @param reader
+	 *            A reader from which we will read the magic file entries.
+	 * @param errorCallBack
+	 *            Call back which shows any problems with the magic entries loaded.
+	 * @throws IOException
+	 *             If there was a problem reading the magic entries from the reader.
+	 */
+	public ContentInfoUtil(Reader reader, ErrorCallBack errorCallBack) throws IOException {
+		this.errorCallBack = errorCallBack;
+		this.magicEntries = readEntries(reader);
 	}
 
 	/**
@@ -180,6 +207,9 @@ public class ContentInfoUtil {
 		int readSize = fileReadSize;
 		if (file.length() < readSize) {
 			readSize = (int) file.length();
+		}
+		if (readSize == 0) {
+			return ContentInfo.EMPTY_INFO;
 		}
 		byte[] bytes = new byte[readSize];
 		FileInputStream fis = null;
@@ -222,7 +252,11 @@ public class ContentInfoUtil {
 	 * Return the content type from the associated bytes or null if none of the magic entries matched.
 	 */
 	public ContentInfo findMatch(byte[] bytes) {
-		return magicEntries.findMatch(bytes);
+		if (bytes.length == 0) {
+			return ContentInfo.EMPTY_INFO;
+		} else {
+			return magicEntries.findMatch(bytes);
+		}
 	}
 
 	/**

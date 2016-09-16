@@ -871,6 +871,8 @@ public enum ContentType {
 	SMV("video/x-smv", "smv", "smv"),
 	ICE("x-conference/x-cooltalk", "ice", "ice"),
 
+	/** default if no content */
+	EMPTY("application/octet-stream", "other"),
 	/** default if no specific match to the mime-type */
 	OTHER("application/octet-stream", "other"),
 	// end

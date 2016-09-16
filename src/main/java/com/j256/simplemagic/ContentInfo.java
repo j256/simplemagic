@@ -12,6 +12,8 @@ public class ContentInfo implements Serializable {
 
 	private static final long serialVersionUID = 1342819252130963539L;
 
+	public static final ContentInfo EMPTY_INFO = new ContentInfo(ContentType.EMPTY);
+
 	private final ContentType contentType;
 	private final String name;
 	private final String message;
