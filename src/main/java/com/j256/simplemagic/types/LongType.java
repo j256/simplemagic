@@ -7,12 +7,14 @@ import com.j256.simplemagic.entries.MagicMatcher;
 import com.j256.simplemagic.entries.NumberOperator;
 
 /**
- * An eight-byte value.
+ * An four-byte value constituted "long" then the magic file spec was written.
  * 
  * @author graywatson
  */
 public class LongType implements MagicMatcher {
 
+	static final int BYTES_PER_LONG = 8;
+	
 	protected final EndianConverter endianConverter;
 
 	public LongType(EndianType endianType) {
@@ -26,7 +28,7 @@ public class LongType implements MagicMatcher {
 
 	@Override
 	public Object extractValueFromBytes(int offset, byte[] bytes) {
-		return endianConverter.convertNumber(offset, bytes, 8);
+		return endianConverter.convertNumber(offset, bytes, BYTES_PER_LONG);
 	}
 
 	@Override
@@ -47,6 +49,6 @@ public class LongType implements MagicMatcher {
 
 	@Override
 	public byte[] getStartingBytes(Object testValue) {
-		return endianConverter.convertToByteArray(((NumberOperator) testValue).getValue(), 8);
+		return endianConverter.convertToByteArray(((NumberOperator) testValue).getValue(), BYTES_PER_LONG);
 	}
 }

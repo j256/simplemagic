@@ -1,5 +1,7 @@
 1.7: ??/??/????
 	* Added support for RIFF WEBP image type.  Thanks much to richid.
+	* Fixed bad bug with the string processing and <>= operators.  Fixes SVG+ detection.  Thanks much to richid.
+	* Added support for an EMPTY ContentType if there is no bytes in the stream or file.  Thanks to se7en007.
 	* Moved to requiring java 1.6.
 
 1.6: 4/27/2014

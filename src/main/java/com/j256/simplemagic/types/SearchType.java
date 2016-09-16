@@ -21,7 +21,8 @@ public class SearchType extends StringType {
 			MutableOffset mutableOffset, byte[] bytes) {
 		TestInfo info = (TestInfo) testValue;
 		// if offset is 1 then we need to pre-read 1 line
-		for (int offset = mutableOffset.offset; offset < mutableOffset.offset + info.maxOffset; offset++) {
+		int end = mutableOffset.offset + info.maxOffset;
+		for (int offset = mutableOffset.offset; offset < end; offset++) {
 			String match = findOffsetMatch(info, offset, mutableOffset, bytes);
 			if (match != null) {
 				return match;

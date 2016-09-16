@@ -140,4 +140,70 @@ public class StringTypeTest {
 		type.renderValue(sb, extract, new MagicFormatter("%s"));
 		assertEquals("h   ello", sb.toString());
 	}
+
+	@Test
+	public void testEquals() {
+		StringType type = new StringType();
+		Object info = type.convertTestString("string", "=foo");
+		byte[] bytes = new byte[] { 'f', 'o', 'o' };
+		assertNotNull(type.isMatch(info, null, false, null, new MutableOffset(0), bytes));
+
+		type = new StringType();
+		info = type.convertTestString("string", "=f");
+		bytes = new byte[] { 'f' };
+		assertNotNull(type.isMatch(info, null, false, null, new MutableOffset(0), bytes));
+
+		type = new StringType();
+		info = type.convertTestString("string", "=f");
+		bytes = new byte[] { 'F' };
+		assertNull(type.isMatch(info, null, false, null, new MutableOffset(0), bytes));
+
+		type = new StringType();
+		info = type.convertTestString("string/c", "=f");
+		bytes = new byte[] { 'F' };
+		assertNotNull(type.isMatch(info, null, false, null, new MutableOffset(0), bytes));
+	}
+
+	@Test
+	public void testGreaterThan() {
+		StringType type = new StringType();
+		Object info = type.convertTestString("string", ">\0");
+		// really any string
+		byte[] bytes = new byte[] { '\001' };
+		assertNotNull(type.isMatch(info, null, false, null, new MutableOffset(0), bytes));
+
+		type = new StringType();
+		info = type.convertTestString("string", ">foo");
+		bytes = new byte[] { 'f', 'o', 'o', 'l', };
+		assertNull(type.isMatch(info, null, false, null, new MutableOffset(0), bytes));
+
+		type = new StringType();
+		info = type.convertTestString("string", ">foo\0");
+		bytes = new byte[] { 'f', 'o', 'o', 'l', };
+		assertNotNull(type.isMatch(info, null, false, null, new MutableOffset(0), bytes));
+
+		type = new StringType();
+		info = type.convertTestString("string", ">f");
+		bytes = new byte[] { 'g' };
+		assertNotNull(type.isMatch(info, null, false, null, new MutableOffset(0), bytes));
+
+		type = new StringType();
+		info = type.convertTestString("string", ">f");
+		bytes = new byte[] { 'f' };
+		assertNull(type.isMatch(info, null, false, null, new MutableOffset(0), bytes));
+	}
+
+	@Test
+	public void testLessThan() {
+
+		StringType type = new StringType();
+		Object info = type.convertTestString("string", "<fop");
+		byte[] bytes = new byte[] { 'f', 'o', 'o' };
+		assertNotNull(type.isMatch(info, null, false, null, new MutableOffset(0), bytes));
+
+		type = new StringType();
+		info = type.convertTestString("string", "<f");
+		bytes = new byte[] { 'f' };
+		assertNull(type.isMatch(info, null, false, null, new MutableOffset(0), bytes));
+	}
 }

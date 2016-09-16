@@ -76,6 +76,7 @@ public class ContentInfoUtilTest {
 					"MythTV NuppelVideo v (640x480),progressive,aspect:1.00,fps:29.97"),
 			new FileType("/files/x.webp", ContentType.WEBP, "webp", "image/webp",
 					"RIFF (little-endian) data, WEBP image"),
+			new FileType("/files/x.svg", ContentType.SVG, "svg", "image/svg+xml", "SVG Scalable Vector Graphics image"),
 			// TODO: need to fix this
 			// new FileType("/files/x.exe", ContentType.OTHER, "Exe", null, "Exe"),
 			// end
@@ -145,6 +146,12 @@ public class ContentInfoUtilTest {
 	@Test(expected = FileNotFoundException.class)
 	public void testMagicNotFound() throws Exception {
 		new ContentInfoUtil("some-unknown-resource", null);
+	}
+
+	@Test
+	public void testEmptyMimeType() {
+		ContentInfoUtil util = getContentInfoUtil();
+		assertEquals(ContentType.EMPTY, util.findMatch(new byte[0]).getContentType());
 	}
 
 	private void testFile(ContentInfoUtil contentInfoUtil, FileType fileType) throws IOException {

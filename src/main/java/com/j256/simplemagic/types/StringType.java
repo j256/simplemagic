@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import com.j256.simplemagic.entries.MagicFormatter;
 import com.j256.simplemagic.entries.MagicMatcher;
+import com.j256.simplemagic.entries.StringOperator;
 
 /**
  * From the magic(5) man page: A string of bytes. The string type specification can be optionally followed by /[Bbc]*.
@@ -26,7 +27,7 @@ public class StringType implements MagicMatcher {
 		Matcher matcher = TYPE_PATTERN.matcher(typeStr);
 		if (!matcher.matches()) {
 			// may not be able to get here
-			return new TestInfo(preProcessPattern(testStr), false, false, false, 0);
+			return new TestInfo(StringOperator.DEFAULT_OPERATOR, (testStr), false, false, false, 0);
 		}
 		// max-offset is ignored by the string type
 		int maxOffset = 0;
@@ -47,25 +48,32 @@ public class StringType implements MagicMatcher {
 		if (flagsStr != null) {
 			for (char ch : flagsStr.toCharArray()) {
 				switch (ch) {
-					case 'B' :
+					case 'B':
 						compactWhiteSpace = true;
 						break;
-					case 'b' :
+					case 'b':
 						optionalWhiteSpace = true;
 						break;
-					case 'c' :
+					case 'c':
 						caseInsensitive = true;
 						break;
-					case 't' :
-					case 'w' :
-					case 'W' :
+					case 't':
+					case 'w':
+					case 'W':
 						// XXX: no idea what these do
 						break;
 				}
 			}
 		}
+		StringOperator operator = StringOperator.fromTest(testStr);
+		if (operator == null) {
+			operator = StringOperator.DEFAULT_OPERATOR;
+		} else {
+			testStr = testStr.substring(1);
+		}
 		String processedPattern = preProcessPattern(testStr);
-		return new TestInfo(processedPattern, compactWhiteSpace, optionalWhiteSpace, caseInsensitive, maxOffset);
+		return new TestInfo(operator, processedPattern, compactWhiteSpace, optionalWhiteSpace, caseInsensitive,
+				maxOffset);
 	}
 
 	@Override
@@ -93,11 +101,12 @@ public class StringType implements MagicMatcher {
 	/**
 	 * Called from the string and search types to see if a string or byte array matches our pattern.
 	 */
-	protected String findOffsetMatch(TestInfo info, int offset, MutableOffset mutableOffset, byte[] bytes) {
-		int targetPos = offset;
+	protected String findOffsetMatch(TestInfo info, int startOffset, MutableOffset mutableOffset, byte[] bytes) {
+		int targetPos = startOffset;
 		boolean lastMagicCompactWhitespace = false;
 		for (int magicPos = 0; magicPos < info.pattern.length(); magicPos++) {
 			char magicCh = info.pattern.charAt(magicPos);
+			boolean lastChar = (magicPos == info.pattern.length() - 1);
 			// did we reach the end?
 			if (targetPos >= bytes.length) {
 				return null;
@@ -106,7 +115,7 @@ public class StringType implements MagicMatcher {
 			targetPos++;
 
 			// if it matches, we can continue
-			if (magicCh == targetCh) {
+			if (info.operator.doTest(targetCh, magicCh, lastChar)) {
 				if (info.compactWhiteSpace) {
 					lastMagicCompactWhitespace = Character.isWhitespace(magicCh);
 				}
@@ -123,7 +132,7 @@ public class StringType implements MagicMatcher {
 					targetPos++;
 				} while (Character.isWhitespace(targetCh));
 				// now that we get to the first non-whitespace, it must match
-				if (magicCh == targetCh) {
+				if (info.operator.doTest(targetCh, magicCh, lastChar)) {
 					if (info.compactWhiteSpace) {
 						lastMagicCompactWhitespace = Character.isWhitespace(magicCh);
 					}
@@ -134,7 +143,7 @@ public class StringType implements MagicMatcher {
 
 			// maybe it doesn't match because of case insensitive handling and magic-char is lowercase
 			if (info.caseInsensitive && Character.isLowerCase(magicCh)) {
-				if (magicCh == Character.toLowerCase(targetCh)) {
+				if (info.operator.doTest(Character.toLowerCase(targetCh), magicCh, lastChar)) {
 					// matches
 					continue;
 				}
@@ -144,9 +153,9 @@ public class StringType implements MagicMatcher {
 			return null;
 		}
 
-		char[] chars = new char[targetPos - offset];
+		char[] chars = new char[targetPos - startOffset];
 		for (int i = 0; i < chars.length; i++) {
-			chars[i] = (char) (bytes[offset + i] & 0xFF);
+			chars[i] = (char) (bytes[startOffset + i] & 0xFF);
 		}
 		mutableOffset.offset = targetPos;
 		return new String(chars);
@@ -175,19 +184,19 @@ public class StringType implements MagicMatcher {
 			}
 			ch = pattern.charAt(++pos);
 			switch (ch) {
-				case 'b' :
+				case 'b':
 					sb.append('\b');
 					break;
-				case 'f' :
+				case 'f':
 					sb.append('\f');
 					break;
-				case 'n' :
+				case 'n':
 					sb.append('\n');
 					break;
-				case '0' :
-				case '1' :
-				case '2' :
-				case '3' : {
+				case '0':
+				case '1':
+				case '2':
+				case '3': {
 					// \017
 					int len = 3;
 					if (pos + len <= pattern.length()) {
@@ -204,13 +213,13 @@ public class StringType implements MagicMatcher {
 					}
 					break;
 				}
-				case 'r' :
+				case 'r':
 					sb.append('\r');
 					break;
-				case 't' :
+				case 't':
 					sb.append('\t');
 					break;
-				case 'x' : {
+				case 'x': {
 					// \xD9
 					int len = 2;
 					if (pos + len < pattern.length()) {
@@ -225,9 +234,9 @@ public class StringType implements MagicMatcher {
 					}
 					break;
 				}
-				case ' ' :
-				case '\\' :
-				default :
+				case ' ':
+				case '\\':
+				default:
 					sb.append(ch);
 					break;
 			}
@@ -254,6 +263,7 @@ public class StringType implements MagicMatcher {
 	 * Internal holder for test information about strings.
 	 */
 	protected static class TestInfo {
+		final StringOperator operator;
 		final String pattern;
 		final boolean compactWhiteSpace;
 		final boolean optionalWhiteSpace;
@@ -261,8 +271,9 @@ public class StringType implements MagicMatcher {
 		// ignored by the string type
 		final int maxOffset;
 
-		public TestInfo(String pattern, boolean compactWhiteSpace, boolean optionalWhiteSpace, boolean caseInsensitive,
-				int maxOffset) {
+		public TestInfo(StringOperator operator, String pattern, boolean compactWhiteSpace, boolean optionalWhiteSpace,
+				boolean caseInsensitive, int maxOffset) {
+			this.operator = operator;
 			this.pattern = pattern;
 			this.compactWhiteSpace = compactWhiteSpace;
 			this.optionalWhiteSpace = optionalWhiteSpace;
