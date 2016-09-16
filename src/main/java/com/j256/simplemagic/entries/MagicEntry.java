@@ -211,10 +211,12 @@ public class MagicEntry {
 		boolean partial;
 		String mimeType;
 		final StringBuilder sb = new StringBuilder();
+
 		private ContentData(String name, String mimeType) {
 			this.name = name;
 			this.mimeType = mimeType;
 		}
+
 		@Override
 		public String toString() {
 			if (sb.length() != 0) {
@@ -232,13 +234,16 @@ public class MagicEntry {
 	 */
 	static class ByteArray {
 		final byte[] bytes;
+
 		public ByteArray(byte[] bytes) {
 			this.bytes = bytes;
 		}
+
 		@Override
 		public int hashCode() {
 			return Arrays.hashCode(bytes);
 		}
+
 		@Override
 		public boolean equals(Object obj) {
 			if (obj == null || obj.getClass() != getClass()) {

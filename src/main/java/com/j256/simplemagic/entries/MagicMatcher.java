@@ -44,6 +44,7 @@ public interface MagicMatcher {
 	 */
 	public static class MutableOffset {
 		public int offset;
+
 		public MutableOffset(int offset) {
 			this.offset = offset;
 		}
