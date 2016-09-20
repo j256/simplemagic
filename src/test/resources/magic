@@ -2833,13 +2833,13 @@
 >4      byte&0xc0       0x40    44.1 kHz,
 >4      byte&0xc0       0x80    32 kHz,
 >4      byte&0xc0       0xc0    reserved frequency,
->5	byte&7 = 0		\b, complete main (CM)
->5	byte&7 = 1		\b, music and effects (ME)
->5	byte&7 = 2		\b, visually impaired (VI)
->5	byte&7 = 3		\b, hearing impaired (HI)
->5	byte&7 = 4		\b, dialogue (D)
->5	byte&7 = 5		\b, commentary (C)
->5	byte&7 = 6		\b, emergency (E)
+>5	byte&7 =0		\b, complete main (CM)
+>5	byte&7 =1		\b, music and effects (ME)
+>5	byte&7 =2		\b, visually impaired (VI)
+>5	byte&7 =3		\b, hearing impaired (HI)
+>5	byte&7 =4		\b, dialogue (D)
+>5	byte&7 =5		\b, commentary (C)
+>5	byte&7 =6		\b, emergency (E)
 >6      byte&0xe0       0x00    1+1 front,
 >6      byte&0xe0       0x20    1 front/0 rear,
 >6      byte&0xe0       0x40    2 front/0 rear,
@@ -2850,25 +2850,25 @@
 >6      byte&0xe0       0xe0    3 front/2 rear,
 >7      byte&0x40       0x00    LFE off,
 >7      byte&0x40       0x40    LFE on,
->4	byte&0x3e = 0x00	\b, 32 kbit/s
->4	byte&0x3e = 0x02        \b, 40 kbit/s
->4	byte&0x3e = 0x04        \b, 48 kbit/s
->4	byte&0x3e = 0x06        \b, 56 kbit/s
->4	byte&0x3e = 0x08        \b, 64 kbit/s
->4	byte&0x3e = 0x0a        \b, 80 kbit/s
->4	byte&0x3e = 0x0c        \b, 96 kbit/s
->4	byte&0x3e = 0x0e        \b, 112 kbit/s
->4	byte&0x3e = 0x10        \b, 128 kbit/s
->4	byte&0x3e = 0x12        \b, 160 kbit/s
->4	byte&0x3e = 0x14        \b, 192 kbit/s
->4	byte&0x3e = 0x16        \b, 224 kbit/s
->4	byte&0x3e = 0x18        \b, 256 kbit/s
->4	byte&0x3e = 0x1a        \b, 320 kbit/s
->4	byte&0x3e = 0x1c        \b, 384 kbit/s
->4	byte&0x3e = 0x1e        \b, 448 kbit/s
->4	byte&0x3e = 0x20        \b, 512 kbit/s
->4	byte&0x3e = 0x22        \b, 576 kbit/s
->4	byte&0x3e = 0x24        \b, 640 kbit/s
+>4	byte&0x3e =0x00        \b, 32 kbit/s
+>4	byte&0x3e =0x02        \b, 40 kbit/s
+>4	byte&0x3e =0x04        \b, 48 kbit/s
+>4	byte&0x3e =0x06        \b, 56 kbit/s
+>4	byte&0x3e =0x08        \b, 64 kbit/s
+>4	byte&0x3e =0x0a        \b, 80 kbit/s
+>4	byte&0x3e =0x0c        \b, 96 kbit/s
+>4	byte&0x3e =0x0e        \b, 112 kbit/s
+>4	byte&0x3e =0x10        \b, 128 kbit/s
+>4	byte&0x3e =0x12        \b, 160 kbit/s
+>4	byte&0x3e =0x14        \b, 192 kbit/s
+>4	byte&0x3e =0x16        \b, 224 kbit/s
+>4	byte&0x3e =0x18        \b, 256 kbit/s
+>4	byte&0x3e =0x1a        \b, 320 kbit/s
+>4	byte&0x3e =0x1c        \b, 384 kbit/s
+>4	byte&0x3e =0x1e        \b, 448 kbit/s
+>4	byte&0x3e =0x20        \b, 512 kbit/s
+>4	byte&0x3e =0x22        \b, 576 kbit/s
+>4	byte&0x3e =0x24        \b, 640 kbit/s
 >6      beshort&0x0180  0x0000  Dolby Surround not indicated
 >6      beshort&0x0180  0x0080  not Dolby Surround encoded
 >6      beshort&0x0180  0x0100  Dolby Surround encoded
@@ -4006,7 +4006,7 @@
 >8	belong	x			%d bytes,
 >16	string	x			named %s.
 
-0	lelong		0x1b031336L	Netboot image,
+0	lelong		0x1b031336	Netboot image,
 >4	lelong&0xFFFFFF00	0
 >>4	lelong&0x100	0x000		mode 2
 >>4	lelong&0x100	0x100		mode 3
@@ -4313,7 +4313,7 @@
 
 4            string  \x01\x00\x01\x00\x01\x00
 >(0.s+16)    string  \x01\x01
->>&(&0.b+8)  byte    0x42       OpenVMS backup saveset data
+>>(&0.b+8)  byte    0x42       OpenVMS backup saveset data
 >>>40        lelong  x          (block size %d,
 >>>49        string  >\0        original name '%s',
 >>>2         short   1024       VAX generated)
