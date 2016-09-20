@@ -35,7 +35,7 @@ public interface MagicMatcher {
 	public void renderValue(StringBuilder sb, Object extractedValue, MagicFormatter formatter);
 
 	/**
-	 * Return the starting bytes of the patter or null if none.
+	 * Return the starting bytes of the pattern or null if none.
 	 */
 	public byte[] getStartingBytes(Object testValue);
 

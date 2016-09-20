@@ -20,7 +20,7 @@ public class MagicEntryParser {
 	private static final String MIME_TYPE_LINE = "!:mime";
 	private static final String STRENGTH_LINE = "!:stength";
 
-	private final static Pattern OFFSET_PATTERN = Pattern.compile("\\(([0-9x]+)\\.([bislBISLm])([+-])([0-9x]+)\\)");
+	private final static Pattern OFFSET_PATTERN = Pattern.compile("\\(([0-9a-fA-Fx]+)\\.([bislBISLm])([\\*\\+\\-]?)([0-9x]*)\\)");
 
 	/**
 	 * Parse a line from the magic configuration file into an entry.
@@ -393,8 +393,13 @@ public class MagicEntryParser {
 	 */
 	private static OffsetInfo parseOffset(String offsetString, String line, ErrorCallBack errorCallBack) {
 		// (9.b+19)
+		// (0x3c.l)
+		// (8.s*16)
 		Matcher matcher = OFFSET_PATTERN.matcher(offsetString);
 		if (!matcher.matches()) {
+			if (errorCallBack != null) {
+				errorCallBack.error(line, "invalid offset pattern: " + offsetString, null);
+			}
 			return null;
 		}
 		int offset;
@@ -468,18 +473,25 @@ public class MagicEntryParser {
 				size = 4;
 				break;
 		}
-		int add;
-		try {
-			add = Integer.decode(matcher.group(4));
-		} catch (NumberFormatException e) {
-			if (errorCallBack != null) {
-				errorCallBack.error(line, "invalid long add value: " + matcher.group(4), e);
+		int add = 0;
+		// the +# section is optional
+		if (matcher.group(4) != null && matcher.group(4).length() > 0) {
+			try {
+				add = Integer.decode(matcher.group(4));
+			} catch (NumberFormatException e) {
+				if (errorCallBack != null) {
+					errorCallBack.error(line, "invalid long add value: " + matcher.group(4), e);
+				}
+				return null;
 			}
-			return null;
-		}
-		// decode doesn't work with leading '+', grumble
-		if ("-".equals(matcher.group(3))) {
-			add = -add;
+			// decode doesn't work with leading '+', grumble
+			String offsetOperator = matcher.group(3);
+			if ("-".equals(offsetOperator)) {
+				add = -add;
+			} else if ("-".equals(offsetOperator)) {
+				offset = add;
+				add = 0;
+			}
 		}
 		return new OffsetInfo(offset, converter, isId3, size, add);
 	}
