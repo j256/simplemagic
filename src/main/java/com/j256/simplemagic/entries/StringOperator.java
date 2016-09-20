@@ -11,6 +11,12 @@ public enum StringOperator {
 			return extractedChar == testChar;
 		}
 	},
+	NOT_EQUALS('!') {
+		@Override
+		public boolean doTest(char extractedChar, char testChar, boolean lastChar) {
+			return extractedChar != testChar;
+		}
+	},
 	GREATER_THAN('>') {
 		@Override
 		public boolean doTest(char extractedChar, char testChar, boolean lastChar) {
