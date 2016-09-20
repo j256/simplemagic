@@ -20,6 +20,12 @@ public class ContentInfoUtilTest {
 
 	private ContentInfoUtil contentInfoUtil;
 
+	/**
+	 * File with their expected information.
+	 * 
+	 * NOTE: the file contents may be truncated since most of the magic number recognition happens at the front of the
+	 * file. Also for the executables, we don't want to publish runnable code to the outside world.
+	 */
 	private FileType[] fileTypes = new FileType[] { //
 			//
 			new FileType("/files/x.gif", ContentType.GIF, "gif", "image/gif", "GIF image data, version 89a, 32 x 32"),
@@ -71,14 +77,17 @@ public class ContentInfoUtilTest {
 					"Microsoft PowerPoint 2007+"),
 			new FileType("/files/x.7z", ContentType.SEVEN_Z, "7zip", "application/x-7z-compressed",
 					"7-zip archive data, version 0.3"),
-			// truncated file
 			new FileType("/files/x.nuv", ContentType.OTHER, "MythTV", null,
 					"MythTV NuppelVideo v (640x480),progressive,aspect:1.00,fps:29.97"),
 			new FileType("/files/x.webp", ContentType.WEBP, "webp", "image/webp",
 					"RIFF (little-endian) data, WEBP image"),
 			new FileType("/files/x.svg", ContentType.SVG, "svg", "image/svg+xml", "SVG Scalable Vector Graphics image"),
-			// TODO: need to fix this
-			// new FileType("/files/x.exe", ContentType.OTHER, "Exe", null, "Exe"),
+			new FileType("/files/windows.exe", ContentType.OTHER, "32", "application/x-dosexec",
+					"PE32 executable for MS Windows (GUI) Intel 80386 32-bit"),
+			new FileType("/files/dos.exe", ContentType.OTHER, "MS-DOS", "application/x-dosexec",
+					"MS-DOS executable, MZ for MS-DOS"),
+			new FileType("/files/dotnet.exe", ContentType.OTHER, "32", "application/x-dosexec",
+					"PE32 executable for MS Windows (GUI) Intel 80386 32-bit Mono/.Net assembly"),
 			// end
 	};
 
