@@ -103,7 +103,7 @@ public class MagicEntryParser {
 			}
 		}
 
-		// process the and part of the type
+		// process the AND (&) part of the type
 		String typeStr = parts[1];
 		sindex = typeStr.indexOf('&');
 		// we use long because of overlaps

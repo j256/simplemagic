@@ -16,7 +16,7 @@ public class NumberOperator {
 		if (op == null) {
 			op = TestOperator.DEFAULT_OPERATOR;
 		} else {
-			test = test.substring(1);
+			test = test.substring(1).trim();
 		}
 		this.operator = op;
 		try {
