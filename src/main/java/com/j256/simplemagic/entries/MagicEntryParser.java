@@ -20,7 +20,8 @@ public class MagicEntryParser {
 	private static final String MIME_TYPE_LINE = "!:mime";
 	private static final String STRENGTH_LINE = "!:stength";
 
-	private final static Pattern OFFSET_PATTERN = Pattern.compile("\\(([0-9a-fA-Fx]+)\\.([bislBISLm])([\\*\\+\\-]?)([0-9x]*)\\)");
+	private final static Pattern OFFSET_PATTERN =
+			Pattern.compile("\\(([0-9a-fA-Fx]+)\\.?([bislBISLm]?)([\\*\\+\\-]?)([0-9a-fA-Fx]*)\\)");
 
 	/**
 	 * Parse a line from the magic configuration file into an entry.
@@ -199,9 +200,8 @@ public class MagicEntryParser {
 				name = trimmedFormat;
 			}
 		}
-		MagicEntry entry =
-				new MagicEntry(name, level, addOffset, offset, offsetInfo, matcher, andValue, unsignedType, testValue,
-						formatSpacePrefix, clearFormat, formatter);
+		MagicEntry entry = new MagicEntry(name, level, addOffset, offset, offsetInfo, matcher, andValue, unsignedType,
+				testValue, formatSpacePrefix, clearFormat, formatter);
 		return entry;
 	}
 
@@ -355,19 +355,19 @@ public class MagicEntryParser {
 
 		int strength = previous.getStrength();
 		switch (operator) {
-			case '+' :
+			case '+':
 				strength += value;
 				break;
-			case '-' :
+			case '-':
 				strength -= value;
 				break;
-			case '*' :
+			case '*':
 				strength *= value;
 				break;
-			case '/' :
+			case '/':
 				strength /= value;
 				break;
-			default :
+			default:
 				if (errorCallBack != null) {
 					errorCallBack.error(line, "invalid strength operator: " + operator, null);
 				}
@@ -428,47 +428,47 @@ public class MagicEntryParser {
 		boolean isId3 = false;
 		int size = 0;
 		switch (ch) {
-			case 'b' :
+			case 'b':
 				// endian doesn't really matter for 1 byte
 				converter = EndianType.LITTLE.getConverter();
 				size = 1;
 				break;
-			case 'i' :
+			case 'i':
 				converter = EndianType.LITTLE.getConverter();
 				size = 4;
 				isId3 = true;
 				break;
-			case 's' :
+			case 's':
 				converter = EndianType.LITTLE.getConverter();
 				size = 2;
 				break;
-			case 'l' :
+			case 'l':
 				converter = EndianType.LITTLE.getConverter();
 				size = 4;
 				break;
-			case 'B' :
+			case 'B':
 				// endian doesn't really matter for 1 byte
 				converter = EndianType.BIG.getConverter();
 				size = 1;
 				break;
-			case 'I' :
+			case 'I':
 				converter = EndianType.BIG.getConverter();
 				size = 4;
 				isId3 = true;
 				break;
-			case 'S' :
+			case 'S':
 				converter = EndianType.BIG.getConverter();
 				size = 2;
 				break;
-			case 'L' :
+			case 'L':
 				converter = EndianType.BIG.getConverter();
 				size = 4;
 				break;
-			case 'm' :
+			case 'm':
 				converter = EndianType.MIDDLE.getConverter();
 				size = 4;
 				break;
-			default :
+			default:
 				converter = EndianType.LITTLE.getConverter();
 				size = 4;
 				break;
