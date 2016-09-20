@@ -11,13 +11,10 @@ import com.j256.simplemagic.endian.EndianType;
  */
 public class LocalLongDateType extends LocalDateType {
 
+	private static final int BYTES_PER_LOCAL_LONG_DATE = 8;
+
 	public LocalLongDateType(EndianType endianType) {
 		super(endianType);
-	}
-
-	@Override
-	public Long extractValueFromBytes(int offset, byte[] bytes) {
-		return endianConverter.convertNumber(offset, bytes, 8);
 	}
 
 	@Override
@@ -25,5 +22,10 @@ public class LocalLongDateType extends LocalDateType {
 		// XXX: is this in millis or seconds?
 		// val *= 1000;
 		return new Date(val);
+	}
+
+	@Override
+	protected int getBytesPerType() {
+		return BYTES_PER_LOCAL_LONG_DATE;
 	}
 }

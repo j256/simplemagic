@@ -1,7 +1,6 @@
 package com.j256.simplemagic.types;
 
 import com.j256.simplemagic.endian.EndianType;
-import com.j256.simplemagic.entries.NumberOperator;
 
 /**
  * A two-byte value.
@@ -10,18 +9,14 @@ import com.j256.simplemagic.entries.NumberOperator;
  */
 public class ShortType extends LongType {
 
+	private static final int BYTES_PER_SHORT = 2;
+
 	public ShortType(EndianType endianType) {
 		super(endianType);
 	}
 
 	@Override
-	public Long extractValueFromBytes(int offset, byte[] bytes) {
-		// we use long here because we don't want to overflow
-		return endianConverter.convertNumber(offset, bytes, 2);
-	}
-
-	@Override
-	public byte[] getStartingBytes(Object testValue) {
-		return endianConverter.convertToByteArray(((NumberOperator) testValue).getValue(), 2);
+	protected int getBytesPerType() {
+		return BYTES_PER_SHORT;
 	}
 }

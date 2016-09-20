@@ -1,27 +1,22 @@
 package com.j256.simplemagic.types;
 
 import com.j256.simplemagic.endian.EndianType;
-import com.j256.simplemagic.entries.NumberOperator;
 
 /**
- * A four-byte integer value.
+ * A four-byte integer value which often handles the "long" types when the spec was written.
  * 
  * @author graywatson
  */
 public class IntegerType extends LongType {
+
+	private static final int BYTES_PER_INTEGER = 4;
 
 	public IntegerType(EndianType endianType) {
 		super(endianType);
 	}
 
 	@Override
-	public Object extractValueFromBytes(int offset, byte[] bytes) {
-		// we use a long here because we don't want to overflow
-		return endianConverter.convertNumber(offset, bytes, 4);
-	}
-
-	@Override
-	public byte[] getStartingBytes(Object testValue) {
-		return endianConverter.convertToByteArray(((NumberOperator) testValue).getValue(), 4);
+	protected int getBytesPerType() {
+		return BYTES_PER_INTEGER;
 	}
 }

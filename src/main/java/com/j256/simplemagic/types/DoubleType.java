@@ -12,7 +12,9 @@ import com.j256.simplemagic.entries.MagicMatcher;
  */
 public class DoubleType implements MagicMatcher {
 
-	private final EndianConverter endianConverter;
+	private static final int BYTES_PER_DOUBLE = 8;
+
+	protected final EndianConverter endianConverter;
 
 	public DoubleType(EndianType endianType) {
 		this.endianConverter = endianType.getConverter();
@@ -29,11 +31,11 @@ public class DoubleType implements MagicMatcher {
 
 	@Override
 	public Object extractValueFromBytes(int offset, byte[] bytes) {
-		Long val = endianConverter.convertNumber(offset, bytes, 8);
+		Long val = endianConverter.convertNumber(offset, bytes, getBytesPerType());
 		if (val == null) {
 			return null;
 		} else {
-			return Double.longBitsToDouble(val);
+			return longToObject(val);
 		}
 	}
 
@@ -42,7 +44,7 @@ public class DoubleType implements MagicMatcher {
 			MutableOffset mutableOffset, byte[] bytes) {
 		// not sure how to do the & here
 		if (testValue.equals(extractedValue)) {
-			mutableOffset.offset += 8;
+			mutableOffset.offset += getBytesPerType();
 			return extractedValue;
 		} else {
 			return null;
@@ -57,5 +59,19 @@ public class DoubleType implements MagicMatcher {
 	@Override
 	public byte[] getStartingBytes(Object testValue) {
 		return null;
+	}
+
+	/**
+	 * Convert a long to the type.
+	 */
+	protected Object longToObject(Long value) {
+		return Double.longBitsToDouble(value);
+	}
+
+	/**
+	 * Return the number of bytes in this type.
+	 */
+	protected int getBytesPerType() {
+		return BYTES_PER_DOUBLE;
 	}
 }

@@ -7,14 +7,14 @@ import com.j256.simplemagic.entries.MagicMatcher;
 import com.j256.simplemagic.entries.NumberOperator;
 
 /**
- * An four-byte value constituted "long" then the magic file spec was written.
+ * An eight-byte value constituted "quad" when the magic file spec was written.
  * 
  * @author graywatson
  */
 public class LongType implements MagicMatcher {
 
 	static final int BYTES_PER_LONG = 8;
-	
+
 	protected final EndianConverter endianConverter;
 
 	public LongType(EndianType endianType) {
@@ -28,14 +28,14 @@ public class LongType implements MagicMatcher {
 
 	@Override
 	public Object extractValueFromBytes(int offset, byte[] bytes) {
-		return endianConverter.convertNumber(offset, bytes, BYTES_PER_LONG);
+		return endianConverter.convertNumber(offset, bytes, getBytesPerType());
 	}
 
 	@Override
 	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue,
 			MutableOffset mutableOffset, byte[] bytes) {
 		if (((NumberOperator) testValue).isMatch(andValue, unsignedType, (Long) extractedValue)) {
-			mutableOffset.offset += 8;
+			mutableOffset.offset += getBytesPerType();
 			return extractedValue;
 		} else {
 			return null;
@@ -49,6 +49,13 @@ public class LongType implements MagicMatcher {
 
 	@Override
 	public byte[] getStartingBytes(Object testValue) {
-		return endianConverter.convertToByteArray(((NumberOperator) testValue).getValue(), BYTES_PER_LONG);
+		return endianConverter.convertToByteArray(((NumberOperator) testValue).getValue(), getBytesPerType());
+	}
+
+	/**
+	 * Return the number of bytes in this type.
+	 */
+	protected int getBytesPerType() {
+		return BYTES_PER_LONG;
 	}
 }
