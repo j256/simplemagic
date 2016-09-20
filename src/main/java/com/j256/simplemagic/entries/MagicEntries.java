@@ -130,7 +130,7 @@ public class MagicEntries {
 	 */
 	public ContentInfo findMatch(byte[] bytes) {
 		if (bytes.length == 0) {
-			return null;
+			return ContentInfo.EMPTY_INFO;
 		}
 		// first do the start byte ones
 		int index = (0xFF & bytes[0]);
