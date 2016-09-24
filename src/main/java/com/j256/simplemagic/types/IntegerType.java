@@ -7,7 +7,7 @@ import com.j256.simplemagic.endian.EndianType;
  * 
  * @author graywatson
  */
-public class IntegerType extends NumberType {
+public class IntegerType extends BaseLongType {
 
 	private static final int BYTES_PER_INTEGER = 4;
 
@@ -26,9 +26,12 @@ public class IntegerType extends NumberType {
 	}
 
 	@Override
-	public int compare(long extractedValue, long testValue) {
-		int extractedInt = (int) extractedValue;
-		int testInt = (int) testValue;
+	public int compare(boolean unsignedType, Number extractedValue, Number testValue) {
+		if (unsignedType) {
+			return LongType.staticCompare(extractedValue, testValue);
+		}
+		int extractedInt = extractedValue.intValue();
+		int testInt = testValue.intValue();
 		if (extractedInt > testInt) {
 			return 1;
 		} else if (extractedInt < testInt) {

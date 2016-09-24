@@ -16,11 +16,20 @@ public class FloatType extends DoubleType {
 	}
 
 	@Override
-	public Object convertTestString(String typeStr, String testStr) {
-		try {
-			return Float.parseFloat(testStr);
-		} catch (NumberFormatException e) {
-			throw new IllegalArgumentException("Could not parse float from: " + testStr);
+	public Number decodeValueString(String valueStr) throws NumberFormatException {
+		return Float.parseFloat(valueStr);
+	}
+
+	@Override
+	public int compare(boolean unsignedType, Number extractedValue, Number testValue) {
+		float extractedFloat = extractedValue.floatValue();
+		float testFloat = testValue.floatValue();
+		if (extractedFloat > testFloat) {
+			return 1;
+		} else if (extractedFloat < testFloat) {
+			return -1;
+		} else {
+			return 0;
 		}
 	}
 
@@ -30,7 +39,7 @@ public class FloatType extends DoubleType {
 	}
 
 	@Override
-	protected int getBytesPerType() {
+	public int getBytesPerType() {
 		return BYTES_PER_FLOAT;
 	}
 }

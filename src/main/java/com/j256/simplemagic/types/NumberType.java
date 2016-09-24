@@ -19,6 +19,11 @@ public abstract class NumberType implements MagicMatcher {
 	}
 
 	/**
+	 * Decode the test string value.
+	 */
+	public abstract Number decodeValueString(String valueStr) throws NumberFormatException;
+
+	/**
 	 * Return the number of bytes in this type.
 	 */
 	public abstract int getBytesPerType();
@@ -26,7 +31,7 @@ public abstract class NumberType implements MagicMatcher {
 	/**
 	 * Return -1 if extractedValue is < testValue, 1 if it is >, 0 if it is equals.
 	 */
-	public abstract int compare(long extractedValue, long testValue);
+	public abstract int compare(boolean unsignedType, Number extractedValue, Number testValue);
 
 	/**
 	 * Return the value with the appropriate bytes masked off corresponding to the bytes in the type.
@@ -35,7 +40,7 @@ public abstract class NumberType implements MagicMatcher {
 
 	@Override
 	public Object convertTestString(String typeStr, String testStr) {
-		return new NumberOperator(this, testStr);
+		return new NumberComparison(this, testStr);
 	}
 
 	@Override
@@ -46,7 +51,7 @@ public abstract class NumberType implements MagicMatcher {
 	@Override
 	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue,
 			MutableOffset mutableOffset, byte[] bytes) {
-		if (((NumberOperator) testValue).isMatch(andValue, unsignedType, (Long) extractedValue)) {
+		if (((NumberComparison) testValue).isMatch(andValue, unsignedType, (Number) extractedValue)) {
 			mutableOffset.offset += getBytesPerType();
 			return extractedValue;
 		} else {
@@ -57,10 +62,5 @@ public abstract class NumberType implements MagicMatcher {
 	@Override
 	public void renderValue(StringBuilder sb, Object extractedValue, MagicFormatter formatter) {
 		formatter.format(sb, extractedValue);
-	}
-
-	@Override
-	public byte[] getStartingBytes(Object testValue) {
-		return endianConverter.convertToByteArray(((NumberOperator) testValue).getValue(), getBytesPerType());
 	}
 }

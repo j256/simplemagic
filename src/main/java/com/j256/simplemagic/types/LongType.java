@@ -7,7 +7,7 @@ import com.j256.simplemagic.endian.EndianType;
  * 
  * @author graywatson
  */
-public class LongType extends NumberType {
+public class LongType extends BaseLongType {
 
 	static final int BYTES_PER_LONG = 8;
 
@@ -29,10 +29,19 @@ public class LongType extends NumberType {
 	}
 
 	@Override
-	public int compare(long extractedValue, long testValue) {
-		if (extractedValue > testValue) {
+	public int compare(boolean unsignedType, Number extractedValue, Number testValue) {
+		return staticCompare(extractedValue, testValue);
+	}
+
+	/**
+	 * Static compare of longs which are unsigned or signed.
+	 */
+	public static int staticCompare(Number extractedValue, Number testValue) {
+		long extractedLong = extractedValue.longValue();
+		long testLong = testValue.longValue();
+		if (extractedLong > testLong) {
 			return 1;
-		} else if (extractedValue < testValue) {
+		} else if (extractedLong < testLong) {
 			return -1;
 		} else {
 			return 0;

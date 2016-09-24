@@ -44,9 +44,9 @@ public abstract class BaseMagicTypeTest {
 		});
 		ContentInfo result = contentInfoUtil.findMatch(bytes);
 		if (expectedMsg == null) {
-			assertNull(result);
+			assertNull("Got result instead of null: " + result, result);
 		} else {
-			assertNotNull(result);
+			assertNotNull("Got null result instead of: " + expectedMsg, result);
 			assertEquals(expectedMsg, result.getMessage());
 		}
 	}

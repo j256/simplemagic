@@ -1,32 +1,23 @@
 package com.j256.simplemagic.types;
 
-import com.j256.simplemagic.endian.EndianConverter;
 import com.j256.simplemagic.endian.EndianType;
-import com.j256.simplemagic.entries.MagicFormatter;
-import com.j256.simplemagic.entries.MagicMatcher;
 
 /**
  * A 64-bit double precision IEEE floating point number in this machine's native byte order.
  * 
  * @author graywatson
  */
-public class DoubleType implements MagicMatcher {
+public class DoubleType extends NumberType {
 
 	private static final int BYTES_PER_DOUBLE = 8;
 
-	protected final EndianConverter endianConverter;
-
 	public DoubleType(EndianType endianType) {
-		this.endianConverter = endianType.getConverter();
+		super(endianType);
 	}
 
 	@Override
-	public Object convertTestString(String typeStr, String testStr) {
-		try {
-			return Double.parseDouble(testStr);
-		} catch (NumberFormatException e) {
-			throw new IllegalArgumentException("Could not parse double from: " + testStr);
-		}
+	public Number decodeValueString(String valueStr) throws NumberFormatException {
+		return Double.parseDouble(valueStr);
 	}
 
 	@Override
@@ -40,20 +31,16 @@ public class DoubleType implements MagicMatcher {
 	}
 
 	@Override
-	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue,
-			MutableOffset mutableOffset, byte[] bytes) {
-		// not sure how to do the & here
-		if (testValue.equals(extractedValue)) {
-			mutableOffset.offset += getBytesPerType();
-			return extractedValue;
+	public int compare(boolean unsignedType, Number extractedValue, Number testValue) {
+		double extractedDouble = extractedValue.doubleValue();
+		double testDouble = testValue.doubleValue();
+		if (extractedDouble > testDouble) {
+			return 1;
+		} else if (extractedDouble < testDouble) {
+			return -1;
 		} else {
-			return null;
+			return 0;
 		}
-	}
-
-	@Override
-	public void renderValue(StringBuilder sb, Object extractedValue, MagicFormatter formatter) {
-		formatter.format(sb, extractedValue);
 	}
 
 	@Override
@@ -68,10 +55,16 @@ public class DoubleType implements MagicMatcher {
 		return Double.longBitsToDouble(value);
 	}
 
+	@Override
+	public long maskValue(long value) {
+		return value;
+	}
+
 	/**
 	 * Return the number of bytes in this type.
 	 */
-	protected int getBytesPerType() {
+	@Override
+	public int getBytesPerType() {
 		return BYTES_PER_DOUBLE;
 	}
 }
