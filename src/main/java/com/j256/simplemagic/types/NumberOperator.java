@@ -1,17 +1,19 @@
-package com.j256.simplemagic.entries;
+package com.j256.simplemagic.types;
 
 /**
  * Internal class that provides information about a particular test.
  */
 public class NumberOperator {
 
-	final TestOperator operator;
-	final long value;
+	private final NumberType numberType;
+	private final TestOperator operator;
+	private final long value;
 
 	/**
-	 * Preprocess the test string into an operator and a value class.
+	 * Pre-process the test string into an operator and a value class.
 	 */
-	public NumberOperator(String test) {
+	public NumberOperator(NumberType numberType, String test) {
+		this.numberType = numberType;
 		TestOperator op = TestOperator.fromTest(test);
 		if (op == null) {
 			op = TestOperator.DEFAULT_OPERATOR;
@@ -26,16 +28,11 @@ public class NumberOperator {
 		}
 	}
 
-	public NumberOperator(TestOperator operator, long value) {
-		this.operator = operator;
-		this.value = value;
-	}
-
 	public boolean isMatch(Long andValue, boolean unsignedType, long extractedValue) {
 		if (andValue != null) {
 			extractedValue &= andValue;
 		}
-		return operator.doTest(extractedValue, value);
+		return operator.doTest(unsignedType, extractedValue, value, numberType);
 	}
 
 	public long getValue() {
@@ -54,44 +51,62 @@ public class NumberOperator {
 
 		EQUALS('=') {
 			@Override
-			public boolean doTest(long extractedValue, long testValue) {
-				return (extractedValue == testValue);
+			public boolean doTest(boolean unsignedType, long extractedValue, long testValue, NumberType numberType) {
+				if (unsignedType) {
+					return (extractedValue == testValue);
+				} else {
+					return (numberType.compare(extractedValue, testValue) == 0);
+				}
 			}
 		},
 		NOT_EQUALS('!') {
 			@Override
-			public boolean doTest(long extractedValue, long testValue) {
-				return (extractedValue != testValue);
+			public boolean doTest(boolean unsignedType, long extractedValue, long testValue, NumberType numberType) {
+				if (unsignedType) {
+					return (extractedValue != testValue);
+				} else {
+					return (numberType.compare(extractedValue, testValue) != 0);
+				}
 			}
 		},
 		GREATER_THAN('>') {
 			@Override
-			public boolean doTest(long extractedValue, long testValue) {
-				return (extractedValue > testValue);
+			public boolean doTest(boolean unsignedType, long extractedValue, long testValue, NumberType numberType) {
+				if (unsignedType) {
+					return (extractedValue > testValue);
+				} else {
+					return (numberType.compare(extractedValue, testValue) > 0);
+				}
 			}
 		},
 		LESS_THAN('<') {
 			@Override
-			public boolean doTest(long extractedValue, long testValue) {
-				return (extractedValue < testValue);
+			public boolean doTest(boolean unsignedType, long extractedValue, long testValue, NumberType numberType) {
+				if (unsignedType) {
+					return (extractedValue < testValue);
+				} else {
+					return (numberType.compare(extractedValue, testValue) < 0);
+				}
 			}
 		},
 		AND_ALL_SET('&') {
 			@Override
-			public boolean doTest(long extractedValue, long testValue) {
+			public boolean doTest(boolean unsignedType, long extractedValue, long testValue, NumberType numberType) {
 				return ((extractedValue & testValue) == testValue);
 			}
 		},
 		AND_ALL_CLEARED('^') {
 			@Override
-			public boolean doTest(long extractedValue, long testValue) {
+			public boolean doTest(boolean unsignedType, long extractedValue, long testValue, NumberType numberType) {
 				return ((extractedValue & testValue) == 0);
 			}
 		},
 		NEGATE('~') {
 			@Override
-			public boolean doTest(long extractedValue, long testValue) {
-				return false;
+			public boolean doTest(boolean unsignedType, long extractedValue, long testValue, NumberType numberType) {
+				// we need the mask because we are using bit negation but testing only a portion of the long
+				long negatedValue = numberType.maskValue(~testValue);
+				return (extractedValue == negatedValue);
 			}
 		},
 		// end
@@ -108,7 +123,8 @@ public class NumberOperator {
 			this.prefixChar = prefixChar;
 		}
 
-		public abstract boolean doTest(long extractedValue, long testValue);
+		public abstract boolean doTest(boolean unsignedType, long extractedValue, long testValue,
+				NumberType numberType);
 
 		/**
 		 * Returns the operator if the first character is an operator. Otherwise this returns null and you should use

@@ -1,8 +1,6 @@
 package com.j256.simplemagic.types;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
 
 import com.j256.simplemagic.endian.EndianType;
 
@@ -11,9 +9,8 @@ import com.j256.simplemagic.endian.EndianType;
  * 
  * @author graywatson
  */
-public class UtcLongDateType extends LocalLongDateType {
+public class UtcLongDateType extends UtcDateType {
 
-	private static final TimeZone UTC_TIME_ZONE = TimeZone.getTimeZone("UTC");
 	private static final int BYTES_PER_UTC_LONG_DATE = 8;
 
 	public UtcLongDateType(EndianType endianType) {
@@ -28,12 +25,7 @@ public class UtcLongDateType extends LocalLongDateType {
 	}
 
 	@Override
-	protected void assisgnTimeZone(SimpleDateFormat format) {
-		format.setTimeZone(UTC_TIME_ZONE);
-	}
-
-	@Override
-	protected int getBytesPerType() {
+	public int getBytesPerType() {
 		return BYTES_PER_UTC_LONG_DATE;
 	}
 }

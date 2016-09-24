@@ -7,9 +7,7 @@ import com.j256.simplemagic.endian.EndianType;
  * 
  * @author graywatson
  */
-public class Id3LengthType extends LongType {
-
-	private static final int BYTES_PER_ID3 = 4;
+public class Id3LengthType extends IntegerType {
 
 	public Id3LengthType(EndianType endianType) {
 		super(endianType);
@@ -17,20 +15,13 @@ public class Id3LengthType extends LongType {
 
 	@Override
 	public Object extractValueFromBytes(int offset, byte[] bytes) {
-		Long val = endianConverter.convertNumber(offset, bytes, BYTES_PER_ID3);
-		if (val == null) {
-			return null;
+		// because we only use the lower 7-bits of each byte, we need to copy into a local byte array
+		int bytesPerType = getBytesPerType();
+		byte[] sevenBitBytes = new byte[bytesPerType];
+		for (int i = 0; i < bytesPerType; i++) {
+			sevenBitBytes[i] = (byte) (bytes[offset + i] & 0x7F);
 		}
-
-		long result = 0;
-		for (int i = 0; i < BYTES_PER_ID3; i++) {
-			result |= (val & 0x7F);
-		}
-		return result;
-	}
-
-	@Override
-	protected int getBytesPerType() {
-		return BYTES_PER_ID3;
+		// because we've copied into a local array, we use the 0 offset
+		return endianConverter.convertNumber(0, sevenBitBytes, bytesPerType);
 	}
 }

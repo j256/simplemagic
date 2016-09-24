@@ -1,7 +1,5 @@
 package com.j256.simplemagic;
 
-import static org.junit.Assert.fail;
-
 import java.io.IOException;
 
 import org.junit.Ignore;
@@ -17,7 +15,7 @@ public class MagicFileTest {
 		new ContentInfoUtil("/magic.gz", new ErrorCallBack() {
 			@Override
 			public void error(String line, String details, Exception e) {
-				fail("Got this error: '" + details + "' for line: " + line);
+				throw new RuntimeException("Got this error: '" + details + "', on line: " + line, e);
 			}
 		});
 	}

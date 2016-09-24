@@ -1,3 +1,10 @@
+1.8: 9/20/2016
+	* Added a bunch more unit tests around numbers and integration tests.  Thanks much to rob stryker.
+	* Fixed problems with the pstring type that were generating the wrong extracted string.
+	* Fixed problems with the ~ negation operation and byte, short, or int values.
+	* Fixed a number of problems around comparing two's complement numbers.
+	* Major reworking of how the internal number types are processed and compared.  Thanks to rob stryker.
+
 1.7: 9/20/2016
 	* Added support for RIFF WEBP image type.  Thanks much to richid.
 	* Added support for an EMPTY ContentType if there is no bytes in the stream or file.  Thanks to se7en007.

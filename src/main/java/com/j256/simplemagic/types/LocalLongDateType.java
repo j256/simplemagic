@@ -25,7 +25,7 @@ public class LocalLongDateType extends LocalDateType {
 	}
 
 	@Override
-	protected int getBytesPerType() {
+	public int getBytesPerType() {
 		return BYTES_PER_LOCAL_LONG_DATE;
 	}
 }

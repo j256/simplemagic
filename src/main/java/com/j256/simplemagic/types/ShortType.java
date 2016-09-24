@@ -7,7 +7,7 @@ import com.j256.simplemagic.endian.EndianType;
  * 
  * @author graywatson
  */
-public class ShortType extends LongType {
+public class ShortType extends NumberType {
 
 	private static final int BYTES_PER_SHORT = 2;
 
@@ -16,7 +16,25 @@ public class ShortType extends LongType {
 	}
 
 	@Override
-	protected int getBytesPerType() {
+	public int getBytesPerType() {
 		return BYTES_PER_SHORT;
+	}
+
+	@Override
+	public long maskValue(long value) {
+		return value & 0xFFFFL;
+	}
+
+	@Override
+	public int compare(long extractedValue, long testValue) {
+		short extractedShort = (short)extractedValue;
+		short testShort = (short)testValue;
+		if (extractedShort > testShort) {
+			return 1;
+		} else if (extractedShort < testShort) {
+			return -1;
+		} else {
+			return 0;
+		}
 	}
 }

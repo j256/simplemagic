@@ -5,7 +5,6 @@ import java.util.regex.Pattern;
 
 import com.j256.simplemagic.entries.MagicFormatter;
 import com.j256.simplemagic.entries.MagicMatcher;
-import com.j256.simplemagic.entries.StringOperator;
 
 /**
  * From the magic(5) man page: A string of bytes. The string type specification can be optionally followed by /[Bbc]*.

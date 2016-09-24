@@ -7,7 +7,7 @@ import com.j256.simplemagic.endian.EndianType;
  * 
  * @author graywatson
  */
-public class ByteType extends LongType {
+public class ByteType extends NumberType {
 
 	public ByteType() {
 		// we don't care about byte order since we only process 1 byte at a time
@@ -15,7 +15,25 @@ public class ByteType extends LongType {
 	}
 
 	@Override
-	protected int getBytesPerType() {
+	public int getBytesPerType() {
 		return 1;
+	}
+
+	@Override
+	public long maskValue(long value) {
+		return value & 0xFFL;
+	}
+
+	@Override
+	public int compare(long extractedValue, long testValue) {
+		byte extractedByte = (byte)extractedValue;
+		byte testByte = (byte)testValue;
+		if (extractedByte > testByte) {
+			return 1;
+		} else if (extractedByte < testByte) {
+			return -1;
+		} else {
+			return 0;
+		}
 	}
 }

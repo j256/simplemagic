@@ -1,4 +1,4 @@
-package com.j256.simplemagic.entries;
+package com.j256.simplemagic.types;
 
 /**
  * Internal class that provides information about a particular test.

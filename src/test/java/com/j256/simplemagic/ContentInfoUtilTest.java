@@ -51,7 +51,7 @@ public class ContentInfoUtilTest {
 			new FileType("/files/exif2.jpg", ContentType.JPEG, "jpeg", "image/jpeg", "JPEG image data, EXIF standard"),
 			new FileType("/files/x.jp2", ContentType.JPEG_2000, "jp2", "image/jp2", "JPEG 2000 image"),
 			new FileType("/files/x.class", ContentType.JAVA_APPLET, "applet", "application/x-java-applet",
-					"compiled Java class data, version 49.0"),
+					"compiled Java class data, version 49.0 (Java 1.5)"),
 			new FileType("/files/x.perl", ContentType.PERL, "perl", "text/x-perl", "Perl script text executable"),
 			new FileType("/files/x.bz2", ContentType.BZIP2, "bzip2", "application/x-bzip2",
 					"bzip2 compressed data, block size = 900k"),
