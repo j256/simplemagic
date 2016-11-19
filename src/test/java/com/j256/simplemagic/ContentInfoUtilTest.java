@@ -42,7 +42,7 @@ public class ContentInfoUtilTest {
 					"application/vnd.openxmlformats-officedocument.wordprocessingml.document", "Microsoft Word 2007+"),
 			new FileType("/files/x.rtf", ContentType.RTF, "rtf", "text/rtf",
 					"Rich Text Format data, version 1, unknown character set unknown version"),
-			new FileType("/files/x.xml", ContentType.XML, "xml", "application/xml", "XML document text"),
+			new FileType("/files/x.xml", ContentType.XML, "xml", "application/xml", "XML 1 document text"), // version=1.0
 			new FileType("/files/jfif.jpg", ContentType.JPEG, "jpeg", "image/jpeg",
 					"JPEG image data, JFIF standard 1.01"),
 			// partial file here

@@ -94,7 +94,13 @@ public class StringType implements MagicMatcher {
 
 	@Override
 	public byte[] getStartingBytes(Object testValue) {
-		return ((TestInfo) testValue).getStartingBytes();
+		TestInfo ti =  (TestInfo) testValue;
+
+		if (ti.caseInsensitive || ti.compactWhiteSpace || ti.optionalWhiteSpace) {
+			return null;
+		} else {
+			return ti.getStartingBytes();
+		}
 	}
 
 	/**

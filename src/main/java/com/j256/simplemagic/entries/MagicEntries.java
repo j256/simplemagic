@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import com.j256.simplemagic.ContentInfo;
+import com.j256.simplemagic.ContentType;
 import com.j256.simplemagic.ContentInfoUtil.ErrorCallBack;
 import com.j256.simplemagic.logger.Logger;
 import com.j256.simplemagic.logger.LoggerFactory;
@@ -134,14 +135,23 @@ public class MagicEntries {
 		}
 		// first do the start byte ones
 		int index = (0xFF & bytes[0]);
+		ContentInfo info = null;
 		if (index < firstByteLinkedLists.length && firstByteLinkedLists[index] != null) {
-			ContentInfo info = findMatch(bytes, firstByteLinkedLists[index]);
-			if (info != null) {
+			info = findMatch(bytes, firstByteLinkedLists[index]);
+			if (info != null && !info.getContentType().equals(ContentType.OTHER)) {
 				// XXX: not sure if it is right to return if only a partial match here
 				return info;
 			}
 		}
-		return findMatch(bytes, entryLinkedList);
+		
+		ContentInfo retry = findMatch(bytes, entryLinkedList);
+		if (retry == null) {
+			return info;
+		} else { 
+			// return retry anyways, because retry is not null and it will not be worse that info which is either null or OTHER
+			return retry;
+		}
+		
 	}
 
 	private ContentInfo findMatch(byte[] bytes, MagicEntry entryLinkedList) {
