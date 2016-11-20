@@ -49,11 +49,6 @@ public class DoubleType extends NumberType {
 	}
 
 
-	@Override
-	public boolean leaveInMatchList(Object testValue) {
-		return true;
-	}
-
 	/**
 	 * Convert a long to the type.
 	 */

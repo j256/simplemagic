@@ -40,13 +40,6 @@ public interface MagicMatcher {
 	public byte[] getStartingBytes(Object testValue);
 
 	/**
-	 * Return true if we should leave the matcher in the main list even if there are starting bytes. We do this so if
-	 * there are starting bytes but optional characters or something that wouldn't match the starting bytes but might
-	 * match anyway.
-	 */
-	public boolean leaveInMatchList(Object testValue);
-
-	/**
 	 * Offset which we can update.
 	 */
 	public static class MutableOffset {

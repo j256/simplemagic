@@ -44,9 +44,4 @@ public class DefaultType implements MagicMatcher {
 	public byte[] getStartingBytes(Object testValue) {
 		return null;
 	}
-
-	@Override
-	public boolean leaveInMatchList(Object testValue) {
-		return true;
-	}
 }

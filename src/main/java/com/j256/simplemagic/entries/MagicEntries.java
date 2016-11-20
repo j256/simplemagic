@@ -3,7 +3,6 @@ package com.j256.simplemagic.entries;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.j256.simplemagic.ContentInfo;
@@ -87,9 +86,7 @@ public class MagicEntries {
 	 */
 	public void optimizeFirstBytes() {
 		// now we post process the entries and remove the first byte ones we can optimize
-		Iterator<MagicEntry> iterator = entryList.iterator();
-		while (iterator.hasNext()) {
-			MagicEntry entry = iterator.next();
+		for (MagicEntry entry : entryList) {
 			byte[] startingBytes = entry.getStartsWithByte();
 			if (startingBytes == null || startingBytes.length == 0) {
 				continue;
@@ -99,15 +96,10 @@ public class MagicEntries {
 				firstByteEntryLists[index] = new ArrayList<MagicEntry>();
 			}
 			firstByteEntryLists[index].add(entry);
-			if (entry.leaveInMatchList()) {
-				/*
-				 * we put an entry in the first-byte list but need to leave it in the main list because there may be
-				 * optional characters in the match
-				 */
-			} else {
-				// remove it from the main entry-list now that it's in the first byte list
-				iterator.remove();
-			}
+			/*
+			 * We put an entry in the first-byte list but need to leave it in the main list because there may be
+			 * optional characters or != or > comparisons in the match
+			 */
 		}
 	}
 

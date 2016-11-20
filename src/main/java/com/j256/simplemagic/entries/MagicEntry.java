@@ -97,18 +97,6 @@ public class MagicEntry {
 		}
 	}
 
-	/**
-	 * Although we optimize certain matchers by getting the starting bytes, we should not remove some of them from the
-	 * main match list in case they (for example) need to remove whitespace while doing the match.
-	 */
-	boolean leaveInMatchList() {
-		if (offset != 0) {
-			return false;
-		} else {
-			return matcher.leaveInMatchList(testValue);
-		}
-	}
-
 	void setStrength(int strength) {
 		this.strength = strength;
 	}

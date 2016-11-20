@@ -97,12 +97,6 @@ public class StringType implements MagicMatcher {
 		return ((TestInfo) testValue).getStartingBytes();
 	}
 
-	@Override
-	public boolean leaveInMatchList(Object testValue) {
-		TestInfo testInfo = (TestInfo) testValue;
-		return testInfo.caseInsensitive || testInfo.compactWhiteSpace || testInfo.optionalWhiteSpace;
-	}
-
 	/**
 	 * Called from the string and search types to see if a string or byte array matches our pattern.
 	 */
