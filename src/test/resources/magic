@@ -8585,8 +8585,6 @@
 0	search/1/cb	\<html			HTML document text
 !:mime	text/html
 
-0	search/1/cb	\<?xml			XML document text
-!:mime	application/xml
 0	string		\<?xml\ version\ "	XML
 !:mime	application/xml
 0	string		\<?xml\ version="	XML
@@ -8599,7 +8597,7 @@
 >15	search/1	>\0			%.3s document text
 >>23	search/1	\<xsl:stylesheet	(XSL stylesheet)
 >>24	search/1	\<xsl:stylesheet	(XSL stylesheet)
-0	search/1/b	\<?xml			XML document text
+0	search/1/cb	\<?xml			XML document text
 !:mime	application/xml
 0	search/1/b	\<?XML			broken XML document text
 !:mime	application/xml

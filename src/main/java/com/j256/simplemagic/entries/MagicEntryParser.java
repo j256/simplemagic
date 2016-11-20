@@ -58,14 +58,6 @@ public class MagicEntryParser {
 			offsetString = parts[0].substring(sindex + 1);
 		}
 
-		if (level > 0 && previous == null) {
-			// we add to the previous entry if the level is > 0, if no previous then skip it
-			if (errorCallBack != null) {
-				errorCallBack.error(line, "level is " + level + ", but no previous entry", null);
-			}
-			return null;
-		}
-
 		int offset;
 		OffsetInfo offsetInfo;
 		if (offsetString.length() == 0) {

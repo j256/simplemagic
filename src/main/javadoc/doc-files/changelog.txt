@@ -1,3 +1,7 @@
+1.9: ?/??/2016
+	* Fixed problem with first bytes optimization not taking into account optional match chars.  Thanks to yongminyan.
+	* Removed the linked list of entries for lists of entries because they may be in multiple places.
+
 1.8: 9/24/2016
 	* Fixed problems with the pstring type that were generating the wrong extracted string.
 	* Fixed problems with the ~ negation operation and byte, short, or int values.

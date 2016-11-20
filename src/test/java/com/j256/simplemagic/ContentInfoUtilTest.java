@@ -42,8 +42,8 @@ public class ContentInfoUtilTest {
 					"application/vnd.openxmlformats-officedocument.wordprocessingml.document", "Microsoft Word 2007+"),
 			new FileType("/files/x.rtf", ContentType.RTF, "rtf", "text/rtf",
 					"Rich Text Format data, version 1, unknown character set unknown version"),
-			new FileType("/files/x.xml", ContentType.XML, "xml", "application/xml", "XML document text"),
-			// new FileType("/files/x.xml", ContentType.XML, "xml", "application/xml", "XML 1 document text"),
+			new FileType("/files/1.xml", ContentType.XML, "xml", "application/xml", "XML 1 document text"),
+			new FileType("/files/2.xml", ContentType.XML, "xml", "application/xml", "XML 2 document text"),
 			new FileType("/files/jfif.jpg", ContentType.JPEG, "jpeg", "image/jpeg",
 					"JPEG image data, JFIF standard 1.01"),
 			// partial file here
@@ -65,7 +65,8 @@ public class ContentInfoUtilTest {
 					"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Microsoft Excel 2007+"),
 			new FileType("/files/x.odt", ContentType.OPENDOCUMENT_TEXT, "opendocument-text",
 					"application/vnd.oasis.opendocument.text", "OpenDocument Text"),
-			new FileType("/files/x.html", ContentType.HTML, "html", "text/html", "HTML document text"),
+			new FileType("/files/1.html", ContentType.HTML, "html", "text/html", "HTML document text"),
+			new FileType("/files/2.html", ContentType.HTML, "html", "text/html", "HTML document text"),
 			new FileType("/files/x.aiff", ContentType.AIFF, "aiff", "audio/x-aiff", "IFF data, AIFF audio"),
 			new FileType("/files/x.mp3", ContentType.AUDIO_MPEG, "mpeg", "audio/mpeg",
 					"MPEG ADTS, layer III, v1, 128 kbps, 44.1 kHz, Stereo"),
@@ -101,8 +102,10 @@ public class ContentInfoUtilTest {
 
 	@Test
 	public void testSpecific() throws Exception {
-		testFile(new ContentInfoUtil("/magic.gz", null),
-				new FileType("/files/x.perl", ContentType.PERL, "perl", "text/x-perl", "Perl script text executable"));
+		ContentInfoUtil util = new ContentInfoUtil("/magic2", null);
+		testFile(util, new FileType("/files/1.xml", ContentType.XML, "xml", "application/xml", "XML 1 document text"));
+		testFile(util, new FileType("/files/2.xml", ContentType.XML, "xml", "application/xml", "XML 2 document text"));
+		testFile(util, new FileType("/files/3.xml", ContentType.XML, "xml", "application/xml", "XML 2 document text"));
 	}
 
 	@Test
@@ -173,7 +176,12 @@ public class ContentInfoUtilTest {
 
 	private ContentInfoUtil getContentInfoUtil() {
 		if (contentInfoUtil == null) {
-			contentInfoUtil = new ContentInfoUtil();
+			try {
+				contentInfoUtil = new ContentInfoUtil("/magic2", null);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return contentInfoUtil;
 	}

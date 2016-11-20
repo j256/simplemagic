@@ -2,6 +2,9 @@ package com.j256.simplemagic.entries;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil.ErrorCallBack;
@@ -16,17 +19,18 @@ import com.j256.simplemagic.logger.LoggerFactory;
 public class MagicEntries {
 
 	private static final int MAX_LEVELS = 20;
-	private static final int FIRST_BYTE_LINKED_LIST_SIZE = 256;
+	private static final int FIRST_BYTE_LIST_SIZE = 256;
 	private static Logger logger = LoggerFactory.getLogger(MagicEntries.class);
 
-	private MagicEntry entryLinkedList;
-	private final MagicEntry[] firstByteLinkedLists = new MagicEntry[FIRST_BYTE_LINKED_LIST_SIZE];
-	private MagicEntry[] levelNexts = new MagicEntry[MAX_LEVELS];
+	private final List<MagicEntry> entryList = new ArrayList<MagicEntry>();
+	@SuppressWarnings("unchecked")
+	private final List<MagicEntry>[] firstByteEntryLists = new ArrayList[FIRST_BYTE_LIST_SIZE];
 
 	/**
 	 * Read the entries so later we can find matches with them.
 	 */
 	public void readEntries(BufferedReader lineReader, ErrorCallBack errorCallBack) throws IOException {
+		final MagicEntry[] levelParents = new MagicEntry[MAX_LEVELS];
 		MagicEntry previousEntry = null;
 		while (true) {
 			String line = lineReader.readLine();
@@ -40,6 +44,7 @@ public class MagicEntries {
 
 			MagicEntry entry;
 			try {
+				// we need the previous entry because of mime-type, etc. which augment the previous line
 				entry = MagicEntryParser.parseLine(previousEntry, line, errorCallBack);
 				if (entry == null) {
 					continue;
@@ -48,46 +53,32 @@ public class MagicEntries {
 				if (errorCallBack != null) {
 					errorCallBack.error(line, e.getMessage(), e);
 				}
-				// ignore this entry
 				continue;
 			}
 
 			int level = entry.getLevel();
-			if (previousEntry == null) {
-				if (level != 0) {
-					if (errorCallBack != null) {
-						errorCallBack.error(line, "first entry of the file but the level (" + level + ") should be 0",
-								null);
-					}
-					continue;
+			if (previousEntry == null && level != 0) {
+				if (errorCallBack != null) {
+					errorCallBack.error(line, "first entry of the file but the level " + level + " should be 0", null);
 				}
-			} else {
-				// if we go down a level, we need to clear the nexts above us
-				for (int levelCount = level + 1; levelCount <= previousEntry.getLevel(); levelCount++) {
-					levelNexts[levelCount] = null;
-				}
+				continue;
 			}
 
-			// if this is the first at this level?
-			if (levelNexts[level] == null) {
-				if (level == 0) {
-					// first top level entry
-					entryLinkedList = entry;
-				} else if (levelNexts[level - 1] != null) {
-					// if the level-next is null then we know that we are a child of the one above us
-					levelNexts[level - 1].setChild(entry);
+			if (level == 0) {
+				// top level entry
+				entryList.add(entry);
+			} else if (levelParents[level - 1] == null) {
+				if (errorCallBack != null) {
+					errorCallBack.error(line,
+							"entry has level " + level + " but no parent entry with level " + (level - 1), null);
 				}
+				continue;
 			} else {
-				// continue the linked list
-				levelNexts[level].setNext(entry);
+				// we are a child of the one above us
+				levelParents[level - 1].addChild(entry);
 			}
-			levelNexts[level] = entry;
+			levelParents[level] = entry;
 			previousEntry = entry;
-		}
-
-		// if we are done reading this file then we clear the level-nexts above 0
-		for (int levelCount = 1; levelCount < levelNexts.length; levelCount++) {
-			levelNexts[levelCount] = null;
 		}
 	}
 
@@ -95,37 +86,28 @@ public class MagicEntries {
 	 * Optimize the magic entries by removing the first-bytes information into their own lists
 	 */
 	public void optimizeFirstBytes() {
-		// no reason toe keep that array around
-		levelNexts = null;
 		// now we post process the entries and remove the first byte ones we can optimize
-		MagicEntry[] firstByteNexts = new MagicEntry[firstByteLinkedLists.length];
-		MagicEntry previousNonFirstByteEntry = null;
-		MagicEntry next;
-		for (MagicEntry entry = entryLinkedList; entry != null; entry = next) {
+		Iterator<MagicEntry> iterator = entryList.iterator();
+		while (iterator.hasNext()) {
+			MagicEntry entry = iterator.next();
 			byte[] startingBytes = entry.getStartsWithByte();
 			if (startingBytes == null || startingBytes.length == 0) {
-				// continue the entry linked list
-				if (previousNonFirstByteEntry == null) {
-					entryLinkedList = entry;
-				} else {
-					previousNonFirstByteEntry.setNext(entry);
-				}
-				previousNonFirstByteEntry = entry;
-			} else {
-				// we put an entry in the first-byte list and leave it in the main list
-				if (entry.leaveInMatchList()) {
-					entry = entry.clone();
-				}
-				int index = (0xFF & startingBytes[0]);
-				if (firstByteNexts[index] == null) {
-					firstByteLinkedLists[index] = entry;
-				} else {
-					firstByteNexts[index].setNext(entry);
-				}
-				firstByteNexts[index] = entry;
+				continue;
 			}
-			next = entry.getNext();
-			entry.setNext(null);
+			int index = (0xFF & startingBytes[0]);
+			if (firstByteEntryLists[index] == null) {
+				firstByteEntryLists[index] = new ArrayList<MagicEntry>();
+			}
+			firstByteEntryLists[index].add(entry);
+			if (entry.leaveInMatchList()) {
+				/*
+				 * we put an entry in the first-byte list but need to leave it in the main list because there may be
+				 * optional characters in the match
+				 */
+			} else {
+				// remove it from the main entry-list now that it's in the first byte list
+				iterator.remove();
+			}
 		}
 	}
 
@@ -138,19 +120,19 @@ public class MagicEntries {
 		}
 		// first do the start byte ones
 		int index = (0xFF & bytes[0]);
-		if (index < firstByteLinkedLists.length && firstByteLinkedLists[index] != null) {
-			ContentInfo info = findMatch(bytes, firstByteLinkedLists[index]);
+		if (index < firstByteEntryLists.length && firstByteEntryLists[index] != null) {
+			ContentInfo info = findMatch(bytes, firstByteEntryLists[index]);
 			if (info != null) {
-				// XXX: not sure if it is right to return if only a partial match here
+				// this seems to be right to return even if only a partial match here
 				return info;
 			}
 		}
-		return findMatch(bytes, entryLinkedList);
+		return findMatch(bytes, entryList);
 	}
 
-	private ContentInfo findMatch(byte[] bytes, MagicEntry entryLinkedList) {
+	private ContentInfo findMatch(byte[] bytes, List<MagicEntry> entryList) {
 		ContentInfo partialMatchInfo = null;
-		for (MagicEntry entry = entryLinkedList; entry != null; entry = entry.getNext()) {
+		for (MagicEntry entry : entryList) {
 			ContentInfo info = entry.matchBytes(bytes);
 			if (info == null) {
 				continue;

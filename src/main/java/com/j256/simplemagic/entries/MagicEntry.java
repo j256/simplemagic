@@ -1,6 +1,8 @@
 package com.j256.simplemagic.entries;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.endian.EndianConverter;
@@ -33,12 +35,10 @@ public class MagicEntry {
 	private final boolean clearFormat;
 	private final MagicFormatter formatter;
 
-	/** if this entry matches then check the child entry which may provide more content type details */
-	private MagicEntry child;
+	/** if this entry matches then check the children entry(s) which may provide more content type details */
+	private List<MagicEntry> children;
 	private int strength;
 	private String mimeType;
-	/** pointer to the next entry we should test */
-	private MagicEntry next;
 
 	/**
 	 * Package protected constructor.
@@ -112,30 +112,15 @@ public class MagicEntry {
 		this.strength = strength;
 	}
 
-	void setChild(MagicEntry child) {
-		this.child = child;
+	void addChild(MagicEntry child) {
+		if (children == null) {
+			children = new ArrayList<MagicEntry>();
+		}
+		children.add(child);
 	}
 
 	void setMimeType(String mimeType) {
 		this.mimeType = mimeType;
-	}
-
-	@Override
-	protected MagicEntry clone() {
-		try {
-			return (MagicEntry) super.clone();
-		} catch (CloneNotSupportedException e) {
-			// won't happen
-			return this;
-		}
-	}
-
-	MagicEntry getNext() {
-		return next;
-	}
-
-	void setNext(MagicEntry next) {
-		this.next = next;
 	}
 
 	@Override
@@ -198,14 +183,15 @@ public class MagicEntry {
 		}
 		logger.trace("matched data: {}: {}", this, contentData);
 
-		if (child == null) {
+		if (children == null) {
 			// no children so we have a full match and can set partial to false
 			contentData.partial = false;
 		} else {
 			// run through the children to add more content-type details
-			for (MagicEntry entry = child; entry != null; entry = entry.getNext()) {
+			for (MagicEntry entry : children) {
+				// goes recursive here
 				entry.matchBytes(bytes, offset, contentData);
-				// NOTE: we continue to match to see if we can add additional information to the name
+				// we continue to match to see if we can add additional children info to the name
 			}
 		}
 
@@ -228,7 +214,7 @@ public class MagicEntry {
 	/**
 	 * Internal processing data about the content.
 	 */
-	private static class ContentData {
+	static class ContentData {
 		String name;
 		boolean partial;
 		String mimeType;
