@@ -112,6 +112,10 @@ public class MagicEntries {
 				}
 				previousNonFirstByteEntry = entry;
 			} else {
+				// we put an entry in the first-byte list and leave it in the main list
+				if (entry.leaveInMatchList()) {
+					entry = entry.clone();
+				}
 				int index = (0xFF & startingBytes[0]);
 				if (firstByteNexts[index] == null) {
 					firstByteLinkedLists[index] = entry;

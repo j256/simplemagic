@@ -23,4 +23,9 @@ public abstract class BaseLongType extends NumberType {
 		return endianConverter.convertToByteArray(((NumberComparison) testValue).getValue().longValue(),
 				getBytesPerType());
 	}
+
+	@Override
+	public boolean leaveInMatchList(Object testValue) {
+		return false;
+	}
 }

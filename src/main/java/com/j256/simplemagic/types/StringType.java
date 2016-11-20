@@ -97,6 +97,12 @@ public class StringType implements MagicMatcher {
 		return ((TestInfo) testValue).getStartingBytes();
 	}
 
+	@Override
+	public boolean leaveInMatchList(Object testValue) {
+		TestInfo testInfo = (TestInfo) testValue;
+		return testInfo.caseInsensitive || testInfo.compactWhiteSpace || testInfo.optionalWhiteSpace;
+	}
+
 	/**
 	 * Called from the string and search types to see if a string or byte array matches our pattern.
 	 */
@@ -280,6 +286,9 @@ public class StringType implements MagicMatcher {
 			this.maxOffset = maxOffset;
 		}
 
+		/**
+		 * Get the bytes that start the pattern from an optimization standpoint. 
+		 */
 		public byte[] getStartingBytes() {
 			if (pattern.length() < 4) {
 				return null;

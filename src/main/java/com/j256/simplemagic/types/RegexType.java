@@ -97,6 +97,11 @@ public class RegexType implements MagicMatcher {
 		return null;
 	}
 
+	@Override
+	public boolean leaveInMatchList(Object testValue) {
+		return true;
+	}
+
 	private static class PatternInfo {
 		int patternFlags;
 		// TODO: need to implement this flag

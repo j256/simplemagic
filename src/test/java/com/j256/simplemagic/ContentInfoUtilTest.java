@@ -43,6 +43,7 @@ public class ContentInfoUtilTest {
 			new FileType("/files/x.rtf", ContentType.RTF, "rtf", "text/rtf",
 					"Rich Text Format data, version 1, unknown character set unknown version"),
 			new FileType("/files/x.xml", ContentType.XML, "xml", "application/xml", "XML document text"),
+			// new FileType("/files/x.xml", ContentType.XML, "xml", "application/xml", "XML 1 document text"),
 			new FileType("/files/jfif.jpg", ContentType.JPEG, "jpeg", "image/jpeg",
 					"JPEG image data, JFIF standard 1.01"),
 			// partial file here
@@ -99,9 +100,9 @@ public class ContentInfoUtilTest {
 	}
 
 	@Test
-	public void testGif() throws Exception {
-		testFile(getContentInfoUtil(), new FileType("/files/x.gif", ContentType.GIF, "gif", "image/gif",
-				"GIF image data, version 89a, 32 x 32"));
+	public void testSpecific() throws Exception {
+		testFile(new ContentInfoUtil("/magic.gz", null),
+				new FileType("/files/x.perl", ContentType.PERL, "perl", "text/x-perl", "Perl script text executable"));
 	}
 
 	@Test
