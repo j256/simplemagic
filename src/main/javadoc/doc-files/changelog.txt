@@ -1,5 +1,6 @@
 1.9: ?/??/2016
 	* Fixed problem with first bytes optimization not taking into account optional match chars.  Thanks to yongminyan.
+	* Added support for !:optional special flag for flagging more specific lines that aren't required.
 	* Removed the linked list of entries for lists of entries because they may be in multiple places.
 
 1.8: 9/24/2016

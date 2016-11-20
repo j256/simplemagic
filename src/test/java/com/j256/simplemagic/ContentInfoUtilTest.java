@@ -44,6 +44,7 @@ public class ContentInfoUtilTest {
 					"Rich Text Format data, version 1, unknown character set unknown version"),
 			new FileType("/files/1.xml", ContentType.XML, "xml", "application/xml", "XML 1 document text"),
 			new FileType("/files/2.xml", ContentType.XML, "xml", "application/xml", "XML 2 document text"),
+			new FileType("/files/3.xml", ContentType.XML, "xml", "application/xml", "XML document text"),
 			new FileType("/files/jfif.jpg", ContentType.JPEG, "jpeg", "image/jpeg",
 					"JPEG image data, JFIF standard 1.01"),
 			// partial file here
@@ -105,7 +106,7 @@ public class ContentInfoUtilTest {
 		ContentInfoUtil util = new ContentInfoUtil("/magic2", null);
 		testFile(util, new FileType("/files/1.xml", ContentType.XML, "xml", "application/xml", "XML 1 document text"));
 		testFile(util, new FileType("/files/2.xml", ContentType.XML, "xml", "application/xml", "XML 2 document text"));
-		testFile(util, new FileType("/files/3.xml", ContentType.XML, "xml", "application/xml", "XML 2 document text"));
+		testFile(util, new FileType("/files/3.xml", ContentType.XML, "xml", "application/xml", "XML document text"));
 	}
 
 	@Test
@@ -176,12 +177,7 @@ public class ContentInfoUtilTest {
 
 	private ContentInfoUtil getContentInfoUtil() {
 		if (contentInfoUtil == null) {
-			try {
-				contentInfoUtil = new ContentInfoUtil("/magic2", null);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			contentInfoUtil = new ContentInfoUtil();
 		}
 		return contentInfoUtil;
 	}

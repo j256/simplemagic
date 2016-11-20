@@ -19,6 +19,7 @@ public class MagicEntryParser {
 	// special lines, others are put into the extensionMap
 	private static final String MIME_TYPE_LINE = "!:mime";
 	private static final String STRENGTH_LINE = "!:stength";
+	private static final String OPTIONAL_LINE = "!:optional";
 
 	private final static Pattern OFFSET_PATTERN =
 			Pattern.compile("\\(([0-9a-fA-Fx]+)\\.?([bislBISLm]?)([\\*\\+\\-]?)([0-9a-fA-Fx]*)\\)");
@@ -288,6 +289,10 @@ public class MagicEntryParser {
 	}
 
 	private static void handleSpecial(MagicEntry previous, String line, ErrorCallBack errorCallBack) {
+		if (line.equals(OPTIONAL_LINE)) {
+			previous.setOptional(true);
+			return;
+		}
 		String[] parts = line.split("\\s+", 2);
 		if (parts.length < 2) {
 			if (errorCallBack != null) {

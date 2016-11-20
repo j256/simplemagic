@@ -8591,12 +8591,16 @@
 !:mime	application/xml
 >15	search/1	>\0			%.3s document text
 >>23	search/1	\<xsl:stylesheet	(XSL stylesheet)
+!:optional
 >>24	search/1	\<xsl:stylesheet	(XSL stylesheet)
+!:optional
 0	string		\<?xml\ version='	XML
 !:mime	application/xml
 >15	search/1	>\0			%.3s document text
 >>23	search/1	\<xsl:stylesheet	(XSL stylesheet)
+!:optional
 >>24	search/1	\<xsl:stylesheet	(XSL stylesheet)
+!:optional
 0	search/1/cb	\<?xml			XML document text
 !:mime	application/xml
 0	search/1/b	\<?XML			broken XML document text

@@ -39,6 +39,7 @@ public class MagicEntry {
 	private List<MagicEntry> children;
 	private int strength;
 	private String mimeType;
+	private boolean optional;
 
 	/**
 	 * Package protected constructor.
@@ -110,6 +111,14 @@ public class MagicEntry {
 
 	void setStrength(int strength) {
 		this.strength = strength;
+	}
+
+	boolean isOptional() {
+		return optional;
+	}
+
+	void setOptional(boolean optional) {
+		this.optional = optional;
 	}
 
 	void addChild(MagicEntry child) {
@@ -188,10 +197,17 @@ public class MagicEntry {
 			contentData.partial = false;
 		} else {
 			// run through the children to add more content-type details
+			boolean allOptional = true;
 			for (MagicEntry entry : children) {
+				if (!entry.isOptional()) {
+					allOptional = false;
+				}
 				// goes recursive here
 				entry.matchBytes(bytes, offset, contentData);
 				// we continue to match to see if we can add additional children info to the name
+			}
+			if (allOptional) {
+				contentData.partial = false;
 			}
 		}
 
