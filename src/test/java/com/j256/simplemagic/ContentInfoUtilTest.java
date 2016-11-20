@@ -103,7 +103,7 @@ public class ContentInfoUtilTest {
 
 	@Test
 	public void testSpecific() throws Exception {
-		ContentInfoUtil util = new ContentInfoUtil("/magic2", null);
+		ContentInfoUtil util = getContentInfoUtil();
 		testFile(util, new FileType("/files/1.xml", ContentType.XML, "xml", "application/xml", "XML 1 document text"));
 		testFile(util, new FileType("/files/2.xml", ContentType.XML, "xml", "application/xml", "XML 2 document text"));
 		testFile(util, new FileType("/files/3.xml", ContentType.XML, "xml", "application/xml", "XML document text"));
