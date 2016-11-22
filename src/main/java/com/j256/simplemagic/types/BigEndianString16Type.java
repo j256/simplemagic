@@ -16,14 +16,21 @@ public class BigEndianString16Type extends StringType {
 				break;
 			}
 		}
-		char[] chars = new char[len / 2];
-		for (int i = 0; i < len; i++) {
+		int charsLength = len / 2;
+		char[] chars = new char[charsLength];
+		for (int i = 0; i < charsLength; i++) {
 			chars[i] = bytesToChar(bytes[i * 2], bytes[i * 2 + 1]);
 		}
 		return chars;
 	}
 
+    @Override
+    public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue,
+            MutableOffset mutableOffset, byte[] bytes) {
+        return findOffsetMatch((TestInfo) testValue, mutableOffset.offset, mutableOffset, (char[]) extractedValue);
+    }
+    
 	protected char bytesToChar(int firstByte, int secondByte) {
-		return (char) (firstByte << 8 + secondByte);
+		return (char) ((firstByte << 8) + secondByte);
 	}
 }

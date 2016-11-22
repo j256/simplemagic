@@ -97,69 +97,77 @@ public class StringType implements MagicMatcher {
 		return ((TestInfo) testValue).getStartingBytes();
 	}
 
+	protected String findOffsetMatch(TestInfo info, int startOffset, MutableOffset mutableOffset, byte[] bytes) {
+	    char[] chars = new char[bytes.length];
+	    for (int i = 0; i < bytes.length; ++i) {
+	        chars[i] = (char) (bytes[i] & 0xFF);
+	    }
+	    return findOffsetMatch(info, startOffset, mutableOffset, chars);
+	}
+
 	/**
 	 * Called from the string and search types to see if a string or byte array matches our pattern.
 	 */
-	protected String findOffsetMatch(TestInfo info, int startOffset, MutableOffset mutableOffset, byte[] bytes) {
-		int targetPos = startOffset;
-		boolean lastMagicCompactWhitespace = false;
-		for (int magicPos = 0; magicPos < info.pattern.length(); magicPos++) {
-			char magicCh = info.pattern.charAt(magicPos);
-			boolean lastChar = (magicPos == info.pattern.length() - 1);
-			// did we reach the end?
-			if (targetPos >= bytes.length) {
-				return null;
-			}
-			char targetCh = (char) (bytes[targetPos] & 0xFF);
-			targetPos++;
+	protected String findOffsetMatch(TestInfo info, int startOffset, MutableOffset mutableOffset, char[] targets) {
+	    int targetPos = startOffset;
+	    boolean lastMagicCompactWhitespace = false;
+	    for (int magicPos = 0; magicPos < info.pattern.length(); magicPos++) {
+	        char magicCh = info.pattern.charAt(magicPos);
+	        boolean lastChar = (magicPos == info.pattern.length() - 1);
+	        // did we reach the end?
+	        if (targetPos >= targets.length) {
+	            return null;
+	        }
+	        char targetCh = targets[targetPos];
+	        targetPos++;
 
-			// if it matches, we can continue
-			if (info.operator.doTest(targetCh, magicCh, lastChar)) {
-				if (info.compactWhiteSpace) {
-					lastMagicCompactWhitespace = Character.isWhitespace(magicCh);
-				}
-				continue;
-			}
+	        // if it matches, we can continue
+	        if (info.operator.doTest(targetCh, magicCh, lastChar)) {
+	            if (info.compactWhiteSpace) {
+	                lastMagicCompactWhitespace = Character.isWhitespace(magicCh);
+	            }
+	            continue;
+	        }
 
-			// if it doesn't match, maybe the target is a whitespace
-			if ((lastMagicCompactWhitespace || info.optionalWhiteSpace) && Character.isWhitespace(targetCh)) {
-				do {
-					if (targetPos >= bytes.length) {
-						break;
-					}
-					targetCh = (char) (bytes[targetPos] & 0xFF);
-					targetPos++;
-				} while (Character.isWhitespace(targetCh));
-				// now that we get to the first non-whitespace, it must match
-				if (info.operator.doTest(targetCh, magicCh, lastChar)) {
-					if (info.compactWhiteSpace) {
-						lastMagicCompactWhitespace = Character.isWhitespace(magicCh);
-					}
-					continue;
-				}
-				// if it doesn't match, check the case insensitive
-			}
+	        // if it doesn't match, maybe the target is a whitespace
+	        if ((lastMagicCompactWhitespace || info.optionalWhiteSpace) && Character.isWhitespace(targetCh)) {
+	            do {
+	                if (targetPos >= targets.length) {
+	                    break;
+	                }
+	                targetCh = targets[targetPos];
+	                targetPos++;
+	            } while (Character.isWhitespace(targetCh));
+	            // now that we get to the first non-whitespace, it must match
+	            if (info.operator.doTest(targetCh, magicCh, lastChar)) {
+	                if (info.compactWhiteSpace) {
+	                    lastMagicCompactWhitespace = Character.isWhitespace(magicCh);
+	                }
+	                continue;
+	            }
+	            // if it doesn't match, check the case insensitive
+	        }
 
-			// maybe it doesn't match because of case insensitive handling and magic-char is lowercase
-			if (info.caseInsensitive && Character.isLowerCase(magicCh)) {
-				if (info.operator.doTest(Character.toLowerCase(targetCh), magicCh, lastChar)) {
-					// matches
-					continue;
-				}
-				// upper-case characters must match
-			}
+	        // maybe it doesn't match because of case insensitive handling and magic-char is lowercase
+	        if (info.caseInsensitive && Character.isLowerCase(magicCh)) {
+	            if (info.operator.doTest(Character.toLowerCase(targetCh), magicCh, lastChar)) {
+	                // matches
+	                continue;
+	            }
+	            // upper-case characters must match
+	        }
 
-			return null;
-		}
+	        return null;
+	    }
 
-		char[] chars = new char[targetPos - startOffset];
-		for (int i = 0; i < chars.length; i++) {
-			chars[i] = (char) (bytes[startOffset + i] & 0xFF);
-		}
-		mutableOffset.offset = targetPos;
-		return new String(chars);
+	    char[] chars = new char[targetPos - startOffset];
+	    for (int i = 0; i < chars.length; i++) {
+	        chars[i] = targets[startOffset + i];
+	    }
+	    mutableOffset.offset = targetPos;
+	    return new String(chars);
 	}
-
+	   
 	/**
 	 * Pre-processes the pattern by handling \007 type of escapes and others.
 	 */
