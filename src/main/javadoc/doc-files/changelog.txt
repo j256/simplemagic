@@ -1,3 +1,6 @@
+1.10: ?/?/2016
+	* Fixed problems with the big and little endian string types.  Thanks to yongminyan.
+
 1.9: 11/20/2016
 	* Fixed problem with first bytes optimization not taking into account optional match chars.  Thanks to yongminyan.
 	* Added support for !:optional special flag for flagging more specific lines that aren't required.

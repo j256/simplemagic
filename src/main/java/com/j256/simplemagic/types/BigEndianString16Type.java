@@ -17,13 +17,16 @@ public class BigEndianString16Type extends StringType {
 			}
 		}
 		char[] chars = new char[len / 2];
-		for (int i = 0; i < len; i++) {
+		for (int i = 0; i < chars.length; i++) {
 			chars[i] = bytesToChar(bytes[i * 2], bytes[i * 2 + 1]);
 		}
 		return chars;
 	}
 
+	/**
+	 * Convert 2 bytes into a character.
+	 */
 	protected char bytesToChar(int firstByte, int secondByte) {
-		return (char) (firstByte << 8 + secondByte);
+		return (char) ((firstByte << 8) + secondByte);
 	}
 }

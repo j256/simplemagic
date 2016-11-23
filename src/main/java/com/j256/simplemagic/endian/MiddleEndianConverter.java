@@ -41,10 +41,10 @@ public class MiddleEndianConverter implements EndianConverter {
 		}
 		long value = 0;
 		// BADC
-		value = value << shift | (bytes[1] & mask);
-		value = value << shift | (bytes[0] & mask);
-		value = value << shift | (bytes[3] & mask);
-		value = value << shift | (bytes[2] & mask);
+		value = (value << shift) | (bytes[1] & mask);
+		value = (value << shift) | (bytes[0] & mask);
+		value = (value << shift) | (bytes[3] & mask);
+		value = (value << shift) | (bytes[2] & mask);
 		return value;
 	}
 }
