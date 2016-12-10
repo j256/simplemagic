@@ -22,8 +22,19 @@ public class SearchType extends StringType {
 		TestInfo info = (TestInfo) testValue;
 		// if offset is 1 then we need to pre-read 1 line
 		int end = mutableOffset.offset + info.maxOffset;
+		if (end > bytes.length) {
+			end = bytes.length;
+		}
+		int length = end - mutableOffset.offset;
+		if (length <= 0) {
+			return null;
+		}
+		char[] chars = new char[length];
+		for (int i = 0; i < length; i++) {
+			chars[i] = (char) (bytes[i + mutableOffset.offset] & 0xFF);
+		}
 		for (int offset = mutableOffset.offset; offset < end; offset++) {
-			String match = findOffsetMatch(info, offset, mutableOffset, bytes);
+			String match = findOffsetMatch(info, offset, mutableOffset, chars);
 			if (match != null) {
 				return match;
 			}

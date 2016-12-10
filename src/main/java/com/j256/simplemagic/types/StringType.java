@@ -1,5 +1,6 @@
 package com.j256.simplemagic.types;
 
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,6 +21,7 @@ public class StringType implements MagicMatcher {
 
 	private final static Pattern TYPE_PATTERN = Pattern.compile("[^/]+(/\\d+)?(/[BbcwWt]*)?");
 	private static final String EMPTY = "";
+	private static final char[] EMPTY_CHARS_ARRAY = new char[0];
 
 	@Override
 	public Object convertTestString(String typeStr, String testStr) {
@@ -83,8 +85,19 @@ public class StringType implements MagicMatcher {
 	@Override
 	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue,
 			MutableOffset mutableOffset, byte[] bytes) {
-		// find the match in the array of bytes
-		return findOffsetMatch((TestInfo) testValue, mutableOffset.offset, mutableOffset, bytes);
+		int startOffset = mutableOffset.offset;
+		int newLength = bytes.length - startOffset;
+		if (newLength < 0) {
+			return EMPTY_CHARS_ARRAY;
+		}
+		char[] chars = new char[newLength];
+		for (int i = 0; i < newLength; i++) {
+			chars[i] = (char) (bytes[i + startOffset] & 0xFF);
+		}
+		// find the match in the array of chars
+		String result = findOffsetMatch((TestInfo) testValue, 0, mutableOffset, chars);
+		mutableOffset.offset += startOffset;
+		return result;
 	}
 
 	@Override
@@ -97,20 +110,17 @@ public class StringType implements MagicMatcher {
 		return ((TestInfo) testValue).getStartingBytes();
 	}
 
-	/**
-	 * Called from the string and search types to see if a string or byte array matches our pattern.
-	 */
-	protected String findOffsetMatch(TestInfo info, int startOffset, MutableOffset mutableOffset, byte[] bytes) {
+	protected String findOffsetMatch(TestInfo info, int startOffset, MutableOffset mutableOffset, char[] chars) {
 		int targetPos = startOffset;
 		boolean lastMagicCompactWhitespace = false;
 		for (int magicPos = 0; magicPos < info.pattern.length(); magicPos++) {
 			char magicCh = info.pattern.charAt(magicPos);
 			boolean lastChar = (magicPos == info.pattern.length() - 1);
 			// did we reach the end?
-			if (targetPos >= bytes.length) {
+			if (targetPos >= chars.length) {
 				return null;
 			}
-			char targetCh = (char) (bytes[targetPos] & 0xFF);
+			char targetCh = chars[targetPos];
 			targetPos++;
 
 			// if it matches, we can continue
@@ -124,10 +134,10 @@ public class StringType implements MagicMatcher {
 			// if it doesn't match, maybe the target is a whitespace
 			if ((lastMagicCompactWhitespace || info.optionalWhiteSpace) && Character.isWhitespace(targetCh)) {
 				do {
-					if (targetPos >= bytes.length) {
+					if (targetPos >= chars.length) {
 						break;
 					}
-					targetCh = (char) (bytes[targetPos] & 0xFF);
+					targetCh = chars[targetPos];
 					targetPos++;
 				} while (Character.isWhitespace(targetCh));
 				// now that we get to the first non-whitespace, it must match
@@ -152,10 +162,7 @@ public class StringType implements MagicMatcher {
 			return null;
 		}
 
-		char[] chars = new char[targetPos - startOffset];
-		for (int i = 0; i < chars.length; i++) {
-			chars[i] = (char) (bytes[startOffset + i] & 0xFF);
-		}
+		chars = Arrays.copyOfRange(chars, startOffset, targetPos);
 		mutableOffset.offset = targetPos;
 		return new String(chars);
 	}
@@ -281,10 +288,10 @@ public class StringType implements MagicMatcher {
 		}
 
 		/**
-		 * Get the bytes that start the pattern from an optimization standpoint. 
+		 * Get the bytes that start the pattern from an optimization standpoint.
 		 */
 		public byte[] getStartingBytes() {
-			if (pattern.length() < 4) {
+			if (pattern == null || pattern.length() < 4) {
 				return null;
 			} else {
 				return new byte[] { (byte) pattern.charAt(0), (byte) pattern.charAt(1), (byte) pattern.charAt(2),
