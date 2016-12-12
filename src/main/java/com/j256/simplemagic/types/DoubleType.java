@@ -21,7 +21,7 @@ public class DoubleType extends NumberType {
 	}
 
 	@Override
-	public Object extractValueFromBytes(int offset, byte[] bytes) {
+	public Object extractValueFromBytes(int offset, byte[] bytes, boolean required) {
 		Long val = endianConverter.convertNumber(offset, bytes, getBytesPerType());
 		if (val == null) {
 			return null;

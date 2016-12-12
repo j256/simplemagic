@@ -150,7 +150,8 @@ public class MagicEntry {
 		if (addOffset) {
 			offset = prevOffset + offset;
 		}
-		Object val = matcher.extractValueFromBytes(offset, bytes);
+		boolean required = (testValue == null && formatter != null);
+		Object val = matcher.extractValueFromBytes(offset, bytes, required);
 		if (val == null) {
 			return null;
 		}
