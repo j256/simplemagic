@@ -12,18 +12,23 @@ public class PStringType extends StringType {
 	 * Extracted value is the extracted string using the first byte as the length.
 	 */
 	@Override
-	public Object extractValueFromBytes(int offset, byte[] bytes) {
-		int len = 0;
-		if (offset < bytes.length) {
-			len = bytes[offset];
-			int left = bytes.length - offset;
-			if (len > left) {
-				len = left;
-			}
+	public Object extractValueFromBytes(int offset, byte[] bytes, boolean required) {
+		// we don't need to extract the value if all we are doing is matching
+		if (!required) {
+			return EMPTY;
+		}
+		if (offset >= bytes.length) {
+			return null;
+		}
+		// length is from the first byte of the string
+		int len = bytes[offset];
+		int left = bytes.length - offset - 1;
+		if (len > left) {
+			len = left;
 		}
 		char[] chars = new char[len];
 		for (int i = 0; i < chars.length; i++) {
-			chars[i] = (char) bytes[offset + 1 + i];
+			chars[i] = (char) (bytes[offset + 1 + i] & 0xFF);
 		}
 		/*
 		 * NOTE: we need to make a new string because it might be returned if we don't match below.
@@ -35,17 +40,16 @@ public class PStringType extends StringType {
 	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue,
 			MutableOffset mutableOffset, byte[] bytes) {
 
-		/*
-		 * We find the match in the array of bytes that were extracted instead of from the bytes passed in. This means
-		 * that we start at the starting offset of 0.
-		 */
-		int startOffset = mutableOffset.offset;
-		String result = findOffsetMatch((TestInfo) testValue, 0, mutableOffset, ((String) extractedValue).toCharArray());
-		/*
-		 * When we come back the mutable offset was set to the position in the extract bytes which is from 0. We need to
-		 * adjust it to make it from the initial start that was passed in.
-		 */
-		mutableOffset.offset += startOffset;
-		return result;
+		if (mutableOffset.offset >= bytes.length) {
+			return null;
+		}
+		// our maximum position is +1 to move past the length byte and then add in the length
+		int maxPos = 1 + bytes[mutableOffset.offset];
+		if (maxPos > bytes.length) {
+			maxPos = bytes.length;
+		}
+
+		// we start matching past the length byte so the starting offset is +1
+		return findOffsetMatch((TestInfo) testValue, mutableOffset.offset + 1, mutableOffset, bytes, null, maxPos);
 	}
 }

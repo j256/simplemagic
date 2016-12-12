@@ -1,5 +1,8 @@
 1.10: ?/?/2016
 	* Fixed problems with the big and little endian string types.  Thanks to yongminyan.
+	* Fixed problem with string match but null pattern.  Thanks to CalebFenton.
+	* Fixed matching of 2 byte characters.  Thanks much to yongminyan.
+	* Refactored the internals to reduce the extracted strings.  Should use less memory.
 
 1.9: 11/20/2016
 	* Fixed problem with first bytes optimization not taking into account optional match chars.  Thanks to yongminyan.

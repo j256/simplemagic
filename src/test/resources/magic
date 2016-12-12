@@ -8576,15 +8576,6 @@
 >>23	search/400	\<urlset		XML Sitemap document text
 !:mime	application/xml-sitemap
 
-0	search/1/cB	\<!doctype\ html	HTML document text
-!:mime	text/html
-0	search/1/cb	\<head			HTML document text
-!:mime	text/html
-0	search/1/cb	\<title			HTML document text
-!:mime	text/html
-0	search/1/cb	\<html			HTML document text
-!:mime	text/html
-
 0	string		\<?xml\ version\ "	XML
 !:mime	application/xml
 0	string		\<?xml\ version="	XML
@@ -8606,6 +8597,14 @@
 0	search/1/b	\<?XML			broken XML document text
 !:mime	application/xml
 
+0	search/1/cB	\<!doctype\ html	HTML document text
+!:mime	text/html
+0	search/1/cb	\<head			HTML document text
+!:mime	text/html
+0	search/1/cb	\<title			HTML document text
+!:mime	text/html
+0	search/1/cb	\<html			HTML document text
+!:mime	text/html
 
 0	search/1/cb	\<!doctype		exported SGML document text
 0	search/1/cb	\<!subdoc		exported SGML subdocument text
