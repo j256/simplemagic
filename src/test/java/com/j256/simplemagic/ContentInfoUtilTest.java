@@ -12,6 +12,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.Arrays;
 
 import org.junit.Test;
@@ -68,6 +70,7 @@ public class ContentInfoUtilTest {
 					"application/vnd.oasis.opendocument.text", "OpenDocument Text"),
 			new FileType("/files/1.html", ContentType.HTML, "html", "text/html", "HTML document text"),
 			new FileType("/files/2.html", ContentType.HTML, "html", "text/html", "HTML document text"),
+			new FileType("/files/3.html", ContentType.HTML, "html", "text/html", "HTML document text"),
 			new FileType("/files/x.aiff", ContentType.AIFF, "aiff", "audio/x-aiff", "IFF data, AIFF audio"),
 			new FileType("/files/x.mp3", ContentType.AUDIO_MPEG, "mpeg", "audio/mpeg",
 					"MPEG ADTS, layer III, v1, 128 kbps, 44.1 kHz, Stereo"),
@@ -107,6 +110,18 @@ public class ContentInfoUtilTest {
 		testFile(util, new FileType("/files/1.xml", ContentType.XML, "xml", "application/xml", "XML 1 document text"));
 		testFile(util, new FileType("/files/2.xml", ContentType.XML, "xml", "application/xml", "XML 2 document text"));
 		testFile(util, new FileType("/files/3.xml", ContentType.XML, "xml", "application/xml", "XML document text"));
+	}
+
+	@Test
+	public void testSmallPattern() throws Exception {
+		// we had the bug where we were matching on longer pattern just because it was long
+		Reader reader = new StringReader( //
+				"100   string   SONG   SoundFX Module sound file\n" //
+						+ "0   string   BZh   bzip2 compressed data\n" //
+						+ "!:mime	application/x-bzip2\n");
+		ContentInfoUtil util = new ContentInfoUtil(reader, null);
+		testFile(util, new FileType("/files/x.bz2", ContentType.BZIP2, "bzip2", "application/x-bzip2",
+				"bzip2 compressed data"));
 	}
 
 	@Test
