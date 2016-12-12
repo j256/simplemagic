@@ -18,11 +18,10 @@ public class MagicEntryParser {
 	private static final String UNKNOWN_NAME = "unknown";
 	// special lines, others are put into the extensionMap
 	private static final String MIME_TYPE_LINE = "!:mime";
-	private static final String STRENGTH_LINE = "!:stength";
 	private static final String OPTIONAL_LINE = "!:optional";
 
 	private final static Pattern OFFSET_PATTERN =
-			Pattern.compile("\\(([0-9a-fA-Fx]+)\\.?([bislBISLm]?)([\\*\\+\\-]?)([0-9a-fA-Fx]*)\\)");
+			Pattern.compile("\\(([0-9a-fA-Fx]+)\\.?([bsilBSILm]?)([\\*\\+\\-]?)([0-9a-fA-Fx]*)\\)");
 
 	/**
 	 * Parse a line from the magic configuration file into an entry.
@@ -71,12 +70,6 @@ public class MagicEntryParser {
 		if (offsetString.charAt(0) == '&') {
 			addOffset = true;
 			offsetString = offsetString.substring(1);
-		}
-		if (offsetString.length() == 0) {
-			if (errorCallBack != null) {
-				errorCallBack.error(line, "invalid offset number:" + offsetString, null);
-			}
-			return null;
 		}
 		if (offsetString.charAt(0) == '(') {
 			offset = -1;
@@ -201,13 +194,13 @@ public class MagicEntryParser {
 	private static String[] splitLine(String line, ErrorCallBack errorCallBack) {
 		// skip opening whitespace if any
 		int startPos = findNonWhitespace(line, 0);
-		if (startPos >= line.length()) {
+		if (startPos < 0) {
 			return null;
 		}
 
 		// find the level info
 		int endPos = findWhitespaceWithoutEscape(line, startPos);
-		if (endPos >= line.length()) {
+		if (endPos < 0) {
 			if (errorCallBack != null) {
 				errorCallBack.error(line, "invalid number of whitespace separated fields, must be >= 4", null);
 			}
@@ -217,7 +210,7 @@ public class MagicEntryParser {
 
 		// skip whitespace
 		startPos = findNonWhitespace(line, endPos + 1);
-		if (startPos >= line.length()) {
+		if (startPos < 0) {
 			if (errorCallBack != null) {
 				errorCallBack.error(line, "invalid number of whitespace separated fields, must be >= 4", null);
 			}
@@ -225,7 +218,7 @@ public class MagicEntryParser {
 		}
 		// find the type string
 		endPos = findWhitespaceWithoutEscape(line, startPos);
-		if (endPos >= line.length()) {
+		if (endPos < 0) {
 			if (errorCallBack != null) {
 				errorCallBack.error(line, "invalid number of whitespace separated fields, must be >= 4", null);
 			}
@@ -235,7 +228,7 @@ public class MagicEntryParser {
 
 		// skip whitespace
 		startPos = findNonWhitespace(line, endPos + 1);
-		if (startPos >= line.length()) {
+		if (startPos < 0) {
 			if (errorCallBack != null) {
 				errorCallBack.error(line, "invalid number of whitespace separated fields, must be >= 4", null);
 			}
@@ -243,49 +236,20 @@ public class MagicEntryParser {
 		}
 		// find the test string
 		endPos = findWhitespaceWithoutEscape(line, startPos);
-		// endPos can be == length
+		if (endPos < 0) {
+			endPos = line.length();
+		}
 		String testStr = line.substring(startPos, endPos);
 
 		// skip any whitespace
 		startPos = findNonWhitespace(line, endPos + 1);
 		// format is optional, this could return length
-		if (startPos < line.length()) {
+		if (startPos < 0) {
+			return new String[] { levelStr, typeStr, testStr };
+		} else {
 			// format is the rest of the line
 			return new String[] { levelStr, typeStr, testStr, line.substring(startPos) };
-		} else {
-			return new String[] { levelStr, typeStr, testStr };
 		}
-	}
-
-	private static int findNonWhitespace(String line, int startPos) {
-		int pos;
-		for (pos = startPos; pos < line.length(); pos++) {
-			if (!Character.isWhitespace(line.charAt(pos))) {
-				break;
-			}
-		}
-		return pos;
-	}
-
-	private static int findWhitespaceWithoutEscape(String line, int startPos) {
-		boolean lastEscape = false;
-		int pos;
-		for (pos = startPos; pos < line.length(); pos++) {
-			char ch = line.charAt(pos);
-			if (ch == ' ') {
-				if (!lastEscape) {
-					break;
-				}
-				lastEscape = false;
-			} else if (Character.isWhitespace(line.charAt(pos))) {
-				break;
-			} else if (ch == '\\') {
-				lastEscape = true;
-			} else {
-				lastEscape = false;
-			}
-		}
-		return pos;
 	}
 
 	private static void handleSpecial(MagicEntry previous, String line, ErrorCallBack errorCallBack) {
@@ -293,84 +257,63 @@ public class MagicEntryParser {
 			previous.setOptional(true);
 			return;
 		}
-		String[] parts = line.split("\\s+", 2);
-		if (parts.length < 2) {
+		int startPos = findNonWhitespace(line, 0);
+		int index = findWhitespaceWithoutEscape(line, startPos);
+		if (index < 0) {
 			if (errorCallBack != null) {
 				errorCallBack.error(line, "invalid extension line has less than 2 whitespace separated fields", null);
 			}
 			return;
 		}
-		String key = parts[0];
-		if (key.equals(MIME_TYPE_LINE)) {
-			previous.setMimeType(parts[1]);
-			return;
-		}
-		if (key.equals(STRENGTH_LINE)) {
-			handleStrength(previous, line, parts[1], errorCallBack);
-			return;
-		}
-		key = key.substring(2);
-		if (key.length() == 0) {
+		String key = line.substring(startPos, index);
+		startPos = findNonWhitespace(line, index);
+		if (startPos < 0) {
 			if (errorCallBack != null) {
-				errorCallBack.error(line, "blank extension key", null);
+				errorCallBack.error(line, "invalid extension line has less than 2 whitespace separated fields", null);
 			}
 			return;
+		}
+		// find whitespace after value, if any
+		index = findWhitespaceWithoutEscape(line, startPos);
+		if (index < 0) {
+			index = line.length();
+		}
+		String value = line.substring(startPos, index);
+
+		if (key.equals(MIME_TYPE_LINE)) {
+			previous.setMimeType(value);
+		} else {
+			// unknown extension key
 		}
 	}
 
-	private static void handleStrength(MagicEntry previous, String line, String strengthValue,
-			ErrorCallBack errorCallBack) {
-		String[] parts = strengthValue.split("\\s+", 2);
-		if (parts.length == 0) {
-			if (errorCallBack != null) {
-				errorCallBack.error(line, "invalid strength value: " + strengthValue, null);
+	private static int findNonWhitespace(String line, int startPos) {
+		for (int pos = startPos; pos < line.length(); pos++) {
+			if (!Character.isWhitespace(line.charAt(pos))) {
+				return pos;
 			}
-			return;
 		}
-		if (parts[0].length() == 0) {
-			if (errorCallBack != null) {
-				errorCallBack.error(line, "invalid strength value: " + strengthValue, null);
-			}
-			return;
-		}
-		char operator = parts[0].charAt(0);
-		String valueStr;
-		if (parts.length == 1) {
-			valueStr = parts[0].substring(1);
-		} else {
-			valueStr = parts[1];
-		}
-		int value;
-		try {
-			value = Integer.parseInt(valueStr);
-		} catch (NumberFormatException e) {
-			if (errorCallBack != null) {
-				errorCallBack.error(line, "invalid strength number value: " + valueStr, null);
-			}
-			return;
-		}
+		return -1;
+	}
 
-		int strength = previous.getStrength();
-		switch (operator) {
-			case '+':
-				strength += value;
-				break;
-			case '-':
-				strength -= value;
-				break;
-			case '*':
-				strength *= value;
-				break;
-			case '/':
-				strength /= value;
-				break;
-			default:
-				if (errorCallBack != null) {
-					errorCallBack.error(line, "invalid strength operator: " + operator, null);
+	private static int findWhitespaceWithoutEscape(String line, int startPos) {
+		boolean lastEscape = false;
+		for (int pos = startPos; pos < line.length(); pos++) {
+			char ch = line.charAt(pos);
+			if (ch == ' ') {
+				if (!lastEscape) {
+					return pos;
 				}
-				return;
+				lastEscape = false;
+			} else if (Character.isWhitespace(line.charAt(pos))) {
+				return pos;
+			} else if (ch == '\\') {
+				lastEscape = true;
+			} else {
+				lastEscape = false;
+			}
 		}
-		previous.setStrength(strength);
+		return -1;
 	}
 
 	/**
@@ -380,7 +323,7 @@ public class MagicEntryParser {
 	 * Offsets do not need to be constant, but can also be read from the file being examined. If the first character
 	 * following the last '>' is a '(' then the string after the parenthesis is interpreted as an indirect offset. That
 	 * means that the number after the parenthesis is used as an offset in the file. The value at that offset is read,
-	 * and is used again as an offset in the file. Indirect offsets are of the form: ((x[.[bislBISLm]][+-]y). The value
+	 * and is used again as an offset in the file. Indirect offsets are of the form: ((x[.[bsilBSILm]][+-]y). The value
 	 * of x is used as an offset in the file. A byte, id3 length, short or long is read at that offset depending on the
 	 * [bislBISLm] type specifier. The capitalized types interpret the number as a big-endian value, whereas the small
 	 * letter versions interpret the number as a little-endian value; the 'm' type interprets the number as a
@@ -425,42 +368,51 @@ public class MagicEntryParser {
 		boolean isId3 = false;
 		int size = 0;
 		switch (ch) {
+			// little-endian byte
 			case 'b':
 				// endian doesn't really matter for 1 byte
 				converter = EndianType.LITTLE.getConverter();
 				size = 1;
 				break;
+			// little-endian short
+			case 's':
+				converter = EndianType.LITTLE.getConverter();
+				size = 2;
+				break;
+			// little-endian integer
 			case 'i':
 				converter = EndianType.LITTLE.getConverter();
 				size = 4;
 				isId3 = true;
 				break;
-			case 's':
-				converter = EndianType.LITTLE.getConverter();
-				size = 2;
-				break;
+			// little-endian long (4 byte)
 			case 'l':
 				converter = EndianType.LITTLE.getConverter();
 				size = 4;
 				break;
+			// big-endian byte
 			case 'B':
 				// endian doesn't really matter for 1 byte
 				converter = EndianType.BIG.getConverter();
 				size = 1;
 				break;
+			// big-endian short
+			case 'S':
+				converter = EndianType.BIG.getConverter();
+				size = 2;
+				break;
+			// big-endian integer
 			case 'I':
 				converter = EndianType.BIG.getConverter();
 				size = 4;
 				isId3 = true;
 				break;
-			case 'S':
-				converter = EndianType.BIG.getConverter();
-				size = 2;
-				break;
+			// big-endian long (4 byte)
 			case 'L':
 				converter = EndianType.BIG.getConverter();
 				size = 4;
 				break;
+			// big-endian integer
 			case 'm':
 				converter = EndianType.MIDDLE.getConverter();
 				size = 4;

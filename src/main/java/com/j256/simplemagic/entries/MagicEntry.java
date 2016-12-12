@@ -1,7 +1,6 @@
 package com.j256.simplemagic.entries;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.j256.simplemagic.ContentInfo;
@@ -37,7 +36,6 @@ public class MagicEntry {
 
 	/** if this entry matches then check the children entry(s) which may provide more content type details */
 	private List<MagicEntry> children;
-	private int strength;
 	private String mimeType;
 	private boolean optional;
 
@@ -59,7 +57,6 @@ public class MagicEntry {
 		this.formatSpacePrefix = formatSpacePrefix;
 		this.clearFormat = clearFormat;
 		this.formatter = formatter;
-		this.strength = 1;
 	}
 
 	/**
@@ -82,23 +79,12 @@ public class MagicEntry {
 		return level;
 	}
 
-	/**
-	 * Get the strength of the rule. Not well supported right now.
-	 */
-	int getStrength() {
-		return strength;
-	}
-
 	byte[] getStartsWithByte() {
 		if (offset != 0) {
 			return null;
 		} else {
 			return matcher.getStartingBytes(testValue);
 		}
-	}
-
-	void setStrength(int strength) {
-		this.strength = strength;
 	}
 
 	boolean isOptional() {
@@ -239,31 +225,6 @@ public class MagicEntry {
 			} else {
 				return name;
 			}
-		}
-	}
-
-	/**
-	 * Wrapper around an array of bytes to provide a hashcode and equals.
-	 */
-	static class ByteArray {
-		final byte[] bytes;
-
-		public ByteArray(byte[] bytes) {
-			this.bytes = bytes;
-		}
-
-		@Override
-		public int hashCode() {
-			return Arrays.hashCode(bytes);
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (obj == null || obj.getClass() != getClass()) {
-				return false;
-			}
-			ByteArray other = (ByteArray) obj;
-			return Arrays.equals(bytes, other.bytes);
 		}
 	}
 
