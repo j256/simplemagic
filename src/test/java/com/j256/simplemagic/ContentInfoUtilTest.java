@@ -183,6 +183,18 @@ public class ContentInfoUtilTest {
 		assertEquals(ContentType.EMPTY, util.findMatch(new byte[0]).getContentType());
 	}
 
+	/**
+	 * Thanks @Abdull.
+	 */
+	@Test
+	public void testLeadingNewlineHtml() {
+		// notice the leading newline
+		String anotherHtml = "\n<!doctype html><title>.</title>";
+		ContentInfoUtil util = getContentInfoUtil();
+		ContentInfo info = util.findMatch(anotherHtml.getBytes());
+		assertEquals(ContentType.HTML, info.getContentType());
+	}
+
 	private void testFile(ContentInfoUtil contentInfoUtil, FileType fileType) throws IOException {
 		ContentInfo details = contentInfoFromResource(contentInfoUtil, fileType.fileName);
 		checkInfo(fileType, details);

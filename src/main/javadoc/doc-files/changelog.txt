@@ -3,6 +3,7 @@
 	* Fixed problem with string match but null pattern.  Thanks to CalebFenton.
 	* Fixed matching of 2 byte characters.  Thanks much to yongminyan.
 	* Refactored the internals to reduce the extracted strings.  Should use less memory.
+	* Fixed problems with leading newlines to HTML and other text types.  Thanks to Abdull.
 
 1.9: 11/20/2016
 	* Fixed problem with first bytes optimization not taking into account optional match chars.  Thanks to yongminyan.
