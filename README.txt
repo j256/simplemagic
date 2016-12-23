@@ -12,7 +12,9 @@ Maven packages are published via the central repo:
 Enjoy,
 Gray Watson
 
-----------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+
+Getting Started
 
 To get started you use the SimpleMagic package like the following:
 
