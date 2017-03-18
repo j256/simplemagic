@@ -1,8 +1,8 @@
 1.11: 3/18/2017
 	* Added support for webm file type.  Thanks to t6nand.
+	* Added initial support for adobe illustrator files.  Thanks to markwoon.
 	* Fixed some of the mpeg file type handling.  Thanks to air-hermes.
 	* Fixed some jpeg file handling although some not working due to recursive patterns.  Thanks to saurabheights.
-	* Added initial support for adobe illustrator files.  Thanks to markwoon.
 
 1.10: 12/13/2016
 	* Fixed problems with the big and little endian string types.  Thanks to yongminyan.
