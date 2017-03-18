@@ -1,3 +1,6 @@
+1.11: 12/13/2016
+	* Added support for webm file type.  Thanks to t6nand.
+
 1.10: 12/13/2016
 	* Fixed problems with the big and little endian string types.  Thanks to yongminyan.
 	* Fixed problem with string match but null pattern.  Thanks to CalebFenton.

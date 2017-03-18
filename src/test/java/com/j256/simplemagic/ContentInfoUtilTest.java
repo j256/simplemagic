@@ -94,6 +94,7 @@ public class ContentInfoUtilTest {
 					"MS-DOS executable, MZ for MS-DOS"),
 			new FileType("/files/dotnet.exe", ContentType.OTHER, "32", "application/x-dosexec",
 					"PE32 executable for MS Windows (GUI) Intel 80386 32-bit Mono/.Net assembly"),
+			new FileType("/files/x.webm", ContentType.WEBM, "webm", "video/webm", "WebM"),
 			// end
 	};
 
