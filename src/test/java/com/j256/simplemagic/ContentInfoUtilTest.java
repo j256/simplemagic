@@ -17,6 +17,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.Arrays;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ContentInfoUtilTest {
@@ -31,100 +32,113 @@ public class ContentInfoUtilTest {
 	 */
 	private FileType[] fileTypes = new FileType[] { //
 			//
-			new FileType("/files/x.gif", ContentType.GIF, "gif", "image/gif", "GIF image data, version 89a, 32 x 32"),
-			new FileType("/files/x.pdf", ContentType.PDF, "pdf", "application/pdf", "PDF document, version 1.3"),
+			new FileType("/files/x.gif", ContentType.GIF, "gif", "image/gif", "GIF image data, version 89a, 32 x 32",
+					false),
+			new FileType("/files/x.pdf", ContentType.PDF, "pdf", "application/pdf", "PDF document, version 1.3", false),
 			new FileType("/files/x.png", ContentType.PNG, "png", "image/png",
-					"PNG image, 205 x 189, 8-bit/color RGB, non-interlaced"),
-			new FileType("/files/x.tiff", ContentType.TIFF, "tiff", "image/tiff", "TIFF image data, big-endian"),
+					"PNG image, 205 x 189, 8-bit/color RGB, non-interlaced", false),
+			new FileType("/files/x.tiff", ContentType.TIFF, "tiff", "image/tiff", "TIFF image data, big-endian", false),
 			new FileType("/files/x.zip", ContentType.ZIP, "zip", "application/zip",
-					"Zip archive data, at least v1.0 to extract"),
-			new FileType("/files/x.javaserial", ContentType.OTHER, "Java", null, "Java serialization data, version 5"),
+					"Zip archive data, at least v1.0 to extract", false),
+			new FileType("/files/x.javaserial", ContentType.OTHER, "Java", null, "Java serialization data, version 5",
+					false),
 			new FileType("/files/x.doc", ContentType.MICROSOFT_WORD, "word", "application/msword",
-					"Microsoft Office Document Microsoft Word Document"),
+					"Microsoft Office Document Microsoft Word Document", false),
 			new FileType("/files/x.docx", ContentType.MICROSOFT_WORD_XML, "word",
-					"application/vnd.openxmlformats-officedocument.wordprocessingml.document", "Microsoft Word 2007+"),
+					"application/vnd.openxmlformats-officedocument.wordprocessingml.document", "Microsoft Word 2007+",
+					false),
 			new FileType("/files/x.rtf", ContentType.RTF, "rtf", "text/rtf",
-					"Rich Text Format data, version 1, unknown character set unknown version"),
-			new FileType("/files/1.xml", ContentType.XML, "xml", "application/xml", "XML 1 document text"),
-			new FileType("/files/2.xml", ContentType.XML, "xml", "application/xml", "XML 2 document text"),
-			new FileType("/files/3.xml", ContentType.XML, "xml", "application/xml", "XML document text"),
+					"Rich Text Format data, version 1, unknown character set unknown version", false),
+			new FileType("/files/1.xml", ContentType.XML, "xml", "application/xml", "XML 1 document text", false),
+			new FileType("/files/2.xml", ContentType.XML, "xml", "application/xml", "XML 2 document text", false),
+			new FileType("/files/3.xml", ContentType.XML, "xml", "application/xml", "XML document text", false),
 			new FileType("/files/jfif.jpg", ContentType.JPEG, "jpeg", "image/jpeg",
-					"JPEG image data, JFIF standard 1.01"),
+					"JPEG image data, JFIF standard 1.01, resolution (DPI), density 3200x3200, segment length 16",
+					false),
 			// partial file here
 			new FileType("/files/exif.jpg", ContentType.JPEG, "jpeg", "image/jpeg",
-					"JPEG image data, EXIF standard 2.1"),
-			new FileType("/files/exif2.jpg", ContentType.JPEG, "jpeg", "image/jpeg", "JPEG image data, EXIF standard"),
-			new FileType("/files/x.jp2", ContentType.JPEG_2000, "jp2", "image/jp2", "JPEG 2000 image"),
+					"JPEG image data, EXIF standard 2.1", false),
+			new FileType("/files/exif2.jpg", ContentType.JPEG, "jpeg", "image/jpeg",
+					"JPEG image data, EXIF standard 2.2", false),
+			new FileType("/files/x.jp2", ContentType.JPEG_2000, "jp2", "image/jp2", "JPEG 2000 image", false),
 			new FileType("/files/x.class", ContentType.JAVA_APPLET, "applet", "application/x-java-applet",
-					"compiled Java class data, version 49.0 (Java 1.5)"),
-			new FileType("/files/x.perl", ContentType.PERL, "perl", "text/x-perl", "Perl script text executable"),
+					"compiled Java class data, version 49.0 (Java 1.5)", false),
+			new FileType("/files/x.perl", ContentType.PERL, "perl", "text/x-perl", "Perl script text executable",
+					false),
 			new FileType("/files/x.bz2", ContentType.BZIP2, "bzip2", "application/x-bzip2",
-					"bzip2 compressed data, block size = 900k"),
+					"bzip2 compressed data, block size = 900k", false),
 			new FileType("/files/x.gz", ContentType.GZIP, "gzip", "application/x-gzip",
-					"gzip compressed data, from Unix, last modified: 2013-05-08 02:57:08 +0000"),
+					"gzip compressed data, from Unix, last modified: 2013-05-08 02:57:08 +0000", false),
 			new FileType("/files/x.m4v", ContentType.MP4A, "mp4a", "video/mp4",
-					"ISO Media, MPEG v4 system, iTunes AVC-LC"),
-			new FileType("/files/x.xls", ContentType.OTHER, "OLE", null, "OLE 2 Compound Document"),
+					"ISO Media, MPEG v4 system, iTunes AVC-LC", false),
+			new FileType("/files/x.xls", ContentType.OTHER, "OLE", null, "OLE 2 Compound Document", false),
 			new FileType("/files/x.xlsx", ContentType.MICROSOFT_EXCEL_XML, "excel",
-					"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Microsoft Excel 2007+"),
+					"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Microsoft Excel 2007+",
+					false),
 			new FileType("/files/x.odt", ContentType.OPENDOCUMENT_TEXT, "opendocument-text",
-					"application/vnd.oasis.opendocument.text", "OpenDocument Text"),
-			new FileType("/files/1.html", ContentType.HTML, "html", "text/html", "HTML document text"),
-			new FileType("/files/2.html", ContentType.HTML, "html", "text/html", "HTML document text"),
-			new FileType("/files/3.html", ContentType.HTML, "html", "text/html", "HTML document text"),
-			new FileType("/files/x.aiff", ContentType.AIFF, "aiff", "audio/x-aiff", "IFF data, AIFF audio"),
+					"application/vnd.oasis.opendocument.text", "OpenDocument Text", false),
+			new FileType("/files/1.html", ContentType.HTML, "html", "text/html", "HTML document text", false),
+			new FileType("/files/2.html", ContentType.HTML, "html", "text/html", "HTML document text", false),
+			new FileType("/files/3.html", ContentType.HTML, "html", "text/html", "HTML document text", false),
+			new FileType("/files/x.aiff", ContentType.AIFF, "aiff", "audio/x-aiff", "IFF data, AIFF audio", false),
 			new FileType("/files/x.mp3", ContentType.AUDIO_MPEG, "mpeg", "audio/mpeg",
-					"MPEG ADTS, layer III, v1, 128 kbps, 44.1 kHz, Stereo"),
+					"MPEG ADTS, layer III, v1, 128 kbps, 44.1 kHz, Stereo", false),
 			new FileType("/files/x.wav", ContentType.WAV, "wav", "audio/x-wav",
-					"RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, stereo 44100 Hz"),
+					"RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, stereo 44100 Hz", false),
 			// NOTE: this seems to be somewhat valid since powerpoint uses this format
-			new FileType("/files/x.ppt", ContentType.OTHER, "OLE", null, "OLE 2 Compound Document"),
+			new FileType("/files/x.ppt", ContentType.OTHER, "OLE", null, "OLE 2 Compound Document", false),
 			new FileType("/files/x.pptx", ContentType.MICROSOFT_POWERPOINT_XML, "powerpoint",
 					"application/vnd.openxmlformats-officedocument.presentationml.presentation",
-					"Microsoft PowerPoint 2007+"),
+					"Microsoft PowerPoint 2007+", false),
 			new FileType("/files/x.7z", ContentType.SEVEN_Z, "7zip", "application/x-7z-compressed",
-					"7-zip archive data, version 0.3"),
+					"7-zip archive data, version 0.3", false),
 			new FileType("/files/x.nuv", ContentType.OTHER, "MythTV", null,
-					"MythTV NuppelVideo v (640x480),progressive,aspect:1.00,fps:29.97"),
+					"MythTV NuppelVideo v (640x480),progressive,aspect:1.00,fps:29.97", false),
 			new FileType("/files/x.webp", ContentType.WEBP, "webp", "image/webp",
-					"RIFF (little-endian) data, WEBP image"),
-			new FileType("/files/x.svg", ContentType.SVG, "svg", "image/svg+xml", "SVG Scalable Vector Graphics image"),
+					"RIFF (little-endian) data, WEBP image", false),
+			new FileType("/files/x.svg", ContentType.SVG, "svg", "image/svg+xml", "SVG Scalable Vector Graphics image",
+					false),
 			new FileType("/files/windows.exe", ContentType.OTHER, "32", "application/x-dosexec",
-					"PE32 executable for MS Windows (GUI) Intel 80386 32-bit"),
+					"PE32 executable for MS Windows (GUI) Intel 80386 32-bit", false),
 			new FileType("/files/dos.exe", ContentType.OTHER, "MS-DOS", "application/x-dosexec",
-					"MS-DOS executable, MZ for MS-DOS"),
+					"MS-DOS executable, MZ for MS-DOS", false),
 			new FileType("/files/dotnet.exe", ContentType.OTHER, "32", "application/x-dosexec",
-					"PE32 executable for MS Windows (GUI) Intel 80386 32-bit Mono/.Net assembly"),
-			new FileType("/files/x.webm", ContentType.WEBM, "webm", "video/webm", "WebM"), //
+					"PE32 executable for MS Windows (GUI) Intel 80386 32-bit Mono/.Net assembly", false),
+			new FileType("/files/x.webm", ContentType.WEBM, "webm", "video/webm", "WebM", false), //
 			new FileType("/files/x.mpg", ContentType.VIDEO_MPEG, "mpeg", "video/mpeg",
-					"MPEG sequence, v1, system multiplex"),
+					"MPEG sequence, v1, system multiplex", false),
+			new FileType("/files/tiff.jpg", ContentType.JPEG, "jpeg", "image/jpeg", "JPEG image data, EXIF standard",
+					true /* not handling recursion */),
 			// end
 	};
 
 	@Test
 	public void testFiles() throws Exception {
 		for (FileType fileType : fileTypes) {
-			testFile(getContentInfoUtil(), fileType);
+			checkFile(getContentInfoUtil(), fileType);
 		}
 	}
 
 	@Test
 	public void testSpecific() throws Exception {
 		ContentInfoUtil util = getContentInfoUtil();
-		testFile(util, new FileType("/files/1.xml", ContentType.XML, "xml", "application/xml", "XML 1 document text"));
-		testFile(util, new FileType("/files/2.xml", ContentType.XML, "xml", "application/xml", "XML 2 document text"));
+		checkFile(util,
+				new FileType("/files/1.xml", ContentType.XML, "xml", "application/xml", "XML 1 document text", false));
+		checkFile(util,
+				new FileType("/files/2.xml", ContentType.XML, "xml", "application/xml", "XML 2 document text", false));
 	}
 
 	@Test
-	public void testMpeg() throws Exception {
+	@Ignore("for spot testing")
+	public void testSpecificFileProblem() throws Exception {
 		/*
 		 * For testing specific entries from a different magic file.
 		 */
-		InputStream stream = getClass().getClassLoader().getResourceAsStream("animation");
+		InputStream stream = getClass().getClassLoader().getResourceAsStream("jpeg");
 		assertNotNull(stream);
 		ContentInfoUtil util = new ContentInfoUtil(new InputStreamReader(stream));
-		testFile(util, new FileType("/files/x.mpg", ContentType.VIDEO_MPEG, "mpeg", "video/mpeg",
-				"MPEG sequence, v1, system multiplex"));
+		checkFile(util, new FileType("/files/tiff.jpg", ContentType.JPEG, "jpeg", "image/jpeg",
+				"JPEG image data, EXIF standard", true));
 	}
 
 	@Test
@@ -135,8 +149,8 @@ public class ContentInfoUtilTest {
 						+ "0   string   BZh   bzip2 compressed data\n" //
 						+ "!:mime	application/x-bzip2\n");
 		ContentInfoUtil util = new ContentInfoUtil(reader, null);
-		testFile(util, new FileType("/files/x.bz2", ContentType.BZIP2, "bzip2", "application/x-bzip2",
-				"bzip2 compressed data"));
+		checkFile(util, new FileType("/files/x.bz2", ContentType.BZIP2, "bzip2", "application/x-bzip2",
+				"bzip2 compressed data", false));
 	}
 
 	@Test
@@ -171,10 +185,10 @@ public class ContentInfoUtilTest {
 	@Test
 	public void testMultipleMagicFiles() throws Exception {
 		ContentInfoUtil util = new ContentInfoUtil(new File("target/test-classes/magicFiles"));
-		testFile(util, new FileType("/files/x.gif", ContentType.GIF, "gif", "image/gif",
-				"GIF image data, version 89a, 32 x 32"));
-		testFile(util, new FileType("/files/jfif.jpg", ContentType.JPEG, "jpeg", "image/jpeg",
-				"JPEG image data, JFIF standard 1.01"));
+		checkFile(util, new FileType("/files/x.gif", ContentType.GIF, "gif", "image/gif",
+				"GIF image data, version 89a, 32 x 32", false));
+		checkFile(util, new FileType("/files/jfif.jpg", ContentType.JPEG, "jpeg", "image/jpeg",
+				"JPEG image data, JFIF standard 1.01", false));
 	}
 
 	@Test
@@ -182,7 +196,7 @@ public class ContentInfoUtilTest {
 		ContentInfoUtil util = getContentInfoUtil();
 		for (int i = 0; i < 100; i++) {
 			for (FileType fileType : fileTypes) {
-				testFile(util, fileType);
+				checkFile(util, fileType);
 			}
 		}
 	}
@@ -210,7 +224,7 @@ public class ContentInfoUtilTest {
 		assertEquals(ContentType.HTML, info.getContentType());
 	}
 
-	private void testFile(ContentInfoUtil contentInfoUtil, FileType fileType) throws IOException {
+	private void checkFile(ContentInfoUtil contentInfoUtil, FileType fileType) throws IOException {
 		ContentInfo details = contentInfoFromResource(contentInfoUtil, fileType.fileName);
 		checkInfo(fileType, details);
 		details = contentInfoFromStreamWrapper(contentInfoUtil, fileType.fileName);
@@ -267,6 +281,8 @@ public class ContentInfoUtilTest {
 			assertEquals("bad name of " + fileType.fileName, fileType.expectedName, details.getName());
 			assertEquals("bad mime-type of " + fileType.fileName, fileType.expectedMimeType, details.getMimeType());
 			assertEquals("bad message for " + fileType.fileName, fileType.expectedMessage, details.getMessage());
+			assertEquals("partial flag should be  " + fileType.expectedPartial + " for " + fileType.fileName,
+					fileType.expectedPartial, details.isPartial());
 		}
 	}
 
@@ -287,14 +303,16 @@ public class ContentInfoUtilTest {
 		final String expectedName;
 		final String expectedMimeType;
 		final String expectedMessage;
+		final boolean expectedPartial;
 
 		private FileType(String fileName, ContentType expectedType, String expectedName, String expectedMimeType,
-				String description) {
+				String description, boolean expectedPartial) {
 			this.fileName = fileName;
 			this.expectedType = expectedType;
 			this.expectedName = expectedName;
 			this.expectedMimeType = expectedMimeType;
 			this.expectedMessage = description;
+			this.expectedPartial = expectedPartial;
 		}
 	}
 }

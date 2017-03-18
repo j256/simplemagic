@@ -8,6 +8,9 @@ Used to maintain requested features or future work.
 - need to handle the indirect type?
 - is the quad date in seconds or millis?? find a magic that uses them
 - need to support the &( (& and the &(& constructs, I don't understand the man pages on it yet even
+- need to support the "recursive" patterns such as tiff.jpg with under linux outputs
+	tiff.jpg: JPEG image data, Exif standard: [TIFF image data, little-endian, direntries=0], baseline, precision 8, 1800x2400, frames 3
+	I think the [...] stuff is recursive
 
 ------------------------------------------------------------------------------------------------------------
 

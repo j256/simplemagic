@@ -1,6 +1,7 @@
 1.11: 12/13/2016
 	* Added support for webm file type.  Thanks to t6nand.
 	* Fixed some of the mpeg file type handling.  Thanks to air-hermes.
+	* Fixed some jpeg file handling although some not working due to recursive patterns.  Thanks to saurabheights.
 
 1.10: 12/13/2016
 	* Fixed problems with the big and little endian string types.  Thanks to yongminyan.

@@ -5869,6 +5869,14 @@
 >6	string		JFIF		\b, JFIF standard
 >>11	byte		x		\b %d.
 >>12	byte		x		\b%02d
+# Next, the resolution or aspect ratio of the image:
+>>13	byte		0		\b, aspect ratio
+>>13	byte		1		\b, resolution (DPI)
+>>13	byte		2		\b, resolution (DPCM)
+>>14	beshort		x		\b, density %dx
+>>16	beshort		x		\b%d
+>>4		beshort		x		\b, segment length %d
+# Next, show thumbnail info, if it exists:
 >>18	byte		!0		\b, thumbnail %dx
 >>>19	byte		x		\b%d
 
@@ -5911,6 +5919,15 @@
 >>>>>(150.l+72)	byte	x		\b.%c
 >>>>>(150.l+73)	byte	!0x30		\b%c
 >>12	string		MM		
+>>>94	beshort		0x8769          
+>>>>(102.L+38)	beshort	0x9000		
+>>>>>(102.L+47)	byte	x		%c
+>>>>>(102.L+48)	byte	x		\b.%c
+>>>>>(102.L+49)	byte	!0x30		\b%c
+>>>>(102.L+62)	beshort	0x9000		
+>>>>>(102.L+71)	byte	x		%c
+>>>>>(102.L+72)	byte	x		\b.%c
+>>>>>(102.L+73)	byte	!0x30		\b%c
 >>>118	beshort		0x8769          
 >>>>(126.L+14)	beshort	0x9000		
 >>>>>(126.L+23)	byte	x		%c
