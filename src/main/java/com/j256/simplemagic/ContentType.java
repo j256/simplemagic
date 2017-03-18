@@ -11,6 +11,8 @@ import java.util.Map;
  */
 public enum ContentType {
 
+	/** Adobe Illustrator (may look like a PDF) */
+	AI("application/vnd.adobe.illustrator", "ai"),
 	/** AIFF audio format */
 	AIFF("audio/x-aiff", "aiff", "aif", "aiff", "aifc"),
 	/** Apple Quicktime image */

@@ -7920,6 +7920,8 @@
 
 0	string		%PDF-		PDF document
 !:mime	application/pdf
+>1	search/2048	\<dc:format>application/vnd.adobe.illustrator</dc:format>	\rAdobe Illustrator
+!:mime	application/vnd.adobe.illustrator
 >5	byte		x		\b, version %c
 >7	byte		x		\b.%c
 

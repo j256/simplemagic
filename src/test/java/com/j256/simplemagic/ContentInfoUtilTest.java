@@ -109,6 +109,8 @@ public class ContentInfoUtilTest {
 					"MPEG sequence, v1, system multiplex", false),
 			new FileType("/files/tiff.jpg", ContentType.JPEG, "jpeg", "image/jpeg", "JPEG image data, EXIF standard",
 					true /* not handling recursion */),
+			new FileType("/files/x.ai", ContentType.AI, "ai", "application/vnd.adobe.illustrator",
+					"Adobe Illustrator, version 1.5", false),
 			// end
 	};
 
@@ -134,11 +136,11 @@ public class ContentInfoUtilTest {
 		/*
 		 * For testing specific entries from a different magic file.
 		 */
-		InputStream stream = getClass().getClassLoader().getResourceAsStream("jpeg");
+		InputStream stream = getClass().getClassLoader().getResourceAsStream("magic");
 		assertNotNull(stream);
 		ContentInfoUtil util = new ContentInfoUtil(new InputStreamReader(stream));
-		checkFile(util, new FileType("/files/tiff.jpg", ContentType.JPEG, "jpeg", "image/jpeg",
-				"JPEG image data, EXIF standard", true));
+		checkFile(util, new FileType("/files/x.ai", ContentType.AI, "ai", "application/vnd.adobe.illustrator",
+				"Adobe Illustrator, version 1.5", false));
 	}
 
 	@Test

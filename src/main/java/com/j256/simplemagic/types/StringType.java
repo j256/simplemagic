@@ -46,6 +46,7 @@ public class StringType implements MagicMatcher {
 		boolean caseInsensitive = false;
 		String flagsStr = matcher.group(2);
 		if (flagsStr != null) {
+			// look at flags/modifiers
 			for (char ch : flagsStr.toCharArray()) {
 				switch (ch) {
 					case 'B':

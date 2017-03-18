@@ -63,7 +63,7 @@ public class MagicEntry {
 	 * Returns the content type associated with the bytes or null if it does not match.
 	 */
 	ContentInfo matchBytes(byte[] bytes) {
-		ContentData data = matchBytes(bytes, 0, null);
+		ContentData data = matchBytes(bytes, 0, 0, null);
 		if (data == null || data.name == UNKNOWN_NAME) {
 			return null;
 		} else {
@@ -128,7 +128,7 @@ public class MagicEntry {
 	/**
 	 * Main processing method which can go recursive.
 	 */
-	private ContentData matchBytes(byte[] bytes, int prevOffset, ContentData contentData) {
+	private ContentData matchBytes(byte[] bytes, int prevOffset, int level, ContentData contentData) {
 		int offset = this.offset;
 		if (offsetInfo != null) {
 			offset = offsetInfo.getOffset(bytes);
@@ -151,7 +151,7 @@ public class MagicEntry {
 		}
 
 		if (contentData == null) {
-			contentData = new ContentData(name, mimeType);
+			contentData = new ContentData(name, mimeType, level);
 			// default is a child didn't match, set a partial so the matcher will keep looking
 			contentData.partial = true;
 		}
@@ -178,7 +178,7 @@ public class MagicEntry {
 					allOptional = false;
 				}
 				// goes recursive here
-				entry.matchBytes(bytes, offset, contentData);
+				entry.matchBytes(bytes, offset, level + 1, contentData);
 				// we continue to match to see if we can add additional children info to the name
 			}
 			if (allOptional) {
@@ -196,8 +196,14 @@ public class MagicEntry {
 		if (name != UNKNOWN_NAME && contentData.name == UNKNOWN_NAME) {
 			contentData.name = name;
 		}
-		if (mimeType != null && contentData.mimeType == null) {
+		/*
+		 * Set the mime-type if it is not set already or if we've gotten more specific in the processing of a pattern
+		 * and determine that it's actually a different type so we can override the previous mime-type. Example of this
+		 * is Adobe Illustrator which looks like a PDF but has extra stuff in it.
+		 */
+		if (mimeType != null && (contentData.mimeType == null || level > contentData.mimeTypeLevel)) {
 			contentData.mimeType = mimeType;
+			contentData.mimeTypeLevel = level;
 		}
 		return contentData;
 	}
@@ -209,11 +215,13 @@ public class MagicEntry {
 		String name;
 		boolean partial;
 		String mimeType;
+		int mimeTypeLevel;
 		final StringBuilder sb = new StringBuilder();
 
-		private ContentData(String name, String mimeType) {
+		private ContentData(String name, String mimeType, int mimeTypeLevel) {
 			this.name = name;
 			this.mimeType = mimeType;
+			this.mimeTypeLevel = mimeTypeLevel;
 		}
 
 		@Override
