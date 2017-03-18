@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
@@ -94,7 +95,9 @@ public class ContentInfoUtilTest {
 					"MS-DOS executable, MZ for MS-DOS"),
 			new FileType("/files/dotnet.exe", ContentType.OTHER, "32", "application/x-dosexec",
 					"PE32 executable for MS Windows (GUI) Intel 80386 32-bit Mono/.Net assembly"),
-			new FileType("/files/x.webm", ContentType.WEBM, "webm", "video/webm", "WebM"),
+			new FileType("/files/x.webm", ContentType.WEBM, "webm", "video/webm", "WebM"), //
+			new FileType("/files/x.mpg", ContentType.VIDEO_MPEG, "mpeg", "video/mpeg",
+					"MPEG sequence, v1, system multiplex"),
 			// end
 	};
 
@@ -110,7 +113,18 @@ public class ContentInfoUtilTest {
 		ContentInfoUtil util = getContentInfoUtil();
 		testFile(util, new FileType("/files/1.xml", ContentType.XML, "xml", "application/xml", "XML 1 document text"));
 		testFile(util, new FileType("/files/2.xml", ContentType.XML, "xml", "application/xml", "XML 2 document text"));
-		testFile(util, new FileType("/files/3.xml", ContentType.XML, "xml", "application/xml", "XML document text"));
+	}
+
+	@Test
+	public void testMpeg() throws Exception {
+		/*
+		 * For testing specific entries from a different magic file.
+		 */
+		InputStream stream = getClass().getClassLoader().getResourceAsStream("animation");
+		assertNotNull(stream);
+		ContentInfoUtil util = new ContentInfoUtil(new InputStreamReader(stream));
+		testFile(util, new FileType("/files/x.mpg", ContentType.VIDEO_MPEG, "mpeg", "video/mpeg",
+				"MPEG sequence, v1, system multiplex"));
 	}
 
 	@Test

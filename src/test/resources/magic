@@ -220,14 +220,17 @@
 >8	string/B	qt		\b, Apple QuickTime movie
 !:mime	video/quicktime
 
-0	 belong		    0x00000001     
+# MPEG sequences
+# Scans for all common MPEG header start codes
+0	 belong		    0x00000001
 >4	 byte&0x1F	    0x07	   JVT NAL sequence, H.264 video
 >>5      byte               66             \b, baseline
 >>5      byte               77             \b, main
 >>5      byte               88             \b, extended
 >>7      byte               x              \b @ L %u
-0        belong&0xFFFFFF00  0x00000100     
+0        belong&0xFFFFFF00  0x00000100
 >3       byte               0xBA           MPEG sequence
+!:mime  video/mpeg
 >>4      byte               &0x40          \b, v2, program multiplex
 >>4      byte               ^0x40          \b, v1, system multiplex
 >3       byte               0xBB           MPEG sequence, v1/2, multiplex (missing pack header)
@@ -236,7 +239,11 @@
 >>4      byte               77             \b, main
 >>4      byte               88             \b, extended
 >>6      byte               x              \b @ L %u
+# GRR too general as it catches also FoxPro Memo example NG.FPT
 >3       byte               0xB0           MPEG sequence, v4
+# TODO: maybe this extra line exclude FoxPro Memo example NG.FPT starting with 000001b0 00000100 00000000
+#>>4      byte               !0             MPEG sequence, v4
+!:mime  video/mpeg4-generic
 >>5      belong             0x000001B5
 >>>9     byte               &0x80
 >>>>10   byte&0xF0          16             \b, video
@@ -306,6 +313,7 @@
 >>4      byte               252            \b, FGS @ L4
 >>4      byte               253            \b, FGS @ L5
 >3       byte               0xB5           MPEG sequence, v4
+!:mime  video/mpeg4-generic
 >>4      byte               &0x80
 >>>5     byte&0xF0          16             \b, video (missing profile header)
 >>>5     byte&0xF0          32             \b, still texture (missing profile header)
@@ -316,6 +324,7 @@
 >>4      byte&0xF8          24             \b, mesh (missing profile header)
 >>4      byte&0xF8          32             \b, face (missing profile header)
 >3       byte               0xB3           MPEG sequence
+!:mime  video/mpeg
 >>12     belong             0x000001B8     \b, v1, progressive Y'CbCr 4:2:0 video
 >>12     belong             0x000001B2     \b, v1, progressive Y'CbCr 4:2:0 video
 >>12     belong             0x000001B5     \b, v2,
@@ -338,20 +347,20 @@
 >>>>140  belong             0x000001B8     \b, v1, progressive Y'CbCr 4:2:0 video
 >>>>140  belong             0x000001B2     \b, v1, progressive Y'CbCr 4:2:0 video
 >>>>140  belong             0x000001B5     \b, v2,
->>>>>144  byte&0x0F          1              \b HP
->>>>>144  byte&0x0F          2              \b Spt
->>>>>144  byte&0x0F          3              \b SNR
->>>>>144  byte&0x0F          4              \b MP
->>>>>144  byte&0x0F          5              \b SP
->>>>>145  byte&0xF0          64             \b@HL
->>>>>145  byte&0xF0          96             \b@H-14
->>>>>145  byte&0xF0          128            \b@ML
->>>>>145  byte&0xF0          160            \b@LL
->>>>>145  byte               &0x08          \b progressive
->>>>>145  byte               ^0x08          \b interlaced
->>>>>145  byte&0x06          2              \b Y'CbCr 4:2:0 video
->>>>>145  byte&0x06          4              \b Y'CbCr 4:2:2 video
->>>>>145  byte&0x06          6              \b Y'CbCr 4:4:4 video
+>>>>>144 byte&0x0F          1              \b HP
+>>>>>144 byte&0x0F          2              \b Spt
+>>>>>144 byte&0x0F          3              \b SNR
+>>>>>144 byte&0x0F          4              \b MP
+>>>>>144 byte&0x0F          5              \b SP
+>>>>>145 byte&0xF0          64             \b@HL
+>>>>>145 byte&0xF0          96             \b@H-14
+>>>>>145 byte&0xF0          128            \b@ML
+>>>>>145 byte&0xF0          160            \b@LL
+>>>>>145 byte               &0x08          \b progressive
+>>>>>145 byte               ^0x08          \b interlaced
+>>>>>145 byte&0x06          2              \b Y'CbCr 4:2:0 video
+>>>>>145 byte&0x06          4              \b Y'CbCr 4:2:2 video
+>>>>>145 byte&0x06          6              \b Y'CbCr 4:4:4 video
 >>76    belong             0x000001B8     \b, v1, progressive Y'CbCr 4:2:0 video
 >>76    belong             0x000001B2     \b, v1, progressive Y'CbCr 4:2:0 video
 >>76    belong             0x000001B5     \b, v2,
