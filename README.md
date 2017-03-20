@@ -1,7 +1,11 @@
 Java Simple Magic
 =================
 
-This package provides some simple Java classes to read the magic files from Unix to simulate the file(1) command.
+Here's a quick "magic" number package that I whipped up which allows content-type (mime-type) determination from files
+and byte arrays. It makes use of the magic(5) Unix content-type files to implement the same functionality as the Unix
+file(1) command in Java which detects the contents of a file. It uses either internal config files or can read
+```/etc/magic```, ```/usr/share/file/magic```, or other magic(5) files and determine file content from ```File```,
+```InputStream```, or ```byte[]```.
 
 For more information, visit the [home page](http://256stuff.com/sources/simplemagic/).
 
