@@ -35,13 +35,14 @@ Once you have the ContentDetails it provides:
 * Mime-type string if one configured by the config file
 
 For example:
-	HTML, mime 'text/html', msg 'HTML document text'
-	Java, msg 'Java serialization data, version 5'
-	PDF, mime 'application/pdf', msg 'PDF document, version 1.4'
-	gzip, mime 'application/x-gzip', msg 'gzip compressed data, was "", from Unix...'
-	GIF, mime 'image/gif', msg 'GIF image data, version 89a, 16 x 16'
-	PNG, mime 'image/png', msg 'PNG image, 600 x 371, 8-bit/color RGB, non-interlaced'
-	ISO, mime 'audio/mp4', msg 'ISO Media, MPEG v4 system, iTunes AAC-LC'
-	Microsoft, mime 'application/msword', msg 'Microsoft Word Document'
-	RIFF, mime 'audio/x-wav', msg 'RIFF (little-endian) data, WAVE audio, Microsoft...'
-	JPEG, mime 'image/jpeg', msg 'JPEG image data, JFIF standard 1.01'
+
+* ```HTML, mime 'text/html', msg 'HTML document text'```
+* ```Java, msg 'Java serialization data, version 5'```
+* ```PDF, mime 'application/pdf', msg 'PDF document, version 1.4'```
+* ```gzip, mime 'application/x-gzip', msg 'gzip compressed data, was "", from Unix...'```
+* ```GIF, mime 'image/gif', msg 'GIF image data, version 89a, 16 x 16'```
+* ```PNG, mime 'image/png', msg 'PNG image, 600 x 371, 8-bit/color RGB, non-interlaced'```
+* ```ISO, mime 'audio/mp4', msg 'ISO Media, MPEG v4 system, iTunes AAC-LC'```
+* ```Microsoft, mime 'application/msword', msg 'Microsoft Word Document'```
+* ```RIFF, mime 'audio/x-wav', msg 'RIFF (little-endian) data, WAVE audio, Microsoft...'```
+* ```JPEG, mime 'image/jpeg', msg 'JPEG image data, JFIF standard 1.01'```
