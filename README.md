@@ -31,12 +31,14 @@ To get started you use the SimpleMagic package like the following:
 	// or
 	ContentInfo info = util.findMatch(contentByteArray);
 
-Once you have the ContentDetails it provides:
+Once you have the [```ContentInfo```](https://github.com/j256/simplemagic/blob/master/src/main/java/com/j256/simplemagic/ContentInfo.java)
+it provides:
  
 * Enumerated type if the type is common
 * Approximate content-name
 * Full message produced by the magic file
 * Mime-type string if one configured by the config file
+* Associated file extensions (if any)
 
 For example:
 
