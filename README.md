@@ -1,19 +1,17 @@
 Java Simple Magic
 =================
 
-Here's a quick "magic" number package that I whipped up which allows content-type (mime-type) determination from files
-and byte arrays. It makes use of the magic(5) Unix content-type files to implement the same functionality as the Unix
-file(1) command in Java which detects the contents of a file. It uses either internal config files or can read
-```/etc/magic```, ```/usr/share/file/magic```, or other magic(5) files and determine file content from ```File```,
-```InputStream```, or ```byte[]```.
+Here's a "magic" number package  which allows content-type (mime-type) determination from files and byte arrays. It makes
+use of the magic(5) Unix content-type files to implement the same functionality as the Unix file(1) command in Java which
+detects the contents of a file. It uses either internal config files or can read ```/etc/magic```,
+```/usr/share/file/magic```, or other magic(5) files and determine file content from ```File```, ```InputStream```, or
+```byte[]```.
 
-For more information, visit the [home page](http://256stuff.com/sources/simplemagic/).
+* For more information, visit the [home page](http://256stuff.com/sources/simplemagic/).
+* The source code be found on the [git repository](https://github.com/j256/simplemagic).
+* Maven packages are published via the [maven central repo](http://repo1.maven.org/maven2/com/j256/simplemagic/simplemagic/).
 
-The source code be found on the [git repository](https://github.com/j256/simplemagic).
-
-Maven packages are published via the [maven central repo](http://repo1.maven.org/maven2/com/j256/simplemagic/simplemagic/).
-
-Enjoy,
+Enjoy, <br />
 Gray Watson
 
 # Getting Started
