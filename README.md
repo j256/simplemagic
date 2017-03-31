@@ -8,11 +8,10 @@ detects the contents of a file. It uses either internal config files or can read
 ```byte[]```.
 
 * For more information, visit the [home page](http://256stuff.com/sources/simplemagic/).
-* The source code be found on the [git repository](https://github.com/j256/simplemagic).
+* The source code be found on the [git repository](https://github.com/j256/simplemagic).  [![CircleCI](https://circleci.com/gh/j256/simplemagic.svg?style=svg)](https://circleci.com/gh/j256/simplemagic)
 * Maven packages are published via the [maven central repo](http://repo1.maven.org/maven2/com/j256/simplemagic/simplemagic/).
 
-Enjoy, <br />
-Gray Watson
+Enjoy, Gray Watson
 
 # Getting Started
 
