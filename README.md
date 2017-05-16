@@ -49,3 +49,7 @@ For example:
 * ```Microsoft, mime 'application/msword', msg 'Microsoft Word Document'```
 * ```RIFF, mime 'audio/x-wav', msg 'RIFF (little-endian) data, WAVE audio, Microsoft...'```
 * ```JPEG, mime 'image/jpeg', msg 'JPEG image data, JFIF standard 1.01'```
+
+# ChangeLog Release Notes
+
+See the [ChangeLog.txt file](src/main/javadoc/doc-files/changelog.txt).
