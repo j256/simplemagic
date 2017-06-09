@@ -25,7 +25,7 @@
 		<log4j-version>1.2.12</log4j-version>
 		<log4j2-version>2.0-beta4</log4j2-version>
 		<!-- test dependency versions -->
-		<easymock-version>2.3</easymock-version>
+		<easymock-version>3.4</easymock-version>
 		<junit-version>4.8.1</junit-version>
 	</properties>
 	<scm>
@@ -156,7 +156,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<!-- j256 Releases (Code releases for j256.com) <j256@256.com> -->
+					<!-- j256 Releases (Code releases for j256.com) <j256@256stuff.com> -->
 					<keyname>D3412AC1</keyname>
 				</configuration>
 			</plugin>

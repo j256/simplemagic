@@ -21,7 +21,7 @@ public class PStringType extends StringType {
 			return null;
 		}
 		// length is from the first byte of the string
-		int len = bytes[offset];
+		int len = (bytes[offset] & 0xFF);
 		int left = bytes.length - offset - 1;
 		if (len > left) {
 			len = left;
@@ -44,7 +44,8 @@ public class PStringType extends StringType {
 			return null;
 		}
 		// our maximum position is +1 to move past the length byte and then add in the length
-		int maxPos = 1 + bytes[mutableOffset.offset];
+		int len = (bytes[mutableOffset.offset] & 0xFF);
+		int maxPos = 1 + len;
 		if (maxPos > bytes.length) {
 			maxPos = bytes.length;
 		}
