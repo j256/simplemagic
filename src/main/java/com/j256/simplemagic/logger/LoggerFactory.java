@@ -66,8 +66,8 @@ public class LoggerFactory {
 				return LogType.valueOf(logTypeString);
 			} catch (IllegalArgumentException e) {
 				Log log = new LocalLog(LoggerFactory.class.getName());
-				log.log(Level.WARNING, "Could not find valid log-type from system property '"
-						+ LOG_TYPE_SYSTEM_PROPERTY + "', value '" + logTypeString + "'");
+				log.log(Level.WARNING, "Could not find valid log-type from system property '" + LOG_TYPE_SYSTEM_PROPERTY
+						+ "', value '" + logTypeString + "'");
 			}
 		}
 
@@ -83,7 +83,9 @@ public class LoggerFactory {
 	/**
 	 * Type of internal logs supported.
 	 */
-	private enum LogType {
+	enum LogType {
+		SLF4J("org.slf4j.LoggerFactory", "com.j256.ormlite.logger.Slf4jLoggingLog"),
+		COMMONS_LOGGING("org.apache.commons.logging.LogFactory", "org.apache.commons.logging.Log"),
 		LOG4J2("org.apache.logging.log4j.LogManager", "com.j256.simplemagic.logger.Log4j2Log"),
 		LOG4J("org.apache.log4j.Logger", "com.j256.simplemagic.logger.Log4jLog"),
 		// this should always be at the end, arguments are unused
@@ -92,12 +94,15 @@ public class LoggerFactory {
 			public Log createLog(String classLabel) {
 				return new LocalLog(classLabel);
 			}
+
 			@Override
 			public boolean isAvailable() {
 				// always available
 				return true;
 			}
 		},
+		// we put this down here because it's always available but we rarely want to use it
+		JAVA_UTIL("java.util.logging.Logger", "com.j256.ormlite.logger.JavaUtilLog"),
 		// end
 		;
 
