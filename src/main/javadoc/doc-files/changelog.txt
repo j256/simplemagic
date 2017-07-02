@@ -1,3 +1,6 @@
+1.13: ?/?/2017
+	* Added more loggers.
+
 1.12: 6/9/2017
 	* Fixed a bug with negative pstring lengths.  Thanks to charles-jacobsen.
 

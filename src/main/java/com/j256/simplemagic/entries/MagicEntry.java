@@ -223,17 +223,6 @@ public class MagicEntry {
 			this.mimeType = mimeType;
 			this.mimeTypeLevel = mimeTypeLevel;
 		}
-
-		@Override
-		public String toString() {
-			if (sb.length() != 0) {
-				return sb.toString();
-			} else if (name == null) {
-				return super.toString();
-			} else {
-				return name;
-			}
-		}
 	}
 
 	/**

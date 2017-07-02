@@ -38,4 +38,9 @@ public class MiddleEndianConverterTest {
 	public void testOutOfBytes() {
 		assertNull(EndianType.MIDDLE.getConverter().convertNumber(0, new byte[0], 4));
 	}
+
+	@Test
+	public void testWrongLength() {
+		assertNull(EndianType.MIDDLE.getConverter().convertToByteArray(0, 2));
+	}
 }
