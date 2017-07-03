@@ -1,5 +1,9 @@
 package com.j256.simplemagic;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -8,7 +12,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,12 +22,16 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.Arrays;
 
+import org.easymock.EasyMock;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
 public class ContentInfoUtilTest {
 
 	private ContentInfoUtil contentInfoUtil;
+
+	private static final File OUTPUT_TEST_DIR = new File("target/" + ContentInfoUtilTest.class.getSimpleName());
 
 	/**
 	 * File with their expected information.
@@ -114,6 +123,11 @@ public class ContentInfoUtilTest {
 			// end
 	};
 
+	@BeforeClass
+	public static void beforeCLass() {
+		OUTPUT_TEST_DIR.mkdirs();
+	}
+
 	@Test
 	public void testFiles() throws Exception {
 		for (FileType fileType : fileTypes) {
@@ -203,7 +217,7 @@ public class ContentInfoUtilTest {
 		}
 	}
 
-	@Test(expected = FileNotFoundException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testMagicNotFound() throws Exception {
 		new ContentInfoUtil("some-unknown-resource", null);
 	}
@@ -212,6 +226,95 @@ public class ContentInfoUtilTest {
 	public void testEmptyMimeType() {
 		ContentInfoUtil util = getContentInfoUtil();
 		assertEquals(ContentType.EMPTY, util.findMatch(new byte[0]).getContentType());
+	}
+
+	@Test
+	public void testFileRead() throws IOException {
+		File outputFile = new File(OUTPUT_TEST_DIR, "fileRead");
+		FileType fileType = fileTypes[0];
+		copyResourceToFile(fileType.fileName, outputFile);
+		ContentInfoUtil util = getContentInfoUtil();
+		assertEquals(fileType.expectedType, util.findMatch(outputFile).getContentType());
+		assertEquals(fileType.expectedType, util.findMatch(outputFile.getPath()).getContentType());
+	}
+
+	@Test
+	public void testEmptyFile() throws IOException {
+		File outputFile = new File(OUTPUT_TEST_DIR, "empty");
+		outputFile.createNewFile();
+		ContentInfoUtil util = getContentInfoUtil();
+		assertEquals(ContentType.EMPTY, util.findMatch(outputFile).getContentType());
+	}
+
+	@Test
+	public void testErrorFile() throws IOException {
+		InputStream input = EasyMock.createMock(InputStream.class);
+		expect(input.read(isA(byte[].class))).andReturn(-1);
+		ContentInfoUtil util = getContentInfoUtil();
+		replay(input);
+		assertNull(util.findMatch(input));
+		verify(input);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testMissingMagicFile() throws IOException {
+		new ContentInfoUtil("/does-not-exist");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testMissingMagicFileCallback() throws IOException {
+		new ContentInfoUtil("/does-not-exist", null);
+	}
+
+	@Test
+	public void testExistingMagicFileResourceCallback() throws IOException {
+		assertNotNull(new ContentInfoUtil("/magic.gz", null));
+	}
+
+	@Test
+	public void testExistingMagicFile() throws IOException {
+		File outputFile = new File(OUTPUT_TEST_DIR, "magic");
+		copyResourceToFile("/magic.gz", outputFile);
+		assertNotNull(new ContentInfoUtil(outputFile));
+		assertNotNull(new ContentInfoUtil(outputFile.getPath()));
+	}
+
+	@Test
+	public void testMagicFile() throws IOException {
+		File magicFile = new File(OUTPUT_TEST_DIR, "magic");
+		magicFile.createNewFile();
+		ContentInfoUtil util = new ContentInfoUtil(magicFile);
+		util.setFileReadSize(1024);
+		util.setErrorCallBack(null);
+		FileType fileType = fileTypes[0];
+		assertEquals(ContentType.EMPTY, util.findMatch(fileType.fileName).getContentType());
+	}
+
+	@Test
+	public void testMagicFileReader() throws IOException {
+		File magicFile = new File(OUTPUT_TEST_DIR, "magic");
+		magicFile.createNewFile();
+		ContentInfoUtil util = new ContentInfoUtil(new FileReader(magicFile));
+		util.setFileReadSize(1024);
+		util.setErrorCallBack(null);
+		FileType fileType = fileTypes[0];
+		assertEquals(ContentType.EMPTY, util.findMatch(fileType.fileName).getContentType());
+	}
+
+	@Test
+	public void testMagicFileNoGz() throws IOException {
+		ContentInfoUtil util = new ContentInfoUtil("/magic", null);
+		util.setFileReadSize(1024);
+		util.setErrorCallBack(null);
+		FileType fileType = fileTypes[0];
+		assertEquals(ContentType.EMPTY, util.findMatch(fileType.fileName).getContentType());
+	}
+
+	@Test
+	public void testFindExtension() {
+		assertNull(ContentInfoUtil.findExtensionMatch(""));
+		assertNull(ContentInfoUtil.findExtensionMatch("."));
+		assertNull(ContentInfoUtil.findExtensionMatch(".somecrazythingthatwillnevermatch"));
 	}
 
 	/**
@@ -224,6 +327,31 @@ public class ContentInfoUtilTest {
 		ContentInfoUtil util = getContentInfoUtil();
 		ContentInfo info = util.findMatch(anotherHtml.getBytes());
 		assertEquals(ContentType.HTML, info.getContentType());
+	}
+
+	private void copyResourceToFile(String resource, File outputFile) throws IOException {
+		InputStream input = null;
+		OutputStream output = null;
+		byte[] buffer = new byte[4096];
+		try {
+			input = getClass().getResourceAsStream(resource);
+			assertNotNull(resource + " not found", input);
+			output = new FileOutputStream(outputFile);
+			while (true) {
+				int numRead = input.read(buffer);
+				if (numRead < 0) {
+					break;
+				}
+				output.write(buffer, 0, numRead);
+			}
+		} finally {
+			if (input != null) {
+				input.close();
+			}
+			if (output != null) {
+				output.close();
+			}
+		}
 	}
 
 	private void checkFile(ContentInfoUtil contentInfoUtil, FileType fileType) throws IOException {
@@ -285,6 +413,8 @@ public class ContentInfoUtilTest {
 			assertEquals("bad message for " + fileType.fileName, fileType.expectedMessage, details.getMessage());
 			assertEquals("partial flag should be  " + fileType.expectedPartial + " for " + fileType.fileName,
 					fileType.expectedPartial, details.isPartial());
+			// coverage
+			details.toString();
 		}
 	}
 

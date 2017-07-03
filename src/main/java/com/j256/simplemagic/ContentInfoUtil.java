@@ -348,7 +348,7 @@ public class ContentInfoUtil {
 	private MagicEntries readEntriesFromResource(String resource) throws IOException {
 		InputStream stream = getClass().getResourceAsStream(resource);
 		if (stream == null) {
-			throw new FileNotFoundException("Internal magic file was not found: " + resource);
+			return null;
 		}
 		Reader reader = null;
 		try {
