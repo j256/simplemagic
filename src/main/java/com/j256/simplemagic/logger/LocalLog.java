@@ -146,8 +146,8 @@ public class LocalLog implements Log {
 			try {
 				levels = configureClassLevels(stream);
 			} catch (IOException e) {
-				System.err.println("IO exception reading the log properties file '" + LOCAL_LOG_PROPERTIES_FILE + "': "
-						+ e);
+				System.err.println(
+						"IO exception reading the log properties file '" + LOCAL_LOG_PROPERTIES_FILE + "': " + e);
 			} finally {
 				try {
 					stream.close();
@@ -208,6 +208,7 @@ public class LocalLog implements Log {
 	private static class PatternLevel {
 		Pattern pattern;
 		Level level;
+
 		public PatternLevel(Pattern pattern, Level level) {
 			this.pattern = pattern;
 			this.level = level;

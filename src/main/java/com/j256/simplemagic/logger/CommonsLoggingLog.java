@@ -16,19 +16,19 @@ public class CommonsLoggingLog implements Log {
 	@Override
 	public boolean isLevelEnabled(Level level) {
 		switch (level) {
-			case TRACE :
+			case TRACE:
 				return log.isTraceEnabled();
-			case DEBUG :
+			case DEBUG:
 				return log.isDebugEnabled();
-			case INFO :
+			case INFO:
 				return log.isInfoEnabled();
-			case WARNING :
+			case WARNING:
 				return log.isWarnEnabled();
-			case ERROR :
+			case ERROR:
 				return log.isErrorEnabled();
-			case FATAL :
+			case FATAL:
 				return log.isFatalEnabled();
-			default :
+			default:
 				return log.isInfoEnabled();
 		}
 	}
@@ -36,25 +36,25 @@ public class CommonsLoggingLog implements Log {
 	@Override
 	public void log(Level level, String msg) {
 		switch (level) {
-			case TRACE :
+			case TRACE:
 				log.trace(msg);
 				break;
-			case DEBUG :
+			case DEBUG:
 				log.debug(msg);
 				break;
-			case INFO :
+			case INFO:
 				log.info(msg);
 				break;
-			case WARNING :
+			case WARNING:
 				log.warn(msg);
 				break;
-			case ERROR :
+			case ERROR:
 				log.error(msg);
 				break;
-			case FATAL :
+			case FATAL:
 				log.fatal(msg);
 				break;
-			default :
+			default:
 				log.info(msg);
 				break;
 		}
@@ -63,25 +63,25 @@ public class CommonsLoggingLog implements Log {
 	@Override
 	public void log(Level level, String msg, Throwable t) {
 		switch (level) {
-			case TRACE :
+			case TRACE:
 				log.trace(msg, t);
 				break;
-			case DEBUG :
+			case DEBUG:
 				log.debug(msg, t);
 				break;
-			case INFO :
+			case INFO:
 				log.info(msg, t);
 				break;
-			case WARNING :
+			case WARNING:
 				log.warn(msg, t);
 				break;
-			case ERROR :
+			case ERROR:
 				log.error(msg, t);
 				break;
-			case FATAL :
+			case FATAL:
 				log.fatal(msg, t);
 				break;
-			default :
+			default:
 				log.info(msg, t);
 				break;
 		}

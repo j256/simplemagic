@@ -30,19 +30,19 @@ public class Log4jLog implements Log {
 
 	private org.apache.log4j.Level levelToLog4jLevel(Level level) {
 		switch (level) {
-			case TRACE :
+			case TRACE:
 				return org.apache.log4j.Level.TRACE;
-			case DEBUG :
+			case DEBUG:
 				return org.apache.log4j.Level.DEBUG;
-			case INFO :
+			case INFO:
 				return org.apache.log4j.Level.INFO;
-			case WARNING :
+			case WARNING:
 				return org.apache.log4j.Level.WARN;
-			case ERROR :
+			case ERROR:
 				return org.apache.log4j.Level.ERROR;
-			case FATAL :
+			case FATAL:
 				return org.apache.log4j.Level.FATAL;
-			default :
+			default:
 				return org.apache.log4j.Level.INFO;
 		}
 	}

@@ -87,6 +87,7 @@ public class RegexType implements MagicMatcher {
 			return null;
 		}
 	}
+
 	@Override
 	public void renderValue(StringBuilder sb, Object extractedValue, MagicFormatter formatter) {
 		formatter.format(sb, extractedValue);

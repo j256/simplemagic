@@ -71,26 +71,26 @@ public class PercentExpression {
 		// 5 is ignored
 		this.patternChar = matcher.group(6).charAt(0);
 		switch (this.patternChar) {
-			case 'e' :
-			case 'E' : {
+			case 'e':
+			case 'E': {
 				this.decimalFormat = scientificFormat(dotPrecision);
 				this.altDecimalFormat = null;
 				break;
 			}
-			case 'f' :
-			case 'F' : {
+			case 'f':
+			case 'F': {
 				this.decimalFormat = decimalFormat(dotPrecision);
 				this.altDecimalFormat = null;
 				break;
 			}
-			case 'g' :
-			case 'G' : {
+			case 'g':
+			case 'G': {
 				// will take the shorter of the two
 				this.decimalFormat = decimalFormat(dotPrecision);
 				this.altDecimalFormat = scientificFormat(dotPrecision);
 				break;
 			}
-			default :
+			default:
 				this.decimalFormat = null;
 				this.altDecimalFormat = null;
 				break;
@@ -111,8 +111,8 @@ public class PercentExpression {
 
 		// %bcdeEfFgGiosuxX
 		switch (patternChar) {
-			case 'b' :
-			case 's' : {
+			case 'b':
+			case 's': {
 				// same as s but interpret character escapes in backslash notation
 				String strValue = extractedValue.toString();
 				if (truncateWidth >= 0 && strValue.length() > truncateWidth) {
@@ -121,7 +121,7 @@ public class PercentExpression {
 				appendValue(sb, null, null, strValue, false);
 				return;
 			}
-			case 'c' : {
+			case 'c': {
 				// character
 				String strValue;
 				if (extractedValue instanceof Character) {
@@ -141,9 +141,9 @@ public class PercentExpression {
 				appendValue(sb, null, null, strValue, false);
 				return;
 			}
-			case 'd' :
-			case 'i' :
-			case 'u' :
+			case 'd':
+			case 'i':
+			case 'u':
 				if (extractedValue instanceof Number) {
 					long value = ((Number) extractedValue).longValue();
 					String sign = null;
@@ -162,12 +162,12 @@ public class PercentExpression {
 					return;
 				}
 				break;
-			case 'e' :
-			case 'E' :
-			case 'f' :
-			case 'F' :
-			case 'g' :
-			case 'G' :
+			case 'e':
+			case 'E':
+			case 'f':
+			case 'F':
+			case 'g':
+			case 'G':
 				if (extractedValue instanceof Number) {
 					double value = ((Number) extractedValue).doubleValue();
 					if (Double.isInfinite(value)) {
@@ -201,7 +201,7 @@ public class PercentExpression {
 				}
 				break;
 			// case 'i' : same as d above
-			case 'o' :
+			case 'o':
 				// octal
 				if (extractedValue instanceof Number) {
 					long value = ((Number) extractedValue).longValue();
@@ -221,19 +221,19 @@ public class PercentExpression {
 				break;
 			// case 's' : same as b above
 			// case 'u' : same as d above
-			case 'x' :
+			case 'x':
 				if (extractedValue instanceof Number) {
 					appendHex(sb, false, extractedValue);
 					return;
 				}
 				break;
-			case 'X' :
+			case 'X':
 				if (extractedValue instanceof Number) {
 					appendHex(sb, true, extractedValue);
 					return;
 				}
 				break;
-			default :
+			default:
 				break;
 		}
 

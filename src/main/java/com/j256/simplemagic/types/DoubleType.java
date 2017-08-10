@@ -48,7 +48,6 @@ public class DoubleType extends NumberType {
 		return null;
 	}
 
-
 	/**
 	 * Convert a long to the type.
 	 */

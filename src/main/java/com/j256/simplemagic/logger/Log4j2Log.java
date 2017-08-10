@@ -16,19 +16,19 @@ public class Log4j2Log implements Log {
 	@Override
 	public boolean isLevelEnabled(Level level) {
 		switch (level) {
-			case TRACE :
+			case TRACE:
 				return logger.isTraceEnabled();
-			case DEBUG :
+			case DEBUG:
 				return logger.isDebugEnabled();
-			case INFO :
+			case INFO:
 				return logger.isInfoEnabled();
-			case WARNING :
+			case WARNING:
 				return logger.isWarnEnabled();
-			case ERROR :
+			case ERROR:
 				return logger.isErrorEnabled();
-			case FATAL :
+			case FATAL:
 				return logger.isFatalEnabled();
-			default :
+			default:
 				return logger.isInfoEnabled();
 		}
 	}
@@ -36,25 +36,25 @@ public class Log4j2Log implements Log {
 	@Override
 	public void log(Level level, String msg) {
 		switch (level) {
-			case TRACE :
+			case TRACE:
 				logger.trace(msg);
 				break;
-			case DEBUG :
+			case DEBUG:
 				logger.debug(msg);
 				break;
-			case INFO :
+			case INFO:
 				logger.info(msg);
 				break;
-			case WARNING :
+			case WARNING:
 				logger.warn(msg);
 				break;
-			case ERROR :
+			case ERROR:
 				logger.error(msg);
 				break;
-			case FATAL :
+			case FATAL:
 				logger.fatal(msg);
 				break;
-			default :
+			default:
 				logger.info(msg);
 				break;
 		}
@@ -63,25 +63,25 @@ public class Log4j2Log implements Log {
 	@Override
 	public void log(Level level, String msg, Throwable t) {
 		switch (level) {
-			case TRACE :
+			case TRACE:
 				logger.trace(msg, t);
 				break;
-			case DEBUG :
+			case DEBUG:
 				logger.debug(msg, t);
 				break;
-			case INFO :
+			case INFO:
 				logger.info(msg, t);
 				break;
-			case WARNING :
+			case WARNING:
 				logger.warn(msg, t);
 				break;
-			case ERROR :
+			case ERROR:
 				logger.error(msg, t);
 				break;
-			case FATAL :
+			case FATAL:
 				logger.fatal(msg, t);
 				break;
-			default :
+			default:
 				logger.info(msg, t);
 				break;
 		}

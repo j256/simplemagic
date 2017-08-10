@@ -18,8 +18,8 @@ public class MagicFormatter {
 	public final static String FINAL_PATTERN_CHARS = "%bcdeEfFgGiosuxX";
 	public final static String PATTERN_MODIFIERS = "lqh";
 	// NOTE: the backspace is taken care of by checking the format string prefix above
-	private final static Pattern FORMAT_PATTERN = Pattern.compile("([^%]*)(%[-+0-9# ." + PATTERN_MODIFIERS + "]*["
-			+ FINAL_PATTERN_CHARS + "])?(.*)");
+	private final static Pattern FORMAT_PATTERN =
+			Pattern.compile("([^%]*)(%[-+0-9# ." + PATTERN_MODIFIERS + "]*[" + FINAL_PATTERN_CHARS + "])?(.*)");
 
 	/**
 	 * This takes a format string, breaks it up into prefix, %-thang, and suffix.
