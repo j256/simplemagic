@@ -14,99 +14,106 @@ import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
 /**
- * Loads the IANA databases (build on 10 august 2017)
+ * Loads the IANA databases (build on 10 august 2017).
+ * IANA databases provides the following elements in a CSV file:
+ * <ul>
+ * <li>Name of the file type</li>
+ * <li>mime type</li>
+ * <li>Name of the articles describing the mime type</li>
+ * </ul>
+ * In addition to these elements, two URLs are created in order to locate the
+ * description of the mime type and the URL of the articles.
  * @author Jean-Christophe Malapert (jcmalapert@gmail.com)
  */
 public class IanaEntries {
 
-    private final static String INTERNAL_IANA_APP_DB = "/iana_app.gz";
-    private final static String INTERNAL_IANA_AUDIO_DB = "/iana_audio.gz";
-    private final static String INTERNAL_IANA_FONT_DB = "/iana_font.gz";
+	private final static String INTERNAL_IANA_APP_DB = "/iana_app.gz";
+	private final static String INTERNAL_IANA_AUDIO_DB = "/iana_audio.gz";
+	private final static String INTERNAL_IANA_FONT_DB = "/iana_font.gz";
     
-    /**
-     * The database
-     */
-    private final Map<String, IanaEntry> _ianaDB;
+	/**
+	 * The database
+	 */
+	private final Map<String, IanaEntry> ianaDB = new HashMap<String, IanaEntry>();
 
-    /**
-     * Constructor.
-     */
-    public IanaEntries() {
-        this._ianaDB = new HashMap<String, IanaEntry>();
-        loadDb(INTERNAL_IANA_APP_DB);
-        loadDb(INTERNAL_IANA_AUDIO_DB);
-        loadDb(INTERNAL_IANA_FONT_DB);
-    }
-
-    /**
-     * Loads the IANA database
-     * @param db 
-     */
-    private void loadDb(String db) {        
-        InputStream stream = getClass().getResourceAsStream(db);
-        if (stream == null) {
-            throw new RuntimeException(db + " is missing");
+        /**
+         * Constructor.
+         */
+        public IanaEntries() {
+        	loadDb(INTERNAL_IANA_APP_DB);
+                loadDb(INTERNAL_IANA_AUDIO_DB);
+                loadDb(INTERNAL_IANA_FONT_DB);
         }
-        Reader reader = null;
-        try {
-            reader = new InputStreamReader(new GZIPInputStream(new BufferedInputStream(stream)));
-            BufferedReader lineReader = new BufferedReader(reader);
-            String line = "";
-            lineReader.readLine();//skip the first line
-            while ((line = lineReader.readLine()) != null) {
-                String[] ianaEntryParsed = line.split(","); 
-                if(ianaEntryParsed[2].startsWith("\"")) {
-                    line = lineReader.readLine().replaceAll("\\s+","");
-                    ianaEntryParsed[2]+=line;
+    
+        /**
+         * Returns the IANA database.
+         */
+        public Map<String, IanaEntry> getIanaDB() {
+            return ianaDB;
+        }
+
+        /**
+         * Returns the IANA metadata for a specific mime type or null when
+         * the mime type is not found.
+         */
+        public IanaEntry getIanaMetadata(final String mimeType) {
+                return this.ianaDB.getOrDefault(mimeType, null);
+        }    
+
+        /**
+         * Loads the IANA database
+         * @param db 
+         */
+        private void loadDb(String db) {        
+                InputStream stream = getClass().getResourceAsStream(db);
+                if (stream == null) {
+                        throw new RuntimeException(db + " is missing");
                 }
-                IanaEntry ianaEntry = new IanaEntry(ianaEntryParsed[0], ianaEntryParsed[1], ianaEntryParsed[2]);
-                addMimeType(ianaEntry.getMimeType(), ianaEntry);
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(IanaEntries.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RuntimeException("Error when loading " + db);
-        } finally {
-            closeQuietly(reader);
-            closeQuietly(stream);
+                Reader reader = null;
+                try {
+                        reader = new InputStreamReader(new GZIPInputStream(new BufferedInputStream(stream)));
+                        stream = null;
+                        BufferedReader lineReader = new BufferedReader(reader);
+                        String line = "";
+                        lineReader.readLine();//skip the first line
+                        while ((line = lineReader.readLine()) != null) {
+                                // parse the CSV file. The CSV file contains
+                                // three elements per row
+                                String[] ianaEntryParsed = line.split(","); 
+                                // fix problem in the CSV file provided by IANA
+                                // such as G719,audio/G719,"[RFC5404][RFC Errata 
+                                //                                         3245]"
+                                if(ianaEntryParsed[2].startsWith("\"")) {
+                                        line = lineReader.readLine().replaceAll("\\s+","");
+                                        ianaEntryParsed[2]+=line;
+                                }
+                                IanaEntry ianaEntry = new IanaEntry(ianaEntryParsed[0], ianaEntryParsed[1], ianaEntryParsed[2]);
+                                addMimeType(ianaEntry.getMimeType(), ianaEntry);
+                        }
+                } catch (IOException ex) {
+                        throw new RuntimeException("Error when loading " + db);
+                } finally {
+                        closeQuietly(reader);
+                        closeQuietly(stream);
+                }
         }
-    }
 
-    private void closeQuietly(Closeable closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (IOException e) {
-                // ignored
-            }
+        private void closeQuietly(Closeable closeable) {
+                if (closeable != null) {
+                        try {
+                                closeable.close();
+                        } catch (IOException e) {
+                                // ignored
+                        }
+                }
         }
-    }
     
-    /**
-     * Add an entry in the IANA database.
-     * @param mimeType mime type
-     * @param ianaEntry metadata of the mime type
-     */
-    private void addMimeType(final String mimeType, final IanaEntry ianaEntry) {
-        if(!mimeType.isEmpty()) {
-            this._ianaDB.put(mimeType, ianaEntry);
+        /**
+         * Add an entry in the IANA database.
+         */
+        private void addMimeType(final String mimeType, final IanaEntry ianaEntry) {
+                if(!mimeType.isEmpty()) {
+                        this.ianaDB.put(mimeType, ianaEntry);
+                }
         }
-    }
-
-    /**
-     * Returns the IANA database.
-     * @return the _ianaDB
-     */
-    public Map<String, IanaEntry> getIanaDB() {
-        return _ianaDB;
-    }
-
-    /**
-     * Returns the IANA metadata for a specific mime type
-     * @param mimeType
-     * @return 
-     */
-    public IanaEntry getIanaMetadata(final String mimeType) {
-        return this._ianaDB.getOrDefault(mimeType, null);
-    }
-
 }

@@ -1,6 +1,7 @@
 package com.j256.simplemagic.entries;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,112 +12,110 @@ import java.util.regex.Pattern;
  */
 public class IanaEntry {
     
-    private static final String MIME_TYPE_BASE_URL = "https://www.iana.org/assignments/media-types/";
-    private static final String RFC_REFERENCE_BASE_URL = "https://tools.ietf.org/html/";    
-    private static final String MIME_TYPE_REFERENCE_BASE_URL = "https://www.iana.org/assignments/media-types/media-types.xhtm";
-    private static final Pattern PATTERN_REGEX = Pattern.compile("\\[(.+?)\\]");
+        private static final String MIME_TYPE_BASE_URL = "https://www.iana.org/assignments/media-types/";
+        private static final String RFC_REFERENCE_BASE_URL = "https://tools.ietf.org/html/";    
+        private static final String MIME_TYPE_REFERENCE_BASE_URL = "https://www.iana.org/assignments/media-types/media-types.xhtm";
+        private static final Pattern PATTERN_REGEX = Pattern.compile("\\[(.+?)\\]");
     
-    /**
-     * Name of the file type
-     */
-    private final String _name;
-    
-    /**
-     * Mime type
-     */
-    private final String _mimeType;
-    
-    /**
-     * URL describing the mime type
-     */
-    private final String _mimeTypeUrl;
-    
-    /**
-     * Reference describing the mime type such as RFC
-     */
-    private final List<String> _reference;       
-    
-    /**
-     * URL of the reference
-     */
-    private List<String> _referenceURL;       
-    
-    public IanaEntry(final String name, final String mimeType, final String reference) {
-        this._name = name;
-        this._mimeType = mimeType;
-        this._reference = parseReference(reference);
-        this._mimeTypeUrl = MIME_TYPE_BASE_URL+_mimeType;
-        this._referenceURL = buildUrl(_reference);
-    }
-    
-    /**
-     * Parse the references and creates one entry by reference.
-     * @param reference
-     * @return the references.
-     */
-    private List<String> parseReference(final String reference) {
-        final List<String> refValues = new ArrayList<String>();
-        final Matcher matcher = PATTERN_REGEX.matcher(reference);
-        while (matcher.find()) {
-            System.out.println(matcher.group(1));
-            refValues.add(matcher.group(1));
+        /**
+         * Name of the file type.
+         */
+        private final String name;
+
+        /**
+         * Mime type.
+         */
+        private final String mimeType;
+
+        /**
+         * URL describing the mime type.
+         */
+        private final String mimeTypeUrl;
+
+        /**
+         * Reference describing the mime type such as RFC document.
+         */
+        private final List<String> reference;       
+
+        /**
+         * URL of the reference
+         */
+        private List<String> referenceURL;       
+
+        public IanaEntry(final String name, final String mimeType, final String ref) {
+                this.name = name;
+                this.mimeType = mimeType;
+                this.reference = parseReference(ref);
+                this.mimeTypeUrl = MIME_TYPE_BASE_URL+mimeType;
+                this.referenceURL = buildUrl(reference);
         }
-        return refValues;
-    }
-    
-    
-    private List<String> buildUrl(final List<String> references) {
-        List<String> urls = new ArrayList<String>(references);
-        for(String url:urls) {
-            if(url.toUpperCase().startsWith("RFC")) {
-                url = RFC_REFERENCE_BASE_URL+url;
-            } else if(url.startsWith("http")) {
-                // do nothing
-            } else {
-                url = MIME_TYPE_REFERENCE_BASE_URL+"#"+url;
-            }
+        
+        /**
+         * Returns the name of the file type.
+         */
+        public String getName() {
+                return name;
         }
-        return urls;
-    }
 
-    /**
-     * Returns the name of the file type.
-     * @return the _name
-     */
-    public String getName() {
-        return _name;
-    }
+        /**
+         * Returns the mime type.
+         */
+        public String getMimeType() {
+                return mimeType;
+        }
 
-    /**
-     * Returns the mime type.
-     * @return the _mimeType
-     */
-    public String getMimeType() {
-        return _mimeType;
-    }
+        /**
+         * Returns the URL of the web page describing the mime type.
+         */
+        public String getMimeTypeUrl() {
+                return mimeTypeUrl;
+        }
 
-    /**
-     * Returns the URL describing the mime type.
-     * @return the _mimeTypeUrl
-     */
-    public String getMimeTypeUrl() {
-        return _mimeTypeUrl;
-    }
+        /**
+         * Returns the references of the mime type such as RFC documents.
+         */
+        public List<String> getReference() {
+                return reference;
+        }
 
-    /**
-     * Returns the references of the mime type.
-     * @return the _reference
-     */
-    public List<String> getReference() {
-        return _reference;
-    }
+        /**
+         * Returns the URL of the references such as the URL of the RFC documents.
+         */
+        public List<String> getReferenceURL() {
+                return referenceURL;
+        }        
 
-    /**
-     * Returns the URL of the references.
-     * @return the _referenceURL
-     */
-    public List<String> getReferenceURL() {
-        return _referenceURL;
-    }
-    
+        /**
+         * Parses the references (such as RFC document) associated to a mime type.
+         * One or several references can be associated to a mime type. Each 
+         * reference is encompassed by this pattern [ ]
+         */
+        private List<String> parseReference(final String reference) {
+                final List<String> refValues = new ArrayList<String>();
+                final Matcher matcher = PATTERN_REGEX.matcher(reference);
+                while (matcher.find()) {
+                        refValues.add(matcher.group(1));
+                }
+                return refValues;
+        }
+
+        /**
+         * Creates the URL of each reference (such as RFC document) 
+         */
+        private List<String> buildUrl(final List<String> references) {
+                List<String> urls = new ArrayList<String>();
+                Iterator<String> iter = references.listIterator();
+                while(iter.hasNext()){
+                        String url = iter.next();
+                        if(url.toUpperCase().startsWith("RFC")) {
+                                url = RFC_REFERENCE_BASE_URL+url;
+                        } else if(url.startsWith("http")) {
+                            // do nothing
+                        } else {
+                                url = MIME_TYPE_REFERENCE_BASE_URL+"#"+url;
+                        }                    
+                        urls.add(url);
+                }
+                return urls;
+        }    
 }
