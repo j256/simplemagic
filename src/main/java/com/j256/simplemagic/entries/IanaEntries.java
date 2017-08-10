@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.j256.simplemagic.entries;
 
 import java.io.BufferedInputStream;
@@ -19,8 +14,8 @@ import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
 /**
- *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * Loads the IANA databases (build on 10 august 2017)
+ * @author Jean-Christophe Malapert (jcmalapert@gmail.com)
  */
 public class IanaEntries {
 
@@ -28,8 +23,14 @@ public class IanaEntries {
     private final static String INTERNAL_IANA_AUDIO_DB = "/iana_audio.gz";
     private final static String INTERNAL_IANA_FONT_DB = "/iana_font.gz";
     
+    /**
+     * The database
+     */
     private final Map<String, IanaEntry> _ianaDB;
 
+    /**
+     * Constructor.
+     */
     public IanaEntries() {
         this._ianaDB = new HashMap<String, IanaEntry>();
         loadDb(INTERNAL_IANA_APP_DB);
@@ -37,6 +38,10 @@ public class IanaEntries {
         loadDb(INTERNAL_IANA_FONT_DB);
     }
 
+    /**
+     * Loads the IANA database
+     * @param db 
+     */
     private void loadDb(String db) {        
         InputStream stream = getClass().getResourceAsStream(db);
         if (stream == null) {
@@ -76,6 +81,11 @@ public class IanaEntries {
         }
     }
     
+    /**
+     * Add an entry in the IANA database.
+     * @param mimeType mime type
+     * @param ianaEntry metadata of the mime type
+     */
     private void addMimeType(final String mimeType, final IanaEntry ianaEntry) {
         if(!mimeType.isEmpty()) {
             this._ianaDB.put(mimeType, ianaEntry);
@@ -83,14 +93,19 @@ public class IanaEntries {
     }
 
     /**
+     * Returns the IANA database.
      * @return the _ianaDB
      */
     public Map<String, IanaEntry> getIanaDB() {
         return _ianaDB;
     }
 
-    
-    public IanaEntry getIanaMetadata(String mimeType) {
+    /**
+     * Returns the IANA metadata for a specific mime type
+     * @param mimeType
+     * @return 
+     */
+    public IanaEntry getIanaMetadata(final String mimeType) {
         return this._ianaDB.getOrDefault(mimeType, null);
     }
 

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.j256.simplemagic.entries;
 
 import java.util.ArrayList;
@@ -11,8 +6,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * <a href="https://www.iana.org/assignments/media-types/media-types.xhtml">IANA metadata</a> coming from
+ * @author Jean-Christophe Malapert (jcmalapert@gmail.com)
  */
 public class IanaEntry {
     
@@ -21,10 +16,29 @@ public class IanaEntry {
     private static final String MIME_TYPE_REFERENCE_BASE_URL = "https://www.iana.org/assignments/media-types/media-types.xhtm";
     private static final Pattern PATTERN_REGEX = Pattern.compile("\\[(.+?)\\]");
     
+    /**
+     * Name of the file type
+     */
     private final String _name;
+    
+    /**
+     * Mime type
+     */
     private final String _mimeType;
+    
+    /**
+     * URL describing the mime type
+     */
     private final String _mimeTypeUrl;
+    
+    /**
+     * Reference describing the mime type such as RFC
+     */
     private final List<String> _reference;       
+    
+    /**
+     * URL of the reference
+     */
     private List<String> _referenceURL;       
     
     public IanaEntry(final String name, final String mimeType, final String reference) {
@@ -32,9 +46,15 @@ public class IanaEntry {
         this._mimeType = mimeType;
         this._reference = parseReference(reference);
         this._mimeTypeUrl = MIME_TYPE_BASE_URL+_mimeType;
+        this._referenceURL = buildUrl(_reference);
     }
     
-    private List<String> parseReference(String reference) {
+    /**
+     * Parse the references and creates one entry by reference.
+     * @param reference
+     * @return the references.
+     */
+    private List<String> parseReference(final String reference) {
         final List<String> refValues = new ArrayList<String>();
         final Matcher matcher = PATTERN_REGEX.matcher(reference);
         while (matcher.find()) {
@@ -43,6 +63,7 @@ public class IanaEntry {
         }
         return refValues;
     }
+    
     
     private List<String> buildUrl(final List<String> references) {
         List<String> urls = new ArrayList<String>(references);
@@ -59,6 +80,7 @@ public class IanaEntry {
     }
 
     /**
+     * Returns the name of the file type.
      * @return the _name
      */
     public String getName() {
@@ -66,6 +88,7 @@ public class IanaEntry {
     }
 
     /**
+     * Returns the mime type.
      * @return the _mimeType
      */
     public String getMimeType() {
@@ -73,6 +96,7 @@ public class IanaEntry {
     }
 
     /**
+     * Returns the URL describing the mime type.
      * @return the _mimeTypeUrl
      */
     public String getMimeTypeUrl() {
@@ -80,6 +104,7 @@ public class IanaEntry {
     }
 
     /**
+     * Returns the references of the mime type.
      * @return the _reference
      */
     public List<String> getReference() {
@@ -87,6 +112,7 @@ public class IanaEntry {
     }
 
     /**
+     * Returns the URL of the references.
      * @return the _referenceURL
      */
     public List<String> getReferenceURL() {

@@ -960,10 +960,18 @@ public enum ContentType {
 		}
         }
         
+        /**
+         * Returns the references of the mime type.
+         * @return the references
+         */
         public List<String> getReferences() {
             return ianaDB.getIanaMetadata(this.getMimeType()).getReference();
         }
         
+        /**
+         * Returns the URL of the references.
+         * @return the URL of the references.
+         */
         public List<String> getReferenceUrls() {
             return ianaDB.getIanaMetadata(this.getMimeType()).getReferenceURL();
         }        
