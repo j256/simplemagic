@@ -1,3 +1,6 @@
+0       string          SIMPLE\x20\x20= FITS data
+!:mime  application/fits
+
 0	lelong		0xc3cbc6c5	RISC OS Chunk data
 >12	string		OBJ_		\b, AOF object
 >12	string		LIB_		\b, ALF library
