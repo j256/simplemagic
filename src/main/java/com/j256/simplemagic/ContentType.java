@@ -1,6 +1,8 @@
 package com.j256.simplemagic;
 
+import com.j256.simplemagic.entries.IanaEntries;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -51,6 +53,8 @@ public enum ContentType {
 	DIFF("text/x-diff", "diff", "diff"),
 	/** TeX DVI output file */
 	DVI("application/x-dvi", "dvi", "dvi"),
+	/** FITS document */
+	FITS("application/fits", "fits", "fits"),        
 	/** Macromedia Flash data */
 	FLASH("application/x-shockwave-flash", "flash", "swf"),
 	/** Macromedia Flash movie file */
@@ -882,6 +886,7 @@ public enum ContentType {
 
 	private final static Map<String, ContentType> mimeTypeMap = new HashMap<String, ContentType>();
 	private final static Map<String, ContentType> fileExtensionMap = new HashMap<String, ContentType>();
+        private final static IanaEntries ianaDB = new IanaEntries();
 
 	static {
 		for (ContentType type : values()) {
@@ -953,5 +958,13 @@ public enum ContentType {
 		} else {
 			return type;
 		}
-	}
+        }
+        
+        public List<String> getReferences() {
+            return ianaDB.getIanaMetadata(this.getMimeType()).getReference();
+        }
+        
+        public List<String> getReferenceUrls() {
+            return ianaDB.getIanaMetadata(this.getMimeType()).getReferenceURL();
+        }        
 }
