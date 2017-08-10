@@ -41,6 +41,8 @@ public class ContentInfoUtilTest {
 	 */
 	private FileType[] fileTypes = new FileType[] { //
 			//
+			new FileType("/files/x.fits", ContentType.FITS, "fits", "application/fits", "FITS data",
+					false),            
 			new FileType("/files/x.gif", ContentType.GIF, "gif", "image/gif", "GIF image data, version 89a, 32 x 32",
 					false),
 			new FileType("/files/x.pdf", ContentType.PDF, "pdf", "application/pdf", "PDF document, version 1.3", false),
