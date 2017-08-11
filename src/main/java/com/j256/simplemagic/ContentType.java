@@ -179,6 +179,8 @@ public enum ContentType {
 	VCARD("text/x-vcard", "vcard", "vcf"),
 	/** Mpeg video */
 	VIDEO_MPEG("video/mpeg", "mpeg", "mpeg", "mpg", "mpe", "m1v", "m2v"),
+        /** VOTable data exchange format */
+        VOTABLE("application/x-votable+xml", "votable", "vot", "xml"),        
 	/** VRML modeling file */
 	VRML("model/vrml", "vrml", "wrl", "vrml"),
 	/** WAV audio */
@@ -974,5 +976,5 @@ public enum ContentType {
          */
         public List<String> getReferenceUrls() {
             return ianaDB.getIanaMetadata(this.getMimeType()).getReferenceURL();
-        }        
+        }   
 }
