@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.zip.GZIPInputStream;
 
 import com.j256.simplemagic.entries.MagicEntries;
+import java.net.URL;
 
 /**
  * <p>
@@ -186,6 +187,30 @@ public class ContentInfoUtil {
 		this.errorCallBack = errorCallBack;
 		this.magicEntries = readEntries(reader);
 	}
+        
+	/**
+	 * Return the content type for the URL or null if none of the magic entries matched. You might want to use
+	 * the {@link ContentInfoInputStreamWrapper} class to delegate to an input-stream and determine content information
+	 * at the same time.
+	 * 
+	 * @throws IOException
+	 *             If there was a problem reading from the input-stream.
+	 * @see ContentInfoInputStreamWrapper
+	 */        
+        public ContentInfo findMatch(final URL url) throws IOException  {
+            InputStream is = null;
+            try {
+                is = url.openStream();
+                ContentInfo contentInfo = findMatch(is);
+                return contentInfo;
+            } catch (IOException ex) {
+                throw new IOException(ex);
+            } finally {
+                if(is != null) {
+                    is.close();                
+                }
+            }
+        }
 
 	/**
 	 * Return the content type for the file-path or null if none of the magic entries matched.
@@ -205,6 +230,9 @@ public class ContentInfoUtil {
 	 */
 	public ContentInfo findMatch(File file) throws IOException {
 		int readSize = fileReadSize;
+                if(!file.canRead()) {
+                    throw new IOException("Unable to read "+ file.getName());
+                }              
 		if (file.length() < readSize) {
 			readSize = (int) file.length();
 		}
