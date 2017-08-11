@@ -1,5 +1,18 @@
-0       string          SIMPLE\x20\x20= FITS data
-!:mime  application/fits
+0	string		SIMPLE\x20\x20=	FITS data
+!:mime	application/fits
+
+0       string          \<?xml\ version="
+>15     string          >\0
+>>23    search/400      \<VOTABLE	VOTABLE data exchange format
+!:mime  application/x-votable+xml
+
+0       string          \<?xml\ version="
+>15     string          >\0
+>>23    search/400      \<xs:schema     XSD schema
+
+0       string          OggS		Ogg, an open source media container format
+!:mime  application/ogg
+
 
 0	lelong		0xc3cbc6c5	RISC OS Chunk data
 >12	string		OBJ_		\b, AOF object
@@ -5733,6 +5746,7 @@
 0	lelong	20000630		OpenEXR image data
 
 0	string	CDF\001			NetCDF Data Format data
+!:mime application/x-netcdf
 
 0	belong	0x0e031301	Hierarchical Data Format (version 4) data
 !:mime	application/x-hdf
@@ -10329,7 +10343,7 @@
 >10	byte&0x0B	2		- ADPCM3 encoding
 >10	byte&0x0B	3		- ADPCM4 encoding
 >10	byte&0x0B	8		- New ADPCM3 encoding
->10	byte&0x04	4		with resync
+>10	byte&0x04       4		with resync
 
 # EBML id:
 0		belong		0x1a45dfa3
@@ -10340,3 +10354,6 @@
 !:mime  video/webm
 >>&1	string		matroska			Matroska data
 !:mime  video/x-matroska
+
+
+
