@@ -198,18 +198,18 @@ public class ContentInfoUtil {
 	 * @see ContentInfoInputStreamWrapper
 	 */        
         public ContentInfo findMatch(final URL url) throws IOException  {
-            InputStream is = null;
-            try {
-                is = url.openStream();
-                ContentInfo contentInfo = findMatch(is);
-                return contentInfo;
-            } catch (IOException ex) {
-                throw new IOException(ex);
-            } finally {
-                if(is != null) {
-                    is.close();                
+                InputStream is = null;
+                try {
+                        is = url.openStream();
+                        ContentInfo contentInfo = findMatch(is);
+                        return contentInfo;
+                } catch (IOException ex) {
+                        throw new IOException(ex);
+                } finally {
+                        if(is != null) {
+                                is.close();                
+                        }
                 }
-            }
         }
 
 	/**
