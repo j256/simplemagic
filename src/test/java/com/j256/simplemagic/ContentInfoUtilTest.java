@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.net.URL;
 import java.util.Arrays;
 
 import org.easymock.EasyMock;
@@ -206,8 +207,15 @@ public class ContentInfoUtilTest {
 		checkFile(util, new FileType("/files/x.gif", ContentType.GIF, "gif", "image/gif",
 				"GIF image data, version 89a, 32 x 32", false));
 		checkFile(util, new FileType("/files/jfif.jpg", ContentType.JPEG, "jpeg", "image/jpeg",
-				"JPEG image data, JFIF standard 1.01", false));
-	}
+				"JPEG image data, JFIF standard 1.01", false));                
+	}                        
+        
+        @Test
+        public void testNetCDFMagicFile() throws IOException {
+            ContentInfoUtil util = new ContentInfoUtil();
+            ContentInfo info = util.findMatch(new URL("https://www.unidata.ucar.edu/software/netcdf/examples/WMI_Lear.nc"));
+            assertEquals("Mime-type of netCDF", "application/x-netcdf", info.getMimeType());
+        }         
 
 	@Test
 	public void testPerformanceRun() throws Exception {
@@ -229,6 +237,12 @@ public class ContentInfoUtilTest {
 		ContentInfoUtil util = getContentInfoUtil();
 		assertEquals(ContentType.EMPTY, util.findMatch(new byte[0]).getContentType());
 	}
+        
+	@Test(expected = IOException.class)
+	public void testUnableToReadFile() throws IOException {
+		ContentInfoUtil util = getContentInfoUtil();
+                util.findMatch(new File("/ttttttt/fileNotExist"));
+	}        
 
 	@Test
 	public void testFileRead() throws IOException {
