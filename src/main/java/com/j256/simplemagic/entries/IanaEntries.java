@@ -9,8 +9,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -23,7 +21,7 @@ import java.util.zip.GZIPInputStream;
  * </ul>
  * In addition to these elements, two URLs are created in order to locate the
  * description of the mime type and the URL of the articles.
- * @author Jean-Christophe Malapert (jcmalapert@gmail.com)
+ * @author Jean-Christophe Malapert
  */
 public class IanaEntries {
 
