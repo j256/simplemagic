@@ -28,6 +28,11 @@ public class MiddleEndianConverterTest {
 		long val = converter.convertId3(0, new byte[] { 1, 2, 3, 4 }, 4);
 		// BADC: 2*2^21 + 1*2^14 + 4*2^7 + 3
 		assertEquals(4211203, val);
+
+		// shift over to test offset
+		val = converter.convertId3(2, new byte[] { 0, 0, 1, 2, 3, 4 }, 4);
+		// BADC: 2*2^21 + 1*2^14 + 4*2^7 + 3
+		assertEquals(4211203, val);
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
