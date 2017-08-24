@@ -36,15 +36,15 @@ public class MiddleEndianConverter implements EndianConverter {
 		if (size != 4) {
 			throw new UnsupportedOperationException("Middle-endian only supports 4-byte integers");
 		}
-		if (offset + size > bytes.length) {
+		if (offset < 0 || offset + size > bytes.length) {
 			return null;
 		}
 		long value = 0;
 		// BADC
-		value = (value << shift) | (bytes[1] & mask);
-		value = (value << shift) | (bytes[0] & mask);
-		value = (value << shift) | (bytes[3] & mask);
-		value = (value << shift) | (bytes[2] & mask);
+		value = (value << shift) | (bytes[offset + 1] & mask);
+		value = (value << shift) | (bytes[offset + 0] & mask);
+		value = (value << shift) | (bytes[offset + 3] & mask);
+		value = (value << shift) | (bytes[offset + 2] & mask);
 		return value;
 	}
 }

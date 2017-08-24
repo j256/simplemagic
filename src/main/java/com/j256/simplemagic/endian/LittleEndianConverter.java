@@ -31,8 +31,8 @@ public class LittleEndianConverter implements EndianConverter {
 		return result;
 	}
 
-	public Long convertNumber(int offset, byte[] bytes, int size, int shift, int mask) {
-		if (offset + size > bytes.length) {
+	private Long convertNumber(int offset, byte[] bytes, int size, int shift, int mask) {
+		if (offset < 0 || offset + size > bytes.length) {
 			return null;
 		}
 		long value = 0;

@@ -19,6 +19,7 @@ public class MiddleEndianConverterTest {
 		assertEquals(33620995, val);
 		byte[] outBytes = converter.convertToByteArray(val, 4);
 		assertTrue(Arrays.equals(bytes, outBytes));
+		assertNull(converter.convertNumber(-1, bytes, 4));
 	}
 
 	@Test

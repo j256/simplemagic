@@ -1,6 +1,7 @@
 package com.j256.simplemagic.endian;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
@@ -16,6 +17,8 @@ public class BigEndianConverterTest {
 		Long result = converter.convertNumber(0, bytes, 8);
 		byte[] outBytes = converter.convertToByteArray(result, 8);
 		assertTrue(Arrays.equals(bytes, outBytes));
+		assertNull(converter.convertNumber(0, bytes, bytes.length + 1));
+		assertNull(converter.convertNumber(-1, bytes, bytes.length));
 	}
 
 	@Test

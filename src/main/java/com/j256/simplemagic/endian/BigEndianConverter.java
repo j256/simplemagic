@@ -33,7 +33,7 @@ public class BigEndianConverter implements EndianConverter {
 	}
 
 	private Long convertNumber(int offset, byte[] bytes, int size, int shift, int mask) {
-		if (offset + size > bytes.length) {
+		if (offset < 0 || offset + size > bytes.length) {
 			return null;
 		}
 		long value = 0;
