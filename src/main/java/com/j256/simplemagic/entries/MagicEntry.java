@@ -125,7 +125,22 @@ public class MagicEntry {
 		return sb.toString();
 	}
 
-	/**
+	public String toString2() {
+		StringBuilder sb = new StringBuilder(toString() + ",addOffset " + addOffset +
+			",offset " + offset + ",offsetInfo " + offsetInfo + 
+			",matcher " + matcher.getClass().getSimpleName() + 
+			",andValue " + andValue + ",unsignedType " + unsignedType + 
+			",formatSpacePrefix " + formatSpacePrefix +
+			",clearFormat " + clearFormat);
+		if (children != null) {
+			for (MagicEntry entry: children) {
+				sb.append("\n").append(entry.toString2());
+			}
+		}
+		return sb.toString();
+	}
+
+        /**
 	 * Main processing method which can go recursive.
 	 */
 	private ContentData matchBytes(byte[] bytes, int prevOffset, int level, ContentData contentData) {
@@ -256,6 +271,11 @@ public class MagicEntry {
 			} else {
 				return (int) (val + add);
 			}
+		}
+		
+		public String toString() {
+			return "[" + offset + "," + converter.getClass().getSimpleName() +
+					"," + isId3 + "," + size + "," + add + "]";
 		}
 	}
 }
