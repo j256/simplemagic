@@ -219,21 +219,24 @@ public class StringType implements MagicMatcher {
 				case '0':
 				case '1':
 				case '2':
-				case '3': {
-					// \017
-					int len = 3;
-					if (pos + len <= pattern.length()) {
-						int octal = radixCharsToChar(pattern, pos, len, 8);
-						if (octal >= 0) {
-							sb.append((char) octal);
-							pos += len - 1;
+				case '3': 
+				case '4':
+				case '5':
+				case '6':
+				case '7': {
+					// \o or \oo or \ooo ... where o is an octal digit
+					int octal = Character.digit(ch, 8);
+					for (int i = 1; i <= 2 && pos + 1 < pattern.length(); i++) {
+						ch = pattern.charAt(pos + 1);
+						int digit = Character.digit(ch, 8);
+						if (digit >= 0) {
+							octal = octal * 8 + digit;
+							pos++;
+						} else {
 							break;
 						}
-					} else if (ch == '0') {
-						sb.append('\0');
-					} else {
-						sb.append(ch);
 					}
+					sb.append((char) (octal & 0xff));
 					break;
 				}
 				case 'r':
@@ -242,17 +245,27 @@ public class StringType implements MagicMatcher {
 				case 't':
 					sb.append('\t');
 					break;
+				case 'a':
+					sb.append('\007');
+					break;
+				case 'v':
+					sb.append('\013');
+					break;
 				case 'x': {
-					// \xD9
-					int len = 2;
-					if (pos + len < pattern.length()) {
-						int hex = radixCharsToChar(pattern, pos + 1, len, 16);
-						if (hex >= 0) {
-							sb.append((char) hex);
-							pos += len;
-							break;
+					// \xh or \xhh ... where h is a hexadecimal digit
+					int hex = Character.digit(pattern.charAt(pos + 1), 16);
+					if (hex >= 0) {
+						pos++;
+						if (pos + 1 < pattern.length()) {
+							int digit = Character.digit(pattern.charAt(pos + 1), 16);
+							if (digit >= 0) {
+								hex = hex * 16 + digit;
+								pos++;
+							}
 						}
+						sb.append((char) (hex & 0xff));
 					} else {
+						// if there is no valid hex digit treat \x as x
 						sb.append(ch);
 					}
 					break;
@@ -265,21 +278,6 @@ public class StringType implements MagicMatcher {
 			}
 		}
 		return sb.toString();
-	}
-
-	private int radixCharsToChar(String pattern, int pos, int len, int radix) {
-		if (pos + len > pattern.length()) {
-			return -1;
-		}
-		int val = 0;
-		for (int i = 0; i < len; i++) {
-			int digit = Character.digit(pattern.charAt(pos + i), radix);
-			if (digit < 0) {
-				return -1;
-			}
-			val = val * radix + digit;
-		}
-		return val;
 	}
 
 	/**
