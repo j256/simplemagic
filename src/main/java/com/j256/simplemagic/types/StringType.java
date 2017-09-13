@@ -187,7 +187,7 @@ public class StringType implements MagicMatcher {
 	/**
 	 * Pre-processes the pattern by handling \007 type of escapes and others.
 	 */
-	private String preProcessPattern(String pattern) {
+	public static String preProcessPattern(String pattern) {
 		int index = pattern.indexOf('\\');
 		if (index < 0) {
 			return pattern;
