@@ -53,7 +53,7 @@ public enum StringOperator {
 
 	/**
 	 * Test 2 characters. If this is the last character then the operator might want to be more strict in its testing.
-	 * For example, "dogs" > "dog" but 'd', 'o', and 'g' should be tested as >=.
+	 * For example, "dogs" &gt; "dog" but 'd', 'o', and 'g' should be tested as &ge;.
 	 */
 	public abstract boolean doTest(char extractedChar, char testChar, boolean lastChar);
 
