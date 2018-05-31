@@ -29,7 +29,7 @@ public abstract class NumberType implements MagicMatcher {
 	public abstract int getBytesPerType();
 
 	/**
-	 * Return -1 if extractedValue is < testValue, 1 if it is >, 0 if it is equals.
+	 * Return -1 if extractedValue is &lt; testValue, 1 if it is &gt;, 0 if it is equals.
 	 */
 	public abstract int compare(boolean unsignedType, Number extractedValue, Number testValue);
 
