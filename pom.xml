@@ -9,7 +9,8 @@
 	<packaging>jar</packaging>
 	<name>Simple Magic</name>
 	<url>http://256stuff.com/sources/simplemagic/</url>
-	<description>Simple Magic Classes</description>
+	<description>Simple Magic number package which allows content-type (mime-type) determination from files
+	and byte arrays.</description>
 	<licenses>
 		<license>
 			<name>ISC License</name>
@@ -254,3 +255,4 @@
 		</dependency>
 	</dependencies>
 </project>
+
