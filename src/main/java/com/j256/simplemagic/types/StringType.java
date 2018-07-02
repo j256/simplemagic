@@ -63,6 +63,9 @@ public class StringType implements MagicMatcher {
 					case 'W':
 						// XXX: no idea what these do
 						break;
+					default:
+						// ignore it I guess
+						break;
 				}
 			}
 		}

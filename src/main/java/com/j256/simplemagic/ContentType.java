@@ -1,9 +1,11 @@
 package com.j256.simplemagic;
 
-import com.j256.simplemagic.entries.IanaEntries;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.j256.simplemagic.entries.IanaEntries;
+import com.j256.simplemagic.entries.IanaEntry;
 
 /**
  * Enumerated type of the content if it is known by SimpleMagic matched from the mime-type. This information is _not_
@@ -54,7 +56,7 @@ public enum ContentType {
 	/** TeX DVI output file */
 	DVI("application/x-dvi", "dvi", "dvi"),
 	/** FITS document */
-	FITS("application/fits", "fits", "fits"),        
+	FITS("application/fits", "fits", "fits"),
 	/** Macromedia Flash data */
 	FLASH("application/x-shockwave-flash", "flash", "swf"),
 	/** Macromedia Flash movie file */
@@ -886,20 +888,18 @@ public enum ContentType {
 
 	private final static Map<String, ContentType> mimeTypeMap = new HashMap<String, ContentType>();
 	private final static Map<String, ContentType> fileExtensionMap = new HashMap<String, ContentType>();
-        private final static IanaEntries ianaDB = new IanaEntries();
+	private static IanaEntries ianaEntries;
 
 	static {
 		for (ContentType type : values()) {
 			if (type.mimeType != null) {
-				if (mimeTypeMap.put(type.mimeType.toLowerCase(), type) != null) {
-					// System.err.println("overriding mime-type " + type.mimeType.toLowerCase());
-				}
+				// NOTE: this may overwrite this mapping
+				mimeTypeMap.put(type.mimeType.toLowerCase(), type);
 			}
 			if (type.fileExtensions != null) {
 				for (String fileExtension : type.fileExtensions) {
-					if (fileExtensionMap.put(fileExtension, type) != null) {
-						// System.err.println("overriding file-extension " + fileExtension);
-					}
+					// NOTE: this may overwrite this mapping
+					fileExtensionMap.put(fileExtension, type);
 				}
 			}
 		}
@@ -908,11 +908,13 @@ public enum ContentType {
 	private final String mimeType;
 	private final String simpleName;
 	private final String[] fileExtensions;
+	private final IanaEntry ianaEntry;
 
 	private ContentType(String mimeType, String simpleName, String... fileExtensions) {
 		this.mimeType = mimeType;
 		this.simpleName = simpleName;
 		this.fileExtensions = fileExtensions;
+		this.ianaEntry = findIanaEntryByMimeType(mimeType);
 	}
 
 	/**
@@ -958,21 +960,34 @@ public enum ContentType {
 		} else {
 			return type;
 		}
-        }
-        
-        /**
-         * Returns the references of the mime type.
-         * @return the references
-         */
-        public List<String> getReferences() {
-            return ianaDB.getIanaMetadata(this.getMimeType()).getReference();
-        }
-        
-        /**
-         * Returns the URL of the references.
-         * @return the URL of the references.
-         */
-        public List<String> getReferenceUrls() {
-            return ianaDB.getIanaMetadata(this.getMimeType()).getReferenceURL();
-        }        
+	}
+
+	/**
+	 * Returns the references of the mime type or null if none.
+	 */
+	public List<String> getReferences() {
+		if (ianaEntry == null) {
+			return null;
+		} else {
+			return ianaEntry.getReferences();
+		}
+	}
+
+	/**
+	 * Returns the URL of the references or null if none.
+	 */
+	public List<String> getReferenceUrls() {
+		if (ianaEntry == null) {
+			return null;
+		} else {
+			return ianaEntry.getReferenceUrls();
+		}
+	}
+
+	private static IanaEntry findIanaEntryByMimeType(String mimeType) {
+		if (ianaEntries == null) {
+			ianaEntries = new IanaEntries();
+		}
+		return ianaEntries.lookupByMimeType(mimeType);
+	}
 }

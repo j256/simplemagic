@@ -54,7 +54,6 @@ public class ContentInfoUtil {
 
 	private final MagicEntries magicEntries;
 	private int fileReadSize = DEFAULT_READ_SIZE;
-	private ErrorCallBack errorCallBack;
 
 	/**
 	 * Construct a magic utility using the internal magic file built into the package.
@@ -76,10 +75,9 @@ public class ContentInfoUtil {
 	 *             If there was a problem reading the magic entries from the internal magic file.
 	 */
 	public ContentInfoUtil(ErrorCallBack errorCallBack) {
-		this.errorCallBack = errorCallBack;
 		if (internalMagicEntries == null) {
 			try {
-				internalMagicEntries = readEntriesFromResource(INTERNAL_MAGIC_FILE);
+				internalMagicEntries = readEntriesFromResource(INTERNAL_MAGIC_FILE, errorCallBack);
 			} catch (IOException e) {
 				throw new IllegalStateException(
 						"Could not load entries from internal magic file: " + INTERNAL_MAGIC_FILE, e);
@@ -115,11 +113,10 @@ public class ContentInfoUtil {
 	 *             If there was a problem reading the magic entries from the internal magic file.
 	 */
 	public ContentInfoUtil(String fileOrDirectoryOrResourcePath, ErrorCallBack errorCallBack) throws IOException {
-		this.errorCallBack = errorCallBack;
-		MagicEntries magicEntries = readEntriesFromResource(fileOrDirectoryOrResourcePath);
+		MagicEntries magicEntries = readEntriesFromResource(fileOrDirectoryOrResourcePath, errorCallBack);
 		if (magicEntries == null) {
 			File file = new File(fileOrDirectoryOrResourcePath);
-			magicEntries = readEntriesFromFile(file);
+			magicEntries = readEntriesFromFile(file, errorCallBack);
 		}
 		if (magicEntries == null) {
 			throw new IllegalArgumentException(
@@ -152,8 +149,7 @@ public class ContentInfoUtil {
 	 *             If there was a problem reading the magic entries from the internal magic file.
 	 */
 	public ContentInfoUtil(File fileOrDirectory, ErrorCallBack errorCallBack) throws IOException {
-		this.errorCallBack = errorCallBack;
-		this.magicEntries = readEntriesFromFile(fileOrDirectory);
+		this.magicEntries = readEntriesFromFile(fileOrDirectory, errorCallBack);
 		if (this.magicEntries == null) {
 			throw new IllegalArgumentException(
 					"Magic path specified is not a file, directory, or resource: " + fileOrDirectory);
@@ -183,8 +179,7 @@ public class ContentInfoUtil {
 	 *             If there was a problem reading the magic entries from the reader.
 	 */
 	public ContentInfoUtil(Reader reader, ErrorCallBack errorCallBack) throws IOException {
-		this.errorCallBack = errorCallBack;
-		this.magicEntries = readEntries(reader);
+		this.magicEntries = readEntries(reader, errorCallBack);
 	}
 
 	/**
@@ -312,17 +307,19 @@ public class ContentInfoUtil {
 	}
 
 	/**
-	 * Set our class which will get called whenever we get a configuration error.
+	 * @deprecated Not used since it is only passed into the constructor.
 	 */
+	@Deprecated
 	public void setErrorCallBack(ErrorCallBack errorCallBack) {
-		this.errorCallBack = errorCallBack;
+		// no op
 	}
 
-	private MagicEntries readEntriesFromFile(File fileOrDirectory) throws FileNotFoundException, IOException {
+	private MagicEntries readEntriesFromFile(File fileOrDirectory, ErrorCallBack errorCallBack)
+			throws FileNotFoundException, IOException {
 		if (fileOrDirectory.isFile()) {
 			FileReader reader = new FileReader(fileOrDirectory);
 			try {
-				return readEntries(reader);
+				return readEntries(reader, errorCallBack);
 			} finally {
 				closeQuietly(reader);
 			}
@@ -331,7 +328,7 @@ public class ContentInfoUtil {
 			for (File subFile : fileOrDirectory.listFiles()) {
 				FileReader fr = new FileReader(subFile);
 				try {
-					readEntries(entries, fr);
+					readEntries(entries, fr, errorCallBack);
 				} catch (IOException e) {
 					// ignore the file
 				} finally {
@@ -345,7 +342,7 @@ public class ContentInfoUtil {
 		}
 	}
 
-	private MagicEntries readEntriesFromResource(String resource) throws IOException {
+	private MagicEntries readEntriesFromResource(String resource, ErrorCallBack errorCallBack) throws IOException {
 		InputStream stream = getClass().getResourceAsStream(resource);
 		if (stream == null) {
 			return null;
@@ -359,21 +356,21 @@ public class ContentInfoUtil {
 				reader = new InputStreamReader(new BufferedInputStream(stream));
 			}
 			stream = null;
-			return readEntries(reader);
+			return readEntries(reader, errorCallBack);
 		} finally {
 			closeQuietly(reader);
 			closeQuietly(stream);
 		}
 	}
 
-	private MagicEntries readEntries(Reader reader) throws IOException {
+	private MagicEntries readEntries(Reader reader, ErrorCallBack errorCallBack) throws IOException {
 		MagicEntries entries = new MagicEntries();
-		readEntries(entries, reader);
+		readEntries(entries, reader, errorCallBack);
 		entries.optimizeFirstBytes();
 		return entries;
 	}
 
-	private void readEntries(MagicEntries entries, Reader reader) throws IOException {
+	private void readEntries(MagicEntries entries, Reader reader, ErrorCallBack errorCallBack) throws IOException {
 		BufferedReader lineReader = new BufferedReader(reader);
 		try {
 			entries.readEntries(lineReader, errorCallBack);

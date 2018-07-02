@@ -1,5 +1,9 @@
-1.13: ?/?/2017
+1.13: 7/2/2018
+	* Added fits support and IANA metadata.  Thanks much to Jean-Christophe.
+	* Added better protection against negative offsets.  Also fixed middle endian converter.
+	* Better protection and testing for number converters.
 	* Fixed problem with resource or file detection.
+	* Fix negative pstring length issue.
 	* Added more loggers.
 
 1.12: 6/9/2017
