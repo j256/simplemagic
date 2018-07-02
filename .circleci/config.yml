@@ -6,23 +6,25 @@ jobs:
       - image: circleci/openjdk:8-jdk-browsers
     steps:
       - checkout
+      - restore_cache:
+          key: j256-simplemagic-{{ checksum "pom.xml" }}
       - run:
-        name: get the maven project dependencies
-        command: mvn dependency:go-offline
+          name: get the maven project dependencies
+          command: mvn dependency:go-offline
       # save the project dependencies
       - save_cache:
-        paths:
-          - ~/.m2
-        key: j256-simplemagic-{{ checksum "pom.xml" }}
+          paths:
+            - ~/.m2
+          key: j256-simplemagic-{{ checksum "pom.xml" }}
       - run:
-        name: mvn build and tests
-        command: mvn package
+          name: mvn build and tests
+          command: mvn package
       # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard. 
       - store_test_results: 
-        path: target/surefire-reports
+          path: target/surefire-reports
       - run:
-        name: Generate JaCoCo report
-        command: mvn jacoco:report
+          name: Generate JaCoCo report
+          command: mvn jacoco:report
       - run:
-        name: Upload coverage report to CodeCov
-        command: bash <(curl -s https://codecov.io/bash)
+          name: Upload coverage report to CodeCov
+          command: bash <(curl -s https://codecov.io/bash)
