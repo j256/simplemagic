@@ -1,9 +1,0 @@
-# config file for circleci
-machine:
-  java:
-    version: openjdk8
-
-test:
-  post:
-    - mvn jacoco:report
-    - bash <(curl -s https://codecov.io/bash)
