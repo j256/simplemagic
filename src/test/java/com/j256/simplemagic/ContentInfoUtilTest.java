@@ -41,8 +41,7 @@ public class ContentInfoUtilTest {
 	 */
 	private FileType[] fileTypes = new FileType[] { //
 			//
-			new FileType("/files/x.fits", ContentType.FITS, "fits", "application/fits", "FITS data",
-					false),            
+			new FileType("/files/x.fits", ContentType.FITS, "fits", "application/fits", "FITS data", false),
 			new FileType("/files/x.gif", ContentType.GIF, "gif", "image/gif", "GIF image data, version 89a, 32 x 32",
 					false),
 			new FileType("/files/x.pdf", ContentType.PDF, "pdf", "application/pdf", "PDF document, version 1.3", false),
@@ -287,7 +286,6 @@ public class ContentInfoUtilTest {
 		magicFile.createNewFile();
 		ContentInfoUtil util = new ContentInfoUtil(magicFile);
 		util.setFileReadSize(1024);
-		util.setErrorCallBack(null);
 		FileType fileType = fileTypes[0];
 		assertEquals(ContentType.EMPTY, util.findMatch(fileType.fileName).getContentType());
 	}
@@ -298,7 +296,6 @@ public class ContentInfoUtilTest {
 		magicFile.createNewFile();
 		ContentInfoUtil util = new ContentInfoUtil(new FileReader(magicFile));
 		util.setFileReadSize(1024);
-		util.setErrorCallBack(null);
 		FileType fileType = fileTypes[0];
 		assertEquals(ContentType.EMPTY, util.findMatch(fileType.fileName).getContentType());
 	}
@@ -307,7 +304,6 @@ public class ContentInfoUtilTest {
 	public void testMagicFileNoGz() throws IOException {
 		ContentInfoUtil util = new ContentInfoUtil("/magic", null);
 		util.setFileReadSize(1024);
-		util.setErrorCallBack(null);
 		FileType fileType = fileTypes[0];
 		assertEquals(ContentType.EMPTY, util.findMatch(fileType.fileName).getContentType());
 	}
@@ -329,6 +325,19 @@ public class ContentInfoUtilTest {
 		ContentInfoUtil util = getContentInfoUtil();
 		ContentInfo info = util.findMatch(anotherHtml.getBytes());
 		assertEquals(ContentType.HTML, info.getContentType());
+	}
+
+	/**
+	 * Thanks much @charles-jacobsen.
+	 */
+	@Test
+	public void negativeStringOffsetTest() {
+		byte[] x = { 77, 90, -19, -22, 26, -86, -36, 125, 81, 56, 92, 49, -27, 85, 125, 34, 88, -103, -55, 58, -21, 23,
+				8, 48, -11, 121, 85, -26, -30, 45, 3, 39, -122, -68, 87, -26, 23, -15, -117, 104, 76, -100, -51, 36,
+				-100, 29, 42, -69, -8, 56, -51, -85, 6, -36, -118, -101, -86, -68, -22, -98, -20, 67, -44, -34, -62, 37,
+				-38, -12, -30 };
+		ContentInfoUtil util = new ContentInfoUtil();
+		util.findMatch(x);
 	}
 
 	private void copyResourceToFile(String resource, File outputFile) throws IOException {
