@@ -203,10 +203,11 @@ public class StringType implements MagicMatcher {
 		}
 
 		StringBuilder sb = new StringBuilder();
-		for (int pos = 0; pos < pattern.length(); pos++) {
+		for (int pos = 0; pos < pattern.length();) {
 			char ch = pattern.charAt(pos);
 			if (ch != '\\') {
 				sb.append(ch);
+				pos++;
 				continue;
 			}
 			if (pos + 1 >= pattern.length()) {
@@ -218,51 +219,45 @@ public class StringType implements MagicMatcher {
 			switch (ch) {
 				case 'b':
 					sb.append('\b');
+					pos++;
 					break;
 				case 'f':
 					sb.append('\f');
+					pos++;
 					break;
 				case 'n':
 					sb.append('\n');
+					pos++;
 					break;
 				case '0':
 				case '1':
 				case '2':
-				case '3': {
-					// \017
-					int len = 3;
-					if (pos + len <= pattern.length()) {
-						int octal = radixCharsToChar(pattern, pos, len, 8);
-						if (octal >= 0) {
-							sb.append((char) octal);
-							pos += len - 1;
-							break;
-						}
-					} else if (ch == '0') {
-						sb.append('\0');
-					} else {
-						sb.append(ch);
-					}
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7': {
+					// 1-3 octal characters: \1 \01 or \017
+					pos += radixCharsToChar(sb, pattern, pos, 3, 8);
 					break;
 				}
 				case 'r':
 					sb.append('\r');
+					pos++;
 					break;
 				case 't':
 					sb.append('\t');
+					pos++;
 					break;
 				case 'x': {
-					// \xD9
-					int len = 2;
-					if (pos + len < pattern.length()) {
-						int hex = radixCharsToChar(pattern, pos + 1, len, 16);
-						if (hex >= 0) {
-							sb.append((char) hex);
-							pos += len;
-							break;
-						}
+					// 1-2 hex characters: \xD or \xD9
+					int adjust = radixCharsToChar(sb, pattern, pos + 1, 2, 16);
+					if (adjust > 0) {
+						// adjust by 1 for the x
+						pos += 1 + adjust;
 					} else {
 						sb.append(ch);
+						pos++;
 					}
 					break;
 				}
@@ -270,25 +265,30 @@ public class StringType implements MagicMatcher {
 				case '\\':
 				default:
 					sb.append(ch);
+					pos++;
 					break;
 			}
 		}
 		return sb.toString();
 	}
 
-	private int radixCharsToChar(String pattern, int pos, int len, int radix) {
-		if (pos + len > pattern.length()) {
-			return -1;
-		}
+	private int radixCharsToChar(StringBuilder sb, String pattern, int pos, int maxLen, int radix) {
 		int val = 0;
-		for (int i = 0; i < len; i++) {
+		int i = 0;
+		for (; i < maxLen; i++) {
+			if (pos + i >= pattern.length()) {
+				break;
+			}
 			int digit = Character.digit(pattern.charAt(pos + i), radix);
 			if (digit < 0) {
-				return -1;
+				break;
 			}
 			val = val * radix + digit;
 		}
-		return val;
+		if (i > 0) {
+			sb.append((char) val);
+		}
+		return i;
 	}
 
 	/**
