@@ -1,4 +1,5 @@
 1.14: X/X/2018
+	* Added support for hbs extension as the handlebars template file.  Thanks to todorov7.
 	* Fixed problem with negative string offsets.  Thanks much to charles-jacobsen.
 
 1.13: 7/2/2018
