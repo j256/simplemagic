@@ -42,6 +42,7 @@ public class RegexType implements MagicMatcher {
 				}
 			}
 		}
+		testStr = PatternUtils.preProcessPattern(testStr);
 		patternInfo.pattern = Pattern.compile(".*(" + testStr + ").*", patternInfo.patternFlags);
 		return patternInfo;
 	}
