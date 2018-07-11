@@ -1,4 +1,4 @@
-1.14: X/X/2018
+1.14: 7/11/2018
 	* Added support for hbs extension as the handlebars template file.  Thanks to todorov7.
 	* Added support for multiple octal and hex lengths to be more compatible.  Thanks to crawley.
 	* Added preprocessing of regex strings to handle escape characters.  Thanks to crawley.
