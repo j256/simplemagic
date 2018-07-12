@@ -23,7 +23,7 @@ import java.util.zip.GZIPInputStream;
  * In addition to these elements, two URLs are created in order to locate the description of the mime type and the URL
  * of the articles.
  * 
- * @author Jean-Christophe Malapert (jcmalapert@gmail.com)
+ * @author Jean-Christophe Malapert
  */
 public class IanaEntries {
 

@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * <a href="https://www.iana.org/assignments/media-types/media-types.xhtml">IANA metadata</a>.
  * 
- * @author Jean-Christophe Malapert (jcmalapert@gmail.com)
+ * @author Jean-Christophe Malapert
  */
 public class IanaEntry {
 
