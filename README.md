@@ -9,6 +9,7 @@ detects the contents of a file. It uses either internal config files or can read
 
 * For more information, visit the [home page](http://256stuff.com/sources/simplemagic/).
 * The source code be found on the [git repository](https://github.com/j256/simplemagic).  [![CircleCI](https://circleci.com/gh/j256/simplemagic.svg?style=svg)](https://circleci.com/gh/j256/simplemagic) [![CodeCov](https://img.shields.io/codecov/c/github/j256/simplemagic.svg)](https://codecov.io/github/j256/simplemagic/)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fj256%2Fsimplemagic.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fj256%2Fsimplemagic?ref=badge_shield)
 * Maven packages are published via [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.j256.simplemagic/simplemagic/badge.svg?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/com.j256.simplemagic/simplemagic/)
 
 Enjoy, Gray Watson
@@ -53,3 +54,7 @@ For example:
 # ChangeLog Release Notes
 
 See the [ChangeLog.txt file](src/main/javadoc/doc-files/changelog.txt).
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fj256%2Fsimplemagic.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fj256%2Fsimplemagic?ref=badge_large)
