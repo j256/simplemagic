@@ -4,10 +4,10 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -20,7 +20,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.Arrays;
 
 import org.easymock.EasyMock;
 import org.junit.BeforeClass;
@@ -405,7 +404,7 @@ public class ContentInfoUtilTest {
 		ByteArrayOutputStream checkOutputStream = new ByteArrayOutputStream();
 		copyStream(wrappedStream, checkOutputStream);
 
-		assertTrue(Arrays.equals(resourceBytes, checkOutputStream.toByteArray()));
+    assertArrayEquals(resourceBytes, checkOutputStream.toByteArray());
 		try {
 			return wrappedStream.findMatch();
 		} finally {

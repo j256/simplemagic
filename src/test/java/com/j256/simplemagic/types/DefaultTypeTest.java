@@ -1,7 +1,7 @@
 package com.j256.simplemagic.types;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
@@ -15,7 +15,7 @@ public class DefaultTypeTest {
 		DefaultType type = new DefaultType();
 		type.convertTestString(null, null);
 		type.extractValueFromBytes(0, null, true);
-		assertTrue(type.isMatch(null, null, false, null, new MutableOffset(0), null) != null);
+    assertNotNull(type.isMatch(null, null, false, null, new MutableOffset(0), null));
 		String str = "weofjwepfj";
 		StringBuilder sb = new StringBuilder();
 		type.renderValue(sb, null, new MagicFormatter(str));
