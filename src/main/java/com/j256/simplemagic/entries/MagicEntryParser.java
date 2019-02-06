@@ -436,10 +436,27 @@ public class MagicEntryParser {
 			// decode doesn't work with leading '+', grumble
 			String offsetOperator = matcher.group(3);
 			if ("-".equals(offsetOperator)) {
+				/*
+				 * From manual: An offset operator of the form (l-R) specifies an offset that is calculated by
+				 * subtracting the value R from the value of memory location specified by l.
+				 */
 				add = -add;
-			} else if ("-".equals(offsetOperator)) {
+			} else if ("*".equals(offsetOperator)) {
+				/*
+				 * From manual: '*' offset operator specifies that the value located at the memory location following
+				 * the operator be used as the offset. Thus, *0x3C indicates that the value contained in 0x3C should be
+				 * used as the offset.
+				 */
 				offset = add;
 				add = 0;
+			} else {
+				/*
+				 * From manual: The + offset operator specifies an incremental offset, based upon the value of the last
+				 * offset. Thus, +15 indicates that the offset value is 15 bytes from the last specified offset.
+				 * 
+				 * From manual: An offset operator of the form (l+R) specifies an offset that is the total of the value
+				 * of memory location specified by l and the value R.
+				 */
 			}
 		}
 		return new OffsetInfo(offset, converter, isId3, size, add);
