@@ -64,7 +64,7 @@ public class MagicEntry {
 	 */
 	ContentInfo matchBytes(byte[] bytes) {
 		ContentData data = matchBytes(bytes, 0, 0, null);
-		if (data == null || data.name == UNKNOWN_NAME) {
+		if (data == null || data.name.equals(UNKNOWN_NAME)) {
 			return null;
 		} else {
 			return new ContentInfo(data.name, data.mimeType, data.sb.toString(), data.partial);
@@ -193,7 +193,7 @@ public class MagicEntry {
 		 * NOTE: the children will have the first opportunity to set this which makes sense since they are the most
 		 * specific.
 		 */
-		if (name != UNKNOWN_NAME && contentData.name == UNKNOWN_NAME) {
+		if (!name.equals(UNKNOWN_NAME) && contentData.name.equals(UNKNOWN_NAME)) {
 			contentData.name = name;
 		}
 		/*
