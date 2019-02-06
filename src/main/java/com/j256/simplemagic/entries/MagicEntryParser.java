@@ -15,7 +15,7 @@ import com.j256.simplemagic.entries.MagicEntry.OffsetInfo;
  */
 public class MagicEntryParser {
 
-	private static final String UNKNOWN_NAME = "unknown";
+	public static final String UNKNOWN_NAME = "unknown";
 	// special lines, others are put into the extensionMap
 	private static final String MIME_TYPE_LINE = "!:mime";
 	private static final String OPTIONAL_LINE = "!:optional";
