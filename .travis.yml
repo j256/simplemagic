@@ -3,4 +3,4 @@ dist: trusty
 install: /bin/true
 cache:
   directories:
-  - "$HOME/.cache"
+  - "$HOME/.m2"
