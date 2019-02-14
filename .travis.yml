@@ -1,3 +1,6 @@
 language: java
 dist: trusty
 install: /bin/true
+cache:
+  directories:
+  - "$HOME/.cache"
