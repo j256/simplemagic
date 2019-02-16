@@ -130,7 +130,12 @@ public class MagicEntry {
 	private ContentData matchBytes(byte[] bytes, int prevOffset, int level, ContentData contentData) {
 		int offset = this.offset;
 		if (offsetInfo != null) {
-			offset = offsetInfo.getOffset(bytes);
+			// offset can be null if we run out of bytes
+			Integer maybeOffset = offsetInfo.getOffset(bytes);
+			if (maybeOffset == null) {
+				return null;
+			}
+			offset = maybeOffset;
 		}
 		if (addOffset) {
 			offset = prevOffset + offset;

@@ -88,7 +88,7 @@ public class LoggerFactory {
 		COMMONS_LOGGING("org.apache.commons.logging.LogFactory", "org.apache.commons.logging.Log"),
 		LOG4J2("org.apache.logging.log4j.LogManager", "com.j256.simplemagic.logger.Log4j2Log"),
 		LOG4J("org.apache.log4j.Logger", "com.j256.simplemagic.logger.Log4jLog"),
-		// this should always be at the end, arguments are unused
+		// this should always be towards the end, arguments are unused
 		LOCAL(LocalLog.class.getName(), LocalLog.class.getName()) {
 			@Override
 			public Log createLog(String classLabel) {

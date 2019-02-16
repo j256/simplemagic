@@ -110,8 +110,8 @@ public class ContentInfoUtilTest {
 					false),
 			new FileType("/files/windows.exe", ContentType.OTHER, "32", "application/x-dosexec",
 					"PE32 executable for MS Windows (GUI) Intel 80386 32-bit", false),
-			new FileType("/files/dos.exe", ContentType.OTHER, "MS-DOS", "application/x-dosexec",
-					"MS-DOS executable, MZ for MS-DOS", false),
+			new FileType("/files/dos.exe", ContentType.OTHER, "MS-DOS", "application/x-dosexec", "MS-DOS executable",
+					false),
 			new FileType("/files/dotnet.exe", ContentType.OTHER, "32", "application/x-dosexec",
 					"PE32 executable for MS Windows (GUI) Intel 80386 32-bit Mono/.Net assembly", false),
 			new FileType("/files/x.webm", ContentType.WEBM, "webm", "video/webm", "WebM", false), //
@@ -286,8 +286,10 @@ public class ContentInfoUtilTest {
 		magicFile.createNewFile();
 		ContentInfoUtil util = new ContentInfoUtil(magicFile);
 		util.setFileReadSize(1024);
-		FileType fileType = fileTypes[0];
-		assertEquals(ContentType.EMPTY, util.findMatch(fileType.fileName).getContentType());
+		File file = new File("target/" + getClass().getSimpleName() + ".t");
+		file.delete();
+		file.createNewFile();
+		assertEquals(ContentType.EMPTY, util.findMatch(file.getPath()).getContentType());
 	}
 
 	@Test
@@ -296,16 +298,20 @@ public class ContentInfoUtilTest {
 		magicFile.createNewFile();
 		ContentInfoUtil util = new ContentInfoUtil(new FileReader(magicFile));
 		util.setFileReadSize(1024);
-		FileType fileType = fileTypes[0];
-		assertEquals(ContentType.EMPTY, util.findMatch(fileType.fileName).getContentType());
+		File file = new File("target/" + getClass().getSimpleName() + ".t");
+		file.delete();
+		file.createNewFile();
+		assertEquals(ContentType.EMPTY, util.findMatch(file.getPath()).getContentType());
 	}
 
 	@Test
 	public void testMagicFileNoGz() throws IOException {
 		ContentInfoUtil util = new ContentInfoUtil("/magic", null);
 		util.setFileReadSize(1024);
-		FileType fileType = fileTypes[0];
-		assertEquals(ContentType.EMPTY, util.findMatch(fileType.fileName).getContentType());
+		File file = new File("target/" + getClass().getSimpleName() + ".t");
+		file.delete();
+		file.createNewFile();
+		assertEquals(ContentType.EMPTY, util.findMatch(file.getPath()).getContentType());
 	}
 
 	@Test
