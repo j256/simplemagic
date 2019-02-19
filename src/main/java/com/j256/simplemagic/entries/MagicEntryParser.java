@@ -57,29 +57,36 @@ public class MagicEntryParser {
 			level = sindex + 1;
 			offsetString = parts[0].substring(sindex + 1);
 		}
+		String work = offsetString;
 
 		int offset;
 		OffsetInfo offsetInfo;
-		if (offsetString.length() == 0) {
+		if (work.length() == 0) {
 			if (errorCallBack != null) {
 				errorCallBack.error(line, "invalid offset number:" + offsetString, null);
 			}
 			return null;
 		}
 		boolean addOffset = false;
-		if (offsetString.charAt(0) == '&') {
+		if (work.charAt(0) == '&') {
+			if (work.length() == 1) {
+				if (errorCallBack != null) {
+					errorCallBack.error(line, "invalid offset number:" + offsetString, null);
+				}
+				return null;
+			}
 			addOffset = true;
-			offsetString = offsetString.substring(1);
+			work = work.substring(1);
 		}
-		if (offsetString.charAt(0) == '(') {
+		if (work.charAt(0) == '(') {
 			offset = -1;
-			offsetInfo = parseOffset(offsetString, line, errorCallBack);
+			offsetInfo = parseOffset(work, line, errorCallBack);
 			if (offsetInfo == null) {
 				return null;
 			}
 		} else {
 			try {
-				offset = Integer.decode(offsetString);
+				offset = Integer.decode(work);
 				offsetInfo = null;
 			} catch (NumberFormatException e) {
 				if (errorCallBack != null) {
