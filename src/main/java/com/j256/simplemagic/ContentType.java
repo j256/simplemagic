@@ -879,6 +879,7 @@ public enum ContentType {
 	SMV("video/x-smv", "smv", "smv"),
 	ICE("x-conference/x-cooltalk", "ice", "ice"),
 	HBS("text/x-handlebars-template", "hbs", "hbs"),
+	AMR("audio/amr", "amr", "amr"),
 
 	/** default if no content */
 	EMPTY("application/octet-stream", "other"),

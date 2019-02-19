@@ -24,7 +24,6 @@ import java.util.Arrays;
 
 import org.easymock.EasyMock;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class ContentInfoUtilTest {
@@ -121,6 +120,8 @@ public class ContentInfoUtilTest {
 					true /* not handling recursion */),
 			new FileType("/files/x.ai", ContentType.AI, "ai", "application/vnd.adobe.illustrator",
 					"Adobe Illustrator, version 1.5", false),
+			new FileType("/files/x.amr", ContentType.AMR, "amr", "audio/amr",
+					"Adaptive Multi-Rate Codec (GSM telephony)", false),
 			// end
 	};
 
@@ -146,7 +147,6 @@ public class ContentInfoUtilTest {
 	}
 
 	@Test
-	@Ignore("for spot testing")
 	public void testSpecificFileProblem() throws Exception {
 		/*
 		 * For testing specific entries from a different magic file.
