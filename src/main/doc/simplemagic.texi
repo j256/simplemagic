@@ -49,13 +49,13 @@ local ~Unix system configuration.
 
 To get started quickly using SimpleMagic, @pxref{Quick Start}.
 @ifhtml
-There is also a @uref{http://256.com/sources/simplemagic/docs/simplemagic.pdf, PDF version of this documentation}.
+There is also a @uref{http://256stuff.com/sources/simplemagic/docs/simplemagic.pdf, PDF version of this documentation}.
 @end ifhtml
 @iftex
-There is also a @uref{http://256.com/sources/simplemagic/docs/simplemagic.html, HTML version of this documentation}.
+There is also a @uref{http://256stuff.com/sources/simplemagic/docs/simplemagic.html, HTML version of this documentation}.
 @end iftex
 
-Gray Watson @uref{http://256.com/gray/}
+Gray Watson @uref{http://256stuff.com/gray/}
 
 @menu
 * Quick Start::                Start using SimpleMagic quickly.
@@ -76,7 +76,7 @@ To use SimpleMagic you need to do the following steps.  For more information, @p
 
 @enumerate
 
-@item Download SimpleMagic from the @uref{http://256.com/sources/simplemagic/releases/, SimpleMagic release page}.  @xref{Downloading}.
+@item Download SimpleMagic from the @uref{http://256stuff.com/sources/simplemagic/releases/, SimpleMagic release page}.  @xref{Downloading}.
 
 @item Optionally load in the magic entries from local file(s).  By default, if you construct a @code{ContentInfoUtil} instance
 with the default constructor, it will load the internal magic entries file.  @xref{Loading Magic Entries}.
@@ -143,7 +143,7 @@ For somewhat more extensive instructions, @pxref{Using}.
 @cindex how to download the jars
 @cindex downloading the jars
 @cindex where to get new jars
-To get started with SimpleMagic, you will need to download the jar file.  The @uref{http://256.com/sources/simplemagic/releases/, SimpleMagic
+To get started with SimpleMagic, you will need to download the jar file.  The @uref{http://256stuff.com/sources/simplemagic/releases/, SimpleMagic
 release page} is the default repository but the jars are also available from the @uref{http://repo1.maven.org/maven2/com/j256/simplemagic/,
 central maven repository}.
 
@@ -321,6 +321,8 @@ To use SimpleMagic with maven, include the following dependency in your @file{po
 @cindex open source license
 This document is part of the SimpleMagic project.
 
+Copyright @value{simplemagic_year}, Gray Watson
+
 Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby
 granted, provided that this permission notice appear in all copies.
 
@@ -330,7 +332,7 @@ DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING F
 WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
 USE OR PERFORMANCE OF THIS SOFTWARE.
 
-The author may be contacted via the @uref{http://256.com/sources/simplemagic/, SimpleMagic home page}.
+The author may be contacted via the @uref{http://256stuff.com/sources/simplemagic/, SimpleMagic home page}.
 
 @c ----------------------------------------------------------------
 @node Index of Concepts,, License, Top

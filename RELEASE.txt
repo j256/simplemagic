@@ -47,7 +47,7 @@ To release SimpleMagic:
 
 8) Update the simplemagic website:
 
-	- cd /var/www/256.com/sources/simplemagic/releases
+	- cd /var/www/256stuff.com/sources/simplemagic/releases
 	- sh get_release.sh  [enter release number]
 	- cd ..
 	- sh explode_javadocs.sh

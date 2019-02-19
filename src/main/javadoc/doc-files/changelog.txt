@@ -1,5 +1,6 @@
 1.16: ?/??/2019
 	* Added support for AMR (audio/amr) type in ContentInfo.  Thanks to @ledjon.
+	* Fixed a possible NPE with bad patterns and improved the error text callback.
 
 1.15: 2/16/2019
 	* Fixed a bug around the processing of offset increment.  Thanks to @stokito.
