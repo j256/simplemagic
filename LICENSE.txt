@@ -1,4 +1,4 @@
-ISC License
+ISC License (https://opensource.org/licenses/ISC)
 
 Copyright 2019, Gray Watson
 
