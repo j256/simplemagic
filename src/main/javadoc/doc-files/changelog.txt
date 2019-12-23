@@ -1,3 +1,11 @@
+1.16: 2/19/2019
+	* Added support for AMR (audio/amr) type in ContentInfo.  Thanks to @ledjon.
+	* Fixed a possible NPE with bad patterns and improved the error text callback.
+
+1.15: 2/16/2019
+	* Fixed a bug around the processing of offset increment.  Thanks to @stokito.
+	* Fixed a bug around unknown magic entry constant.  Thanks to @stokito.
+
 1.14: 7/11/2018
 	* Added support for hbs extension as the handlebars template file.  Thanks to todorov7.
 	* Added support for multiple octal and hex lengths to be more compatible.  Thanks to crawley.

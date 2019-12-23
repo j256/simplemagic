@@ -17,7 +17,6 @@ import com.j256.simplemagic.logger.LoggerFactory;
  */
 public class MagicEntry {
 
-	private static final String UNKNOWN_NAME = "unknown";
 	private static Logger logger = LoggerFactory.getLogger(MagicEntry.class);
 
 	private final String name;
@@ -64,7 +63,7 @@ public class MagicEntry {
 	 */
 	ContentInfo matchBytes(byte[] bytes) {
 		ContentData data = matchBytes(bytes, 0, 0, null);
-		if (data == null || data.name.equals(UNKNOWN_NAME)) {
+		if (data == null || data.name.equals(MagicEntryParser.UNKNOWN_NAME)) {
 			return null;
 		} else {
 			return new ContentInfo(data.name, data.mimeType, data.sb.toString(), data.partial);
@@ -131,7 +130,12 @@ public class MagicEntry {
 	private ContentData matchBytes(byte[] bytes, int prevOffset, int level, ContentData contentData) {
 		int offset = this.offset;
 		if (offsetInfo != null) {
-			offset = offsetInfo.getOffset(bytes);
+			// offset can be null if we run out of bytes
+			Integer maybeOffset = offsetInfo.getOffset(bytes);
+			if (maybeOffset == null) {
+				return null;
+			}
+			offset = maybeOffset;
 		}
 		if (addOffset) {
 			offset = prevOffset + offset;
@@ -193,7 +197,7 @@ public class MagicEntry {
 		 * NOTE: the children will have the first opportunity to set this which makes sense since they are the most
 		 * specific.
 		 */
-		if (!name.equals(UNKNOWN_NAME) && contentData.name.equals(UNKNOWN_NAME)) {
+		if (!name.equals(MagicEntryParser.UNKNOWN_NAME) && contentData.name.equals(MagicEntryParser.UNKNOWN_NAME)) {
 			contentData.name = name;
 		}
 		/*

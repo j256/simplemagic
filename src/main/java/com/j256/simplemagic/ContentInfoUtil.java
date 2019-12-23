@@ -200,17 +200,30 @@ public class ContentInfoUtil {
 	 */
 	public ContentInfo findMatch(File file) throws IOException {
 		int readSize = fileReadSize;
-		if (file.length() < readSize) {
-			readSize = (int) file.length();
+		if (!file.exists()) {
+			throw new IOException("File does not exist: " + file);
 		}
-		if (readSize == 0) {
+		if (!file.canRead()) {
+			throw new IOException("File is not readable: " + file);
+		}
+		long length = file.length();
+		if (length <= 0) {
 			return ContentInfo.EMPTY_INFO;
+		}
+		if (length < readSize) {
+			readSize = (int) length;
 		}
 		byte[] bytes = new byte[readSize];
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(file);
-			fis.read(bytes);
+			int numRead = fis.read(bytes);
+			if (numRead <= 0) {
+				return ContentInfo.EMPTY_INFO;
+			}
+			if (numRead < bytes.length) {
+				bytes = Arrays.copyOf(bytes, numRead);
+			}
 		} finally {
 			closeQuietly(fis);
 		}

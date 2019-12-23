@@ -3,7 +3,7 @@ package com.j256.simplemagic.endian;
 import java.nio.ByteOrder;
 
 /**
- * Types of endian supported by the system.
+ * Types of endian-ness supported by the system.
  * 
  * @author graywatson
  */

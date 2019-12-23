@@ -15,7 +15,7 @@ import com.j256.simplemagic.entries.MagicEntry.OffsetInfo;
  */
 public class MagicEntryParser {
 
-	private static final String UNKNOWN_NAME = "unknown";
+	public static final String UNKNOWN_NAME = "unknown";
 	// special lines, others are put into the extensionMap
 	private static final String MIME_TYPE_LINE = "!:mime";
 	private static final String OPTIONAL_LINE = "!:optional";
@@ -57,29 +57,36 @@ public class MagicEntryParser {
 			level = sindex + 1;
 			offsetString = parts[0].substring(sindex + 1);
 		}
+		String work = offsetString;
 
 		int offset;
 		OffsetInfo offsetInfo;
-		if (offsetString.length() == 0) {
+		if (work.length() == 0) {
 			if (errorCallBack != null) {
 				errorCallBack.error(line, "invalid offset number:" + offsetString, null);
 			}
 			return null;
 		}
 		boolean addOffset = false;
-		if (offsetString.charAt(0) == '&') {
+		if (work.charAt(0) == '&') {
+			if (work.length() == 1) {
+				if (errorCallBack != null) {
+					errorCallBack.error(line, "invalid offset number:" + offsetString, null);
+				}
+				return null;
+			}
 			addOffset = true;
-			offsetString = offsetString.substring(1);
+			work = work.substring(1);
 		}
-		if (offsetString.charAt(0) == '(') {
+		if (work.charAt(0) == '(') {
 			offset = -1;
-			offsetInfo = parseOffset(offsetString, line, errorCallBack);
+			offsetInfo = parseOffset(work, line, errorCallBack);
 			if (offsetInfo == null) {
 				return null;
 			}
 		} else {
 			try {
-				offset = Integer.decode(offsetString);
+				offset = Integer.decode(work);
 				offsetInfo = null;
 			} catch (NumberFormatException e) {
 				if (errorCallBack != null) {
@@ -436,10 +443,27 @@ public class MagicEntryParser {
 			// decode doesn't work with leading '+', grumble
 			String offsetOperator = matcher.group(3);
 			if ("-".equals(offsetOperator)) {
+				/*
+				 * From manual: An offset operator of the form (l-R) specifies an offset that is calculated by
+				 * subtracting the value R from the value of memory location specified by l.
+				 */
 				add = -add;
-			} else if ("-".equals(offsetOperator)) {
+			} else if ("*".equals(offsetOperator)) {
+				/*
+				 * From manual: '*' offset operator specifies that the value located at the memory location following
+				 * the operator be used as the offset. Thus, *0x3C indicates that the value contained in 0x3C should be
+				 * used as the offset.
+				 */
 				offset = add;
 				add = 0;
+			} else {
+				/*
+				 * From manual: The + offset operator specifies an incremental offset, based upon the value of the last
+				 * offset. Thus, +15 indicates that the offset value is 15 bytes from the last specified offset.
+				 * 
+				 * From manual: An offset operator of the form (l+R) specifies an offset that is the total of the value
+				 * of memory location specified by l and the value R.
+				 */
 			}
 		}
 		return new OffsetInfo(offset, converter, isId3, size, add);

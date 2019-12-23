@@ -1941,6 +1941,7 @@
 60	string	SONG		SoundFX Module sound file
 
 0	string	#!AMR		Adaptive Multi-Rate Codec (GSM telephony)
+!:mime	audio/amr
 
 0	string	SCgf	SuperCollider3 Synth Definition file,
 >4	belong	x	version %d
