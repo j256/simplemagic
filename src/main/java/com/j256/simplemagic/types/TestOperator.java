@@ -63,7 +63,7 @@ public enum TestOperator {
 
 	private final char prefixChar;
 
-	private TestOperator(char prefixChar) {
+	TestOperator(char prefixChar) {
 		this.prefixChar = prefixChar;
 	}
 

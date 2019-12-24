@@ -130,7 +130,7 @@ public enum MagicType {
 		}
 	}
 
-	private MagicType(String name, MagicMatcher matcher) {
+	MagicType(String name, MagicMatcher matcher) {
 		this.name = name;
 		this.matcher = matcher;
 	}

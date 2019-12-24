@@ -109,7 +109,7 @@ public class LoggerFactory {
 		private final String detectClassName;
 		private final String logClassName;
 
-		private LogType(String detectClassName, String logClassName) {
+		LogType(String detectClassName, String logClassName) {
 			this.detectClassName = detectClassName;
 			this.logClassName = logClassName;
 		}

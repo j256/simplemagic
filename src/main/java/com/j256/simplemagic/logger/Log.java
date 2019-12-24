@@ -43,7 +43,7 @@ public interface Log {
 
 		private int level;
 
-		private Level(int level) {
+		Level(int level) {
 			this.level = level;
 		}
 

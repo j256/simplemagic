@@ -47,7 +47,7 @@ public enum StringOperator {
 
 	private final char prefixChar;
 
-	private StringOperator(char prefixChar) {
+	StringOperator(char prefixChar) {
 		this.prefixChar = prefixChar;
 	}
 
