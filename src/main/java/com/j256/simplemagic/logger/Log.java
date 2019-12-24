@@ -10,22 +10,22 @@ public interface Log {
 	/**
 	 * Returns true if the log mode is in trace or higher.
 	 */
-	public boolean isLevelEnabled(Level level);
+	boolean isLevelEnabled(Level level);
 
 	/**
 	 * Log a trace message.
 	 */
-	public void log(Level level, String message);
+	void log(Level level, String message);
 
 	/**
 	 * Log a trace message with a throwable.
 	 */
-	public void log(Level level, String message, Throwable t);
+	void log(Level level, String message, Throwable t);
 
 	/**
 	 * Level of log messages being sent.
 	 */
-	public enum Level {
+	enum Level {
 		/** for tracing messages that are very verbose */
 		TRACE(1),
 		/** messages suitable for debugging purposes */

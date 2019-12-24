@@ -418,6 +418,6 @@ public class ContentInfoUtil {
 		 * @param e
 		 *            Exception that was thrown trying to parse the line or null if none.
 		 */
-		public void error(String line, String details, Exception e);
+		void error(String line, String details, Exception e);
 	}
 }
