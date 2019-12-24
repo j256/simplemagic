@@ -123,18 +123,17 @@
 						<goals>
 							<goal>jar</goal>
 						</goals>
-						<configuration>
-							<additionalparam>-tag inheritDoc:X -Xdoclint:none</additionalparam>
-						</configuration>
 					</execution>
 				</executions>
 				<configuration>
 					<bottom>
 						This content is licensed by Gray Watson under the
 						&lt;a
-						href="http://creativecommons.org/licenses/by-sa/3.0/" &gt;Creative Commons Attribution-Share Alike 3.0 License.
+						href="https://creativecommons.org/licenses/by-sa/3.0/" &gt;Creative Commons Attribution-Share Alike 3.0 License.
 						&lt;/a&gt; </bottom>
-					<additionalparam>-tag inheritDoc:X -Xdoclint:none</additionalparam>
+					<additionalOptions>-tag inheritDoc:X</additionalOptions>
+					<doclint>none</doclint>
+					<source>1.6</source>
 					<excludePackageNames>
 					</excludePackageNames>
 				</configuration>
