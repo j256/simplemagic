@@ -15,7 +15,7 @@ public class DefaultTypeTest {
 		DefaultType type = new DefaultType();
 		type.convertTestString(null, null);
 		type.extractValueFromBytes(0, null, true);
-    assertNotNull(type.isMatch(null, null, false, null, new MutableOffset(0), null));
+		assertNotNull(type.isMatch(null, null, false, null, new MutableOffset(0), null));
 		String str = "weofjwepfj";
 		StringBuilder sb = new StringBuilder();
 		type.renderValue(sb, null, new MagicFormatter(str));

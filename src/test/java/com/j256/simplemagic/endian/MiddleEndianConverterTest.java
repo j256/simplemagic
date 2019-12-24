@@ -16,7 +16,7 @@ public class MiddleEndianConverterTest {
 		// BADC: 2*2^24 + 1*2^16 + 4*2^8 + 3
 		assertEquals(33620995, val);
 		byte[] outBytes = converter.convertToByteArray(val, 4);
-    assertArrayEquals(bytes, outBytes);
+		assertArrayEquals(bytes, outBytes);
 		assertNull(converter.convertNumber(-1, bytes, 4));
 	}
 

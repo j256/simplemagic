@@ -410,7 +410,7 @@ public class ContentInfoUtilTest {
 		ByteArrayOutputStream checkOutputStream = new ByteArrayOutputStream();
 		copyStream(wrappedStream, checkOutputStream);
 
-    assertArrayEquals(resourceBytes, checkOutputStream.toByteArray());
+		assertArrayEquals(resourceBytes, checkOutputStream.toByteArray());
 		try {
 			return wrappedStream.findMatch();
 		} finally {
