@@ -34,13 +34,7 @@ public class DoubleType extends NumberType {
 	public int compare(boolean unsignedType, Number extractedValue, Number testValue) {
 		double extractedDouble = extractedValue.doubleValue();
 		double testDouble = testValue.doubleValue();
-		if (extractedDouble > testDouble) {
-			return 1;
-		} else if (extractedDouble < testDouble) {
-			return -1;
-		} else {
-			return 0;
-		}
+		return Double.compare(extractedDouble, testDouble);
 	}
 
 	@Override

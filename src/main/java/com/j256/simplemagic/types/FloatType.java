@@ -24,13 +24,7 @@ public class FloatType extends DoubleType {
 	public int compare(boolean unsignedType, Number extractedValue, Number testValue) {
 		float extractedFloat = extractedValue.floatValue();
 		float testFloat = testValue.floatValue();
-		if (extractedFloat > testFloat) {
-			return 1;
-		} else if (extractedFloat < testFloat) {
-			return -1;
-		} else {
-			return 0;
-		}
+		return Float.compare(extractedFloat, testFloat);
 	}
 
 	@Override
