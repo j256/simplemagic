@@ -87,7 +87,6 @@ public class LoggerFactory {
 		SLF4J("org.slf4j.LoggerFactory", "com.j256.ormlite.logger.Slf4jLoggingLog"),
 		COMMONS_LOGGING("org.apache.commons.logging.LogFactory", "org.apache.commons.logging.Log"),
 		LOG4J2("org.apache.logging.log4j.LogManager", "com.j256.simplemagic.logger.Log4j2Log"),
-		LOG4J("org.apache.log4j.Logger", "com.j256.simplemagic.logger.Log4jLog"),
 		// this should always be towards the end, arguments are unused
 		LOCAL(LocalLog.class.getName(), LocalLog.class.getName()) {
 			@Override

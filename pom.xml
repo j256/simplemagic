@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<!-- simplemagic pom configuration file for Maven (http://maven.apache.org/) -->
+<project xmlns="https://maven.apache.org/POM/4.0.0" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+	<!-- simplemagic pom configuration file for Maven (https://maven.apache.org/) -->
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.j256.simplemagic</groupId>
 	<artifactId>simplemagic</artifactId>
 	<version>1.17-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Simple Magic</name>
-	<url>http://256stuff.com/sources/simplemagic/</url>
+	<url>https://256stuff.com/sources/simplemagic/</url>
 	<description>Simple Magic number package which allows content-type (mime-type) determination from files
 	and byte arrays.</description>
 	<licenses>
@@ -24,8 +24,7 @@
 	</parent>
 	<properties>
 		<!-- optional dependency versions -->
-		<log4j-version>1.2.17</log4j-version>
-		<log4j2-version>2.0-beta4</log4j2-version>
+		<log4j2-version>2.4.1</log4j2-version>
 		<slf4j-version>1.7.2</slf4j-version>
 		<commons-logging-version>1.1.1</commons-logging-version>
 		<!-- test dependency versions -->
@@ -41,9 +40,9 @@
 		<developer>
 			<id>gray</id>
 			<name>Gray Watson</name>
-			<url>http://256stuff.com/gray/</url>
+			<url>https://256stuff.com/gray/</url>
 			<organization>256stuff.com</organization>
-			<organizationUrl>http://256stuff.com/</organizationUrl>
+			<organizationUrl>https://256stuff.com/</organizationUrl>
 			<roles>
 				<role>architect</role>
 				<role>developer</role>
@@ -58,12 +57,12 @@
 				<repository>
 					<id>sonatype-nexus-staging</id>
 					<name>Nexus Release Repository</name>
-					<url>http://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 				</repository>
 				<snapshotRepository>
 					<id>sonatype-nexus-snapshots</id>
 					<name>Sonatype Nexus Snapshots</name>
-					<url>http://oss.sonatype.org/content/repositories/snapshots/</url>
+					<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
 				</snapshotRepository>
 			</distributionManagement>
 		</profile>
@@ -134,7 +133,7 @@
 					<bottom>
 						This content is licensed by Gray Watson under the
 						&lt;a
-						href="http://creativecommons.org/licenses/by-sa/3.0/" &gt;Creative Commons Attribution-Share Alike 3.0 License.
+						href="https://creativecommons.org/licenses/by-sa/3.0/" &gt;Creative Commons Attribution-Share Alike 3.0 License.
 						&lt;/a&gt; </bottom>
 					<additionalparam>-tag inheritDoc:X -Xdoclint:none</additionalparam>
 					<excludePackageNames>
@@ -224,12 +223,6 @@
 	</build>
 	<dependencies>
 		<!-- optional dependencies -->
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${log4j-version}</version>
-			<scope>provided</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
