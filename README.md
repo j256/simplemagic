@@ -16,18 +16,18 @@ Enjoy, Gray Watson
 # Getting Started
 
 To get started you use the SimpleMagic package like the following:
-
-	// create a magic utility using the internal magic file
-	ContentInfoUtil util = new ContentInfoUtil();
-	// if you want to use a different config file(s), you can load them by hand:
-	// ContentInfoUtil util = new ContentInfoUtil("/etc/magic");
-	...
-	ContentInfo info = util.findMatch("/tmp/upload.tmp");
-	// or
-	ContentInfo info = util.findMatch(inputStream);
-	// or
-	ContentInfo info = util.findMatch(contentByteArray);
-
+```java
+// create a magic utility using the internal magic file
+ContentInfoUtil util = new ContentInfoUtil();
+// if you want to use a different config file(s), you can load them by hand:
+// ContentInfoUtil util = new ContentInfoUtil("/etc/magic");
+// ...
+ContentInfo info = util.findMatch("/tmp/upload.tmp");
+// or
+ContentInfo info = util.findMatch(inputStream);
+// or
+ContentInfo info = util.findMatch(contentByteArray);
+```
 Once you have the [```ContentInfo```](https://github.com/j256/simplemagic/blob/master/src/main/java/com/j256/simplemagic/ContentInfo.java)
 it provides:
  
