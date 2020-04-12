@@ -40,6 +40,8 @@ public class ContentInfoUtilTest {
 	 */
 	private FileType[] fileTypes = new FileType[] { //
 			//
+			new FileType("/files/x.mkv", ContentType.MATROSKA, "matroska", "video/x-matroska",
+					"Matroska data", false),
 			new FileType("/files/x.fits", ContentType.FITS, "fits", "application/fits", "FITS data", false),
 			new FileType("/files/x.gif", ContentType.GIF, "gif", "image/gif", "GIF image data, version 89a, 32 x 32",
 					false),
@@ -122,6 +124,8 @@ public class ContentInfoUtilTest {
 					"Adobe Illustrator, version 1.5", false),
 			new FileType("/files/x.amr", ContentType.AMR, "amr", "audio/amr",
 					"Adaptive Multi-Rate Codec (GSM telephony)", false),
+			new FileType("/files/dvd.ts", ContentType.VIDEO_MPEG, "mpeg", "video/mpeg",
+					"MPEG transport stream data", false)
 			// end
 	};
 
