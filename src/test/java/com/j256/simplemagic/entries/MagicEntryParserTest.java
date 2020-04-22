@@ -111,6 +111,54 @@ public class MagicEntryParserTest {
 		assertNotNull(error.details);
 	}
 
+    @Test
+    public void testBigIntegerHexValues() {
+        //Ensure usage of BigInteger does not fail for Type AND-number.
+		MagicEntry entry = MagicEntryParser.parseLine(null, ">0x01C\tulequad&0xFFFFFFFCFFFFFFFC\t=0x0000000000000000", null);
+        assertNotNull(entry);
+
+        //Ensure usage of BigInteger does not fail for testValue parsing.
+        entry = MagicEntryParser.parseLine(null, ">>5\tlequad\t\t!0xffffffffffffffff\tnon-streamed, size %lld", null);
+        assertNotNull(entry);
+    }
+
+	@Test
+	public void testTestValueContainsWhitespace() {
+        //EQUALS operator followed by whitespace and operand shall be valid
+        MagicEntry entry = MagicEntryParser.parseLine(null, ">>>>>>0\tubyte\t\t\t= 10\tInfocom (Z-machine %d", null);
+        assertNotNull(entry);
+
+        //NOT-EQUALS operator followed by whitespace and operand shall be valid
+        entry = MagicEntryParser.parseLine(null, ">>>>>>0\tubyte\t\t\t! 10\tInfocom (Z-machine %d", null);
+        assertNotNull(entry);
+
+        //GREATER-THAN operator followed by whitespace and operand shall be valid
+        entry = MagicEntryParser.parseLine(null, ">>>>>>0\tubyte\t\t\t> 10\tInfocom (Z-machine %d", null);
+        assertNotNull(entry);
+
+        //LESS-THAN operator followed by whitespace and operand shall be valid
+        entry = MagicEntryParser.parseLine(null, ">>>>>>0\tubyte\t\t\t< 10\tInfocom (Z-machine %d", null);
+        assertNotNull(entry);
+
+        //AND-ALL-SET operator followed by whitespace and operand shall be valid
+        entry = MagicEntryParser.parseLine(null, ">>>>>>0\tubyte\t\t\t& 10\tInfocom (Z-machine %d", null);
+        assertNotNull(entry);
+
+        //AND-ALL-CLEARED operator followed by whitespace and operand shall be valid
+        entry = MagicEntryParser.parseLine(null, ">>>>>>0\tubyte\t\t\t^ 10\tInfocom (Z-machine %d", null);
+        assertNotNull(entry);
+
+        //NEGATE operator followed by whitespace and operand shall be valid
+        entry = MagicEntryParser.parseLine(null, ">>>>>>0\tubyte\t\t\t~ 10\tInfocom (Z-machine %d", null);
+        assertNotNull(entry);
+
+        //UNKNOWN operator followed by whitespace and operand shall be invalid
+        LocalErrorCallBack error = new LocalErrorCallBack();
+        entry = MagicEntryParser.parseLine(null, ">>>>>>0\tubyte\t\t\t. 10\tInfocom (Z-machine %d", error);
+        assertNull(entry);
+        assertNotNull(error.details);
+	}
+
 	private static class LocalErrorCallBack implements ErrorCallBack {
 		@SuppressWarnings("unused")
 		String line;

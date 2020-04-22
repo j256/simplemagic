@@ -1,5 +1,6 @@
 package com.j256.simplemagic.entries;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import com.j256.simplemagic.logger.LoggerFactory;
  */
 public class MagicEntry {
 
-	private static Logger logger = LoggerFactory.getLogger(MagicEntry.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MagicEntry.class);
 
 	private final String name;
 	private final int level;
@@ -25,7 +26,7 @@ public class MagicEntry {
 	private final int offset;
 	private final OffsetInfo offsetInfo;
 	private final MagicMatcher matcher;
-	private final Long andValue;
+	private final BigInteger andValue;
 	private final boolean unsignedType;
 	// the testValue object is defined by the particular matcher
 	private final Object testValue;
@@ -42,8 +43,8 @@ public class MagicEntry {
 	 * Package protected constructor.
 	 */
 	MagicEntry(String name, int level, boolean addOffset, int offset, OffsetInfo offsetInfo, MagicMatcher matcher,
-			Long andValue, boolean unsignedType, Object testValue, boolean formatSpacePrefix, boolean clearFormat,
-			MagicFormatter formatter) {
+			   BigInteger andValue, boolean unsignedType, Object testValue, boolean formatSpacePrefix, boolean clearFormat,
+			   MagicFormatter formatter) {
 		this.name = name;
 		this.level = level;
 		this.addOffset = addOffset;
@@ -169,7 +170,7 @@ public class MagicEntry {
 			}
 			matcher.renderValue(contentData.sb, val, formatter);
 		}
-		logger.trace("matched data: {}: {}", this, contentData);
+		LOGGER.trace("matched data: {}: {}", this, contentData);
 
 		if (children == null) {
 			// no children so we have a full match and can set partial to false
@@ -251,9 +252,9 @@ public class MagicEntry {
 		public Integer getOffset(byte[] bytes) {
 			Long val;
 			if (isId3) {
-				val = (Long) converter.convertId3(offset, bytes, size);
+				val = converter.convertId3(offset, bytes, size);
 			} else {
-				val = (Long) converter.convertNumber(offset, bytes, size);
+				val = converter.convertNumber(offset, bytes, size);
 			}
 			if (val == null) {
 				return null;

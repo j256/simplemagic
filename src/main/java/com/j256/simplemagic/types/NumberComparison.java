@@ -1,5 +1,7 @@
 package com.j256.simplemagic.types;
 
+import java.math.BigInteger;
+
 /**
  * Internal class that compares a number from the bytes with the value from the magic rule.
  */
@@ -30,9 +32,9 @@ public class NumberComparison {
 		}
 	}
 
-	public boolean isMatch(Long andValue, boolean unsignedType, Number extractedValue) {
+	public boolean isMatch(BigInteger andValue, boolean unsignedType, Number extractedValue) {
 		if (andValue != null) {
-			extractedValue = extractedValue.longValue() & andValue;
+			extractedValue = BigInteger.valueOf(extractedValue.longValue()).and(andValue);
 		}
 		return operator.doTest(unsignedType, extractedValue, value, numberType);
 	}

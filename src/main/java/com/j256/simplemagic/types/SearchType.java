@@ -1,5 +1,7 @@
 package com.j256.simplemagic.types;
 
+import java.math.BigInteger;
+
 /**
  * From the magic(5) man page: A literal string search starting at the given line offset. The same modifier flags can be
  * used as for string patterns. The modifier flags (if any) must be followed by /number range, that is, the number of
@@ -16,8 +18,8 @@ package com.j256.simplemagic.types;
 public class SearchType extends StringType {
 
 	@Override
-	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue,
-			MutableOffset mutableOffset, byte[] bytes) {
+	public Object isMatch(Object testValue, BigInteger andValue, boolean unsignedType, Object extractedValue,
+						  MutableOffset mutableOffset, byte[] bytes) {
 		TestInfo info = (TestInfo) testValue;
 		int maxOffset = info.maxOffset;
 		if (info.optionalWhiteSpace) {

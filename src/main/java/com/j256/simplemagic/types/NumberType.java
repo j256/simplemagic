@@ -5,12 +5,17 @@ import com.j256.simplemagic.endian.EndianType;
 import com.j256.simplemagic.entries.MagicFormatter;
 import com.j256.simplemagic.entries.MagicMatcher;
 
+import java.math.BigInteger;
+import java.util.regex.Pattern;
+
 /**
  * Base class for our numbers so we can do generic operations on them.
  * 
  * @author graywatson
  */
 public abstract class NumberType implements MagicMatcher {
+
+	public static final Pattern HEX_PATTERN = Pattern.compile("0[xX]([0-9a-fA-F]+)");
 
 	protected final EndianConverter endianConverter;
 
@@ -49,8 +54,8 @@ public abstract class NumberType implements MagicMatcher {
 	}
 
 	@Override
-	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue,
-			MutableOffset mutableOffset, byte[] bytes) {
+	public Object isMatch(Object testValue, BigInteger andValue, boolean unsignedType, Object extractedValue,
+						  MutableOffset mutableOffset, byte[] bytes) {
 		if (((NumberComparison) testValue).isMatch(andValue, unsignedType, (Number) extractedValue)) {
 			mutableOffset.offset += getBytesPerType();
 			return extractedValue;

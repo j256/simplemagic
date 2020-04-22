@@ -40,6 +40,14 @@ public class LongTypeTest extends BaseMagicTypeTest {
 
 		bytes = hexToBytes("FFFFFFFFFFFFFFFF");
 		testOutput(magic, bytes, null);
+
+		magic = "0 bequad =0xFFFFFFFFFFFFFFFF match";
+		bytes = hexToBytes("FFFFFFFFFFFFFFFF");
+		testOutput(magic, bytes, "match");
+
+		magic = "0 bequad =0xFFFFFFFFFFFFFFFF match";
+		bytes = hexToBytes("0000000000000000");
+		testOutput(magic, bytes, null);
 	}
 
 	@Test

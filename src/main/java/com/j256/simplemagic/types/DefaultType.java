@@ -3,6 +3,8 @@ package com.j256.simplemagic.types;
 import com.j256.simplemagic.entries.MagicFormatter;
 import com.j256.simplemagic.entries.MagicMatcher;
 
+import java.math.BigInteger;
+
 /**
  * This is intended to be used with the test @code{x} (which is always true) and a message that is to be used if there
  * are no other matches.
@@ -29,8 +31,8 @@ public class DefaultType implements MagicMatcher {
 	}
 
 	@Override
-	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue,
-			MutableOffset offset, byte[] bytes) {
+	public Object isMatch(Object testValue, BigInteger andValue, boolean unsignedType, Object extractedValue,
+						  MutableOffset offset, byte[] bytes) {
 		// always matches
 		return EMPTY;
 	}

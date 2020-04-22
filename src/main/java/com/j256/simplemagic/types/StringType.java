@@ -1,5 +1,6 @@
 package com.j256.simplemagic.types;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -86,8 +87,8 @@ public class StringType implements MagicMatcher {
 	}
 
 	@Override
-	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue,
-			MutableOffset mutableOffset, byte[] bytes) {
+	public Object isMatch(Object testValue, BigInteger andValue, boolean unsignedType, Object extractedValue,
+						  MutableOffset mutableOffset, byte[] bytes) {
 		return findOffsetMatch((TestInfo) testValue, mutableOffset.offset, mutableOffset, bytes, null, bytes.length);
 	}
 

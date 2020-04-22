@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,8 +54,8 @@ public class RegexType implements MagicMatcher {
 	}
 
 	@Override
-	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue,
-			MutableOffset mutableOffset, byte[] bytes) {
+	public Object isMatch(Object testValue, BigInteger andValue, boolean unsignedType, Object extractedValue,
+						  MutableOffset mutableOffset, byte[] bytes) {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes)));
 		String line = null;
 		int bytesOffset = 0;

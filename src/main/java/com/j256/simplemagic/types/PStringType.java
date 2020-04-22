@@ -1,5 +1,7 @@
 package com.j256.simplemagic.types;
 
+import java.math.BigInteger;
+
 /**
  * A Pascal-style string where the first byte is interpreted as the an unsigned length. The string is not '\0'
  * terminated.
@@ -37,8 +39,8 @@ public class PStringType extends StringType {
 	}
 
 	@Override
-	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue,
-			MutableOffset mutableOffset, byte[] bytes) {
+	public Object isMatch(Object testValue, BigInteger andValue, boolean unsignedType, Object extractedValue,
+						  MutableOffset mutableOffset, byte[] bytes) {
 
 		if (mutableOffset.offset >= bytes.length) {
 			return null;

@@ -1,7 +1,9 @@
 package com.j256.simplemagic.entries;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.Format;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -348,14 +350,14 @@ public class PercentExpression {
 	private Format decimalFormat(int fractionPrecision) {
 		DecimalFormat format;
 		if (fractionPrecision == 0) {
-			format = new DecimalFormat("###0");
+			format = new DecimalFormat("###0", new DecimalFormatSymbols(Locale.US));
 		} else if (fractionPrecision > 0) {
 			StringBuilder formatSb = new StringBuilder();
 			formatSb.append("###0.");
 			appendChars(formatSb, ZERO_CHARS, fractionPrecision);
-			format = new DecimalFormat(formatSb.toString());
+			format = new DecimalFormat(formatSb.toString(), new DecimalFormatSymbols(Locale.US));
 		} else {
-			format = new DecimalFormat("###0.###");
+			format = new DecimalFormat("###0.###", new DecimalFormatSymbols(Locale.US));
 		}
 		return format;
 	}
@@ -363,15 +365,15 @@ public class PercentExpression {
 	private Format scientificFormat(int fractionPrecision) {
 		DecimalFormat format;
 		if (fractionPrecision == 0) {
-			format = new DecimalFormat("0E0");
+			format = new DecimalFormat("0E0", new DecimalFormatSymbols(Locale.US));
 		} else if (fractionPrecision > 0) {
 			StringBuilder formatSb = new StringBuilder();
 			formatSb.append("0.");
 			appendChars(formatSb, ZERO_CHARS, fractionPrecision);
 			formatSb.append("E0");
-			format = new DecimalFormat(formatSb.toString());
+			format = new DecimalFormat(formatSb.toString(), new DecimalFormatSymbols(Locale.US));
 		} else {
-			format = new DecimalFormat("0.###E0");
+			format = new DecimalFormat("0.###E0", new DecimalFormatSymbols(Locale.US));
 		}
 		return format;
 	}

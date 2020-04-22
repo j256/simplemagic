@@ -1,5 +1,7 @@
 package com.j256.simplemagic.entries;
 
+import java.math.BigInteger;
+
 /**
  * Classes which are able to match content according to operations and output description.
  * 
@@ -9,9 +11,9 @@ public interface MagicMatcher {
 
 	/**
 	 * Converts the test-string from the magic line to be the testValue object to be passed into
-	 * {@link #isMatch(Object, Long, boolean, Object, MutableOffset, byte[])} and {@link #getStartingBytes(Object)}.
+	 * {@link #isMatch(Object, BigInteger, boolean, Object, MutableOffset, byte[])} and {@link #getStartingBytes(Object)}.
 	 */
-	public Object convertTestString(String typeStr, String testStr);
+	Object convertTestString(String typeStr, String testStr);
 
 	/**
 	 * Extract the value from the bytes either for doing the match or rendering it in the format.
@@ -23,33 +25,33 @@ public interface MagicMatcher {
 	 * @param required
 	 *            Whether or not the extracted value is required for later. If it is not then the type may opt to not
 	 *            extract the value and to do the matching directly.
-	 * @return The object to be passed to {@link #isMatch(Object, Long, boolean, Object, MutableOffset, byte[])} or null
+	 * @return The object to be passed to {@link #isMatch(Object, BigInteger, boolean, Object, MutableOffset, byte[])} or null
 	 *         if not enough bytes.
 	 */
-	public Object extractValueFromBytes(int offset, byte[] bytes, boolean required);
+	Object extractValueFromBytes(int offset, byte[] bytes, boolean required);
 
 	/**
 	 * Matches if the bytes match at a certain offset.
 	 * 
 	 * @return The extracted-value object, or null if no match.
 	 */
-	public Object isMatch(Object testValue, Long andValue, boolean unsignedType, Object extractedValue,
-			MutableOffset offset, byte[] bytes);
+	Object isMatch(Object testValue, BigInteger andValue, boolean unsignedType, Object extractedValue,
+						  MutableOffset offset, byte[] bytes);
 
 	/**
 	 * Returns the string version of the extracted value.
 	 */
-	public void renderValue(StringBuilder sb, Object extractedValue, MagicFormatter formatter);
+	void renderValue(StringBuilder sb, Object extractedValue, MagicFormatter formatter);
 
 	/**
 	 * Return the starting bytes of the pattern or null if none.
 	 */
-	public byte[] getStartingBytes(Object testValue);
+	byte[] getStartingBytes(Object testValue);
 
 	/**
 	 * Offset which we can update.
 	 */
-	public static class MutableOffset {
+	class MutableOffset {
 		public int offset;
 
 		public MutableOffset(int offset) {
