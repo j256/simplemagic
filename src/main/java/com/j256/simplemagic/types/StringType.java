@@ -88,7 +88,7 @@ public class StringType implements MagicMatcher {
 
 	@Override
 	public Object isMatch(Object testValue, BigInteger andValue, boolean unsignedType, Object extractedValue,
-						  MutableOffset mutableOffset, byte[] bytes) {
+			MutableOffset mutableOffset, byte[] bytes) {
 		return findOffsetMatch((TestInfo) testValue, mutableOffset.offset, mutableOffset, bytes, null, bytes.length);
 	}
 
@@ -223,8 +223,8 @@ public class StringType implements MagicMatcher {
 			if (pattern == null || pattern.length() < 4) {
 				return null;
 			} else {
-				return new byte[] { (byte) pattern.charAt(0), (byte) pattern.charAt(1), (byte) pattern.charAt(2),
-						(byte) pattern.charAt(3) };
+				return new byte[]{(byte) pattern.charAt(0), (byte) pattern.charAt(1), (byte) pattern.charAt(2),
+						(byte) pattern.charAt(3)};
 			}
 		}
 

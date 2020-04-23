@@ -55,7 +55,7 @@ public abstract class NumberType implements MagicMatcher {
 
 	@Override
 	public Object isMatch(Object testValue, BigInteger andValue, boolean unsignedType, Object extractedValue,
-						  MutableOffset mutableOffset, byte[] bytes) {
+			MutableOffset mutableOffset, byte[] bytes) {
 		if (((NumberComparison) testValue).isMatch(andValue, unsignedType, (Number) extractedValue)) {
 			mutableOffset.offset += getBytesPerType();
 			return extractedValue;

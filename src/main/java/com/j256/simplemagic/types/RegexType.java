@@ -55,7 +55,7 @@ public class RegexType implements MagicMatcher {
 
 	@Override
 	public Object isMatch(Object testValue, BigInteger andValue, boolean unsignedType, Object extractedValue,
-						  MutableOffset mutableOffset, byte[] bytes) {
+			MutableOffset mutableOffset, byte[] bytes) {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes)));
 		String line = null;
 		int bytesOffset = 0;

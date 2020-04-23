@@ -40,7 +40,7 @@ public class PStringType extends StringType {
 
 	@Override
 	public Object isMatch(Object testValue, BigInteger andValue, boolean unsignedType, Object extractedValue,
-						  MutableOffset mutableOffset, byte[] bytes) {
+			MutableOffset mutableOffset, byte[] bytes) {
 
 		if (mutableOffset.offset >= bytes.length) {
 			return null;

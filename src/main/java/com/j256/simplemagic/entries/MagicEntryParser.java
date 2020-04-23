@@ -100,30 +100,30 @@ public class MagicEntryParser {
 			}
 		}
 
-        // process the AND (&) part of the type
-        String typeStr = parts[1];
-        sindex = typeStr.indexOf('&');
-        // we use BigInteger because of overlaps
-        BigInteger andValue = null;
-        if (sindex >= 0) {
-            String andStr = typeStr.substring(sindex + 1);
-            try {
-                Matcher matcher = HEX_PATTERN.matcher(andStr);
-                andValue = matcher.matches() ? new BigInteger(matcher.group(1), 16) : new BigInteger(andStr);
-            } catch (NumberFormatException e) {
-                if (errorCallBack != null) {
-                    errorCallBack.error(line, "invalid type AND-number: " + andStr, e);
-                }
-                return null;
-            }
-            typeStr = typeStr.substring(0, sindex);
-        }
-        if (typeStr.length() == 0) {
-            if (errorCallBack != null) {
-                errorCallBack.error(line, "blank type string", null);
-            }
-            return null;
-        }
+		// process the AND (&) part of the type
+		String typeStr = parts[1];
+		sindex = typeStr.indexOf('&');
+		// we use BigInteger because of overlaps
+		BigInteger andValue = null;
+		if (sindex >= 0) {
+			String andStr = typeStr.substring(sindex + 1);
+			try {
+				Matcher matcher = HEX_PATTERN.matcher(andStr);
+				andValue = matcher.matches() ? new BigInteger(matcher.group(1), 16) : new BigInteger(andStr);
+			} catch (NumberFormatException e) {
+				if (errorCallBack != null) {
+					errorCallBack.error(line, "invalid type AND-number: " + andStr, e);
+				}
+				return null;
+			}
+			typeStr = typeStr.substring(0, sindex);
+		}
+		if (typeStr.length() == 0) {
+			if (errorCallBack != null) {
+				errorCallBack.error(line, "blank type string", null);
+			}
+			return null;
+		}
 
 		// process the type string
 		boolean unsignedType = false;
@@ -198,8 +198,9 @@ public class MagicEntryParser {
 				name = trimmedFormat;
 			}
 		}
-		return new MagicEntry(name, level, addOffset, offset, offsetInfo, matcher, andValue, unsignedType,
+		MagicEntry entry = new MagicEntry(name, level, addOffset, offset, offsetInfo, matcher, andValue, unsignedType,
 				testValue, formatSpacePrefix, clearFormat, formatter);
+		return entry;
 	}
 
 	private static String[] splitLine(String line, ErrorCallBack errorCallBack) {
@@ -252,24 +253,24 @@ public class MagicEntryParser {
 		}
 		String testStr = line.substring(startPos, endPos);
 		// Search operand for isolated operators
-		if(TestOperator.fromTest(testStr) != null && testStr.length()==1){
-            // skip any whitespace to find operand
-            startPos = findNonWhitespace(line, endPos + 1);
+		if (TestOperator.fromTest(testStr) != null && testStr.length() == 1) {
+			// skip any whitespace to find operand
+			startPos = findNonWhitespace(line, endPos + 1);
 
-            // if there is no operand, then the operator is isolated and the testString is erroneous.
-            if (startPos < 0) {
-                if (errorCallBack != null) {
-                    errorCallBack.error(line, String.format("No operand found for: %s", testStr), null);
-                }
-                return null;
-            }
-            endPos = findWhitespaceWithoutEscape(line, startPos);
-            if (endPos < 0) {
-                endPos = line.length();
-            }
-            // the following element must be the operand, else the testString is erroneous anyway. Append it!
-            testStr+=line.substring(startPos, endPos);
-        }
+			// if there is no operand, then the operator is isolated and the testString is erroneous.
+			if (startPos < 0) {
+				if (errorCallBack != null) {
+					errorCallBack.error(line, String.format("No operand found for: %s", testStr), null);
+				}
+				return null;
+			}
+			endPos = findWhitespaceWithoutEscape(line, startPos);
+			if (endPos < 0) {
+				endPos = line.length();
+			}
+			// the following element must be the operand, else the testString is erroneous anyway. Append it!
+			testStr += line.substring(startPos, endPos);
+		}
 
 		// skip any whitespace
 		startPos = findNonWhitespace(line, endPos + 1);

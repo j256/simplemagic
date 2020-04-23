@@ -32,7 +32,7 @@ public class DefaultType implements MagicMatcher {
 
 	@Override
 	public Object isMatch(Object testValue, BigInteger andValue, boolean unsignedType, Object extractedValue,
-						  MutableOffset offset, byte[] bytes) {
+			MutableOffset offset, byte[] bytes) {
 		// always matches
 		return EMPTY;
 	}

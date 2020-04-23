@@ -27,7 +27,7 @@ public class BigEndianString16Type extends StringType {
 
 	@Override
 	public Object isMatch(Object testValue, BigInteger andValue, boolean unsignedType, Object extractedValue,
-						  MutableOffset mutableOffset, byte[] bytes) {
+			MutableOffset mutableOffset, byte[] bytes) {
 		// we do the match on the extracted chars
 		char[] chars = (char[]) extractedValue;
 		return super.findOffsetMatch((TestInfo) testValue, mutableOffset.offset, mutableOffset, null, chars,

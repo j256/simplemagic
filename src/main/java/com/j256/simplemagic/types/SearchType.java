@@ -19,7 +19,7 @@ public class SearchType extends StringType {
 
 	@Override
 	public Object isMatch(Object testValue, BigInteger andValue, boolean unsignedType, Object extractedValue,
-						  MutableOffset mutableOffset, byte[] bytes) {
+			MutableOffset mutableOffset, byte[] bytes) {
 		TestInfo info = (TestInfo) testValue;
 		int maxOffset = info.maxOffset;
 		if (info.optionalWhiteSpace) {

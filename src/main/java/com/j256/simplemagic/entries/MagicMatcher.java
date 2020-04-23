@@ -13,7 +13,7 @@ public interface MagicMatcher {
 	 * Converts the test-string from the magic line to be the testValue object to be passed into
 	 * {@link #isMatch(Object, BigInteger, boolean, Object, MutableOffset, byte[])} and {@link #getStartingBytes(Object)}.
 	 */
-	Object convertTestString(String typeStr, String testStr);
+	public Object convertTestString(String typeStr, String testStr);
 
 	/**
 	 * Extract the value from the bytes either for doing the match or rendering it in the format.
@@ -28,30 +28,30 @@ public interface MagicMatcher {
 	 * @return The object to be passed to {@link #isMatch(Object, BigInteger, boolean, Object, MutableOffset, byte[])} or null
 	 *         if not enough bytes.
 	 */
-	Object extractValueFromBytes(int offset, byte[] bytes, boolean required);
+	public Object extractValueFromBytes(int offset, byte[] bytes, boolean required);
 
 	/**
 	 * Matches if the bytes match at a certain offset.
 	 * 
 	 * @return The extracted-value object, or null if no match.
 	 */
-	Object isMatch(Object testValue, BigInteger andValue, boolean unsignedType, Object extractedValue,
-						  MutableOffset offset, byte[] bytes);
+	public Object isMatch(Object testValue, BigInteger andValue, boolean unsignedType, Object extractedValue,
+			MutableOffset offset, byte[] bytes);
 
 	/**
 	 * Returns the string version of the extracted value.
 	 */
-	void renderValue(StringBuilder sb, Object extractedValue, MagicFormatter formatter);
+	public void renderValue(StringBuilder sb, Object extractedValue, MagicFormatter formatter);
 
 	/**
 	 * Return the starting bytes of the pattern or null if none.
 	 */
-	byte[] getStartingBytes(Object testValue);
+	public byte[] getStartingBytes(Object testValue);
 
 	/**
 	 * Offset which we can update.
 	 */
-	class MutableOffset {
+	public class MutableOffset {
 		public int offset;
 
 		public MutableOffset(int offset) {

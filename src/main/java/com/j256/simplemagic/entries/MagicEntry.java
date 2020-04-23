@@ -18,7 +18,7 @@ import com.j256.simplemagic.logger.LoggerFactory;
  */
 public class MagicEntry {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MagicEntry.class);
+	private static final Logger logger = LoggerFactory.getLogger(MagicEntry.class);
 
 	private final String name;
 	private final int level;
@@ -43,8 +43,8 @@ public class MagicEntry {
 	 * Package protected constructor.
 	 */
 	MagicEntry(String name, int level, boolean addOffset, int offset, OffsetInfo offsetInfo, MagicMatcher matcher,
-			   BigInteger andValue, boolean unsignedType, Object testValue, boolean formatSpacePrefix, boolean clearFormat,
-			   MagicFormatter formatter) {
+			BigInteger andValue, boolean unsignedType, Object testValue, boolean formatSpacePrefix, boolean clearFormat,
+			MagicFormatter formatter) {
 		this.name = name;
 		this.level = level;
 		this.addOffset = addOffset;
@@ -170,7 +170,7 @@ public class MagicEntry {
 			}
 			matcher.renderValue(contentData.sb, val, formatter);
 		}
-		LOGGER.trace("matched data: {}: {}", this, contentData);
+		logger.trace("matched data: {}: {}", this, contentData);
 
 		if (children == null) {
 			// no children so we have a full match and can set partial to false
