@@ -203,9 +203,10 @@
 							<target>
 								<!-- couldn't use the gzip plugin because no level and couldn't call gzip directly because the output linefeeds were 
 									corrupting the gzip stream. -->
-								<exec executable="gzip_magic.sh">
-									<arg value="src/test/resources/magic" />
-									<arg value="target/classes/magic.gz" />
+								<exec executable="sh">
+									<arg value="${project.basedir}/gzip_magic.sh" />
+									<arg value="${project.basedir}/src/test/resources/magic" />
+									<arg value="${project.build.outputDirectory}/magic.gz" />
 								</exec>
 							</target>
 						</configuration>
