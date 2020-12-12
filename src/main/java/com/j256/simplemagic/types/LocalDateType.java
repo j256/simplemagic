@@ -14,7 +14,7 @@ import com.j256.simplemagic.entries.MagicFormatter;
  */
 public class LocalDateType extends IntegerType {
 
-	public final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS");
+	public final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 
 	public LocalDateType(EndianType endianType) {
 		super(endianType);
