@@ -1,5 +1,6 @@
 package com.j256.simplemagic.types;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -13,12 +14,7 @@ import com.j256.simplemagic.entries.MagicFormatter;
  */
 public class LocalDateType extends IntegerType {
 
-	protected final ThreadLocal<SimpleDateFormat> dateFormat = new ThreadLocal<SimpleDateFormat>() {
-		@Override
-		protected SimpleDateFormat initialValue() {
-			return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
-		}
-	};
+	public final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 
 	public LocalDateType(EndianType endianType) {
 		super(endianType);
@@ -28,7 +24,7 @@ public class LocalDateType extends IntegerType {
 	public void renderValue(StringBuilder sb, Object extractedValue, MagicFormatter formatter) {
 		long val = (Long) extractedValue;
 		Date date = dateFromExtractedValue(val);
-		SimpleDateFormat format = dateFormat.get();
+		DateFormat format = (DateFormat) DATE_FORMAT.clone();
 		assisgnTimeZone(format);
 		formatter.format(sb, format.format(date));
 	}
@@ -38,7 +34,7 @@ public class LocalDateType extends IntegerType {
 		return new Date(val);
 	}
 
-	protected void assisgnTimeZone(SimpleDateFormat format) {
+	protected void assisgnTimeZone(DateFormat format) {
 		// noop for local time-zone
 	}
 }

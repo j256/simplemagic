@@ -1,3 +1,6 @@
+1.17: ??/??/2020
+	* Moved to using SimpleDateFormat.clone() instead of thread locals.
+
 1.16: 2/19/2019
 	* Added support for AMR (audio/amr) type in ContentInfo.  Thanks to @ledjon.
 	* Fixed a possible NPE with bad patterns and improved the error text callback.

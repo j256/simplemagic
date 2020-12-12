@@ -1,6 +1,6 @@
 package com.j256.simplemagic.types;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -26,7 +26,7 @@ public class UtcDateType extends LocalDateType {
 	}
 
 	@Override
-	protected void assisgnTimeZone(SimpleDateFormat format) {
+	protected void assisgnTimeZone(DateFormat format) {
 		format.setTimeZone(UTC_TIME_ZONE);
 	}
 }
