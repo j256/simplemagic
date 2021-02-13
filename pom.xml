@@ -30,7 +30,7 @@
 		<commons-logging-version>1.1.1</commons-logging-version>
 		<!-- test dependency versions -->
 		<easymock-version>3.4</easymock-version>
-		<junit-version>4.13.1</junit-version>
+		<junit-version>4.13.2</junit-version>
 	</properties>
 	<scm>
 		<url>https://github.com/j256/simplemagic</url>
@@ -219,7 +219,7 @@
 			<plugin>
 				<groupId>com.j256.testcheckpublisher</groupId>
 				<artifactId>test-check-publisher-maven-plugin</artifactId>
-				<version>0.8</version>
+				<version>1.2</version>
 			</plugin>
 		</plugins>
 		<pluginManagement>
