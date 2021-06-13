@@ -346,6 +346,14 @@ public class ContentInfoUtilTest {
 		util.findMatch(x);
 	}
 
+	@Test
+	public void twoByteTruncatedWindowsExecutable() {
+		// had a bug report that seems to be already fixed but more coverage is good
+		byte[] x = { 77, 90 };
+		ContentInfoUtil util = new ContentInfoUtil();
+		util.findMatch(x);
+	}
+
 	private void copyResourceToFile(String resource, File outputFile) throws IOException {
 		InputStream input = null;
 		OutputStream output = null;
