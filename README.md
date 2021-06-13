@@ -11,7 +11,7 @@ detects the contents of a file. It uses either internal config files or can read
 * The source code be found on the [git repository](https://github.com/j256/simplemagic).  [![CircleCI](https://circleci.com/gh/j256/simplemagic.svg?style=svg)](https://circleci.com/gh/j256/simplemagic) [![CodeCov](https://img.shields.io/codecov/c/github/j256/simplemagic.svg)](https://codecov.io/github/j256/simplemagic/)
 * Maven packages are published via [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.j256.simplemagic/simplemagic/badge.svg?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/com.j256.simplemagic/simplemagic/) [![javadoc](https://javadoc.io/badge2/com.j256.simplemagic/simplemagic/javadoc.svg)](https://javadoc.io/doc/com.j256.simplemagic/simplemagic)
 
-Enjoy, Gray Watson
+Enjoy.  Gray Watson
 
 # Getting Started
 
