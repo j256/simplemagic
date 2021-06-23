@@ -50,6 +50,18 @@ For example:
 * ```RIFF, mime 'audio/x-wav', msg 'RIFF (little-endian) data, WAVE audio, Microsoft...'```
 * ```JPEG, mime 'image/jpeg', msg 'JPEG image data, JFIF standard 1.01'```
 
+# Maven Configuration
+
+* Maven packages are published via [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.j256.simplemagic/simplemagic/badge.svg?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/com.j256.simplemagic/simplemagic/)
+
+``` xml
+<dependency>
+	<groupId>com.j256.simplemagic</groupId>
+	<artifactId>simplemagic</artifactId>
+	<version>1.16</version>
+</dependency>
+```
+
 # ChangeLog Release Notes
 
 See the [ChangeLog.txt file](src/main/javadoc/doc-files/changelog.txt).
