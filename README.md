@@ -58,7 +58,7 @@ For example:
 <dependency>
 	<groupId>com.j256.simplemagic</groupId>
 	<artifactId>simplemagic</artifactId>
-	<version>1.16</version>
+	<version>1.17</version>
 </dependency>
 ```
 

@@ -1,5 +1,6 @@
-1.17: ??/??/2020
+1.17: 12/29/2021
 	* Moved to using SimpleDateFormat.clone() instead of thread locals.
+	* Updated to new version of SimpleLogging which increased the version of Log4j2.
 
 1.16: 2/19/2019
 	* Added support for AMR (audio/amr) type in ContentInfo.  Thanks to @ledjon.
