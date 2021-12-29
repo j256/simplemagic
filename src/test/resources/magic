@@ -676,7 +676,7 @@
 >>16	uleshort	x			\b, %dms per frame
 
 
-0	belong&0xFF5F0010	0x47400010	MPEG transport stream data
+0	belong&0xFF5FFF1F	0x47400010	MPEG transport stream data
 >188	byte			!0x47		CORRUPTED
 
 0	belong&0xffffff00	0x1f070000      DIF
@@ -758,15 +758,11 @@
 !:mime	video/mp4v-es
 0       belong             0x000001B3
 !:mime	video/mpv
-0       belong&0xFF5F0010  0x47400010
+0       belong&0xFF5FFF1F  0x47400010
 !:mime	video/mp2t
 0       belong             0x00000001
 >4      byte&0x1F	   0x07
 !:mime	video/h264
-
-0	belong&0xFF5F0010	0x47400010	MPEG transport stream data
-!:mime video/mpeg
->188	byte			0x47
 
 0	long		0100554		APL workspace (Ken's original?)
 0	search/1	FiLeStArTfIlEsTaRt	binscii (apple ][) text
@@ -6516,25 +6512,9 @@
 >126    short   0x4d49  (little endian)
 >>124   leshort x       version 0x%04x
 
-0       belong      0x1a45dfa3  Matroska data
-!:mime video/x-matroska
-
 0		belong		0x1a45dfa3
 >5		beshort		0x4282
-!:mime video/x-matroska
 >>8		string		matroska	Matroska data
-
-0		belong		0x1a45dfa3
->5		beshort		0x4286
->21		beshort		0x4282
-!:mime video/x-matroska
->>2		string		matroska	Matroska data
-
-0		belong		0x1a45dfa3
->12		beshort		0x4286
->28		beshort		0x4282
-!:mime video/x-matroska
->>&1    string		matroska	Matroska data
 
 0	string		\0m\3		mcrypt 2.5 encrypted data,
 >4	string		>\0		algorithm: %s,
