@@ -1,4 +1,4 @@
-package com.j256.simplemagic.logger;
+package com.j256.simplemagic.logger.backend;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,36 +12,49 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 
+import com.j256.simplemagic.logger.Level;
+import com.j256.simplemagic.logger.LogBackend;
+import com.j256.simplemagic.logger.LogBackendFactory;
+import com.j256.simplemagic.logger.LoggerFactory;
+
 /**
- * Class which implements our {@link Log} interface so we can bypass external logging classes if they are not available.
+ * Log backend that uses logging classes if they are not available.
  * 
+ * From SimpleLogging: https://github.com/j256/simplelogging
+ *
  * <p>
- * You can set the log level by setting the System.setProperty(LocalLog.LOCAL_LOG_LEVEL_PROPERTY, "trace"). Acceptable
- * values are: TRACE, DEBUG, INFO, WARN, ERROR, and FATAL. You can also redirect the log to a file by setting the
- * System.setProperty(LocalLog.LOCAL_LOG_FILE_PROPERTY, "log.out"). Otherwise, log output will go to stdout.
+ * You can set the log level by setting the System.setProperty(LocalLogBackend.LOCAL_LOG_LEVEL_PROPERTY, "trace").
+ * Acceptable values are: TRACE, DEBUG, INFO, WARN, ERROR, and FATAL. You can also redirect the log to a file by setting
+ * the System.setProperty(LocalLogBackend.LOCAL_LOG_FILE_PROPERTY, "log.out"). Otherwise, log output will go to stdout.
  * </p>
  * 
  * <p>
- * It also supports a file simplemagicLocalLog.properties file which contains lines such as:
+ * It also supports a file simpleLoggingLocalLog.properties file which contains lines such as:
  * </p>
  * 
  * <pre>
  * # regex-pattern = Level
- * log4j\.logger\.com\.j256\.simplemagic.*=TRACE
+ * com\.foo\.yourclass.*=DEBUG
+ * com\.foo\.yourclass\.BaseMappedStatement=TRACE
+ * com\.foo\.yourclass\.MappedCreate=TRACE
+ * com\.foo\.yourclass\.StatementExecutor=TRACE
  * </pre>
  * 
  * @author graywatson
  */
-public class LocalLog implements Log {
+public class LocalLogBackend implements LogBackend {
 
-	public static final String LOCAL_LOG_LEVEL_PROPERTY = "com.j256.simplemagic.logger.level";
-	public static final String LOCAL_LOG_FILE_PROPERTY = "com.j256.simplemagic.logger.file";
-	public static final String LOCAL_LOG_PROPERTIES_FILE = "/simplemagicLocalLog.properties";
+	public static final String LOCAL_LOG_LEVEL_PROPERTY = "com.j256.simplelogging.level";
+	public static final String LOCAL_LOG_FILE_PROPERTY = "com.j256.simplelogging.file";
+	public static final String LOCAL_LOG_PROPERTIES_FILE = "/simpleLoggingLocalLog.properties";
 
 	private static final Level DEFAULT_LEVEL = Level.DEBUG;
-	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS");
+	// used with clone()
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS");
 	private static PrintStream printStream;
 	private static final List<PatternLevel> classLevels;
 
@@ -49,7 +62,7 @@ public class LocalLog implements Log {
 	private final Level level;
 
 	static {
-		InputStream stream = LocalLog.class.getResourceAsStream(LOCAL_LOG_PROPERTIES_FILE);
+		InputStream stream = LocalLogBackend.class.getResourceAsStream(LOCAL_LOG_PROPERTIES_FILE);
 		List<PatternLevel> levels = readLevelResourceFile(stream);
 		classLevels = levels;
 
@@ -61,7 +74,7 @@ public class LocalLog implements Log {
 		openLogFile(logPath);
 	}
 
-	public LocalLog(String className) {
+	public LocalLogBackend(String className) {
 		// get the last part of the class name
 		this.className = LoggerFactory.getSimpleClassName(className);
 
@@ -85,9 +98,15 @@ public class LocalLog implements Log {
 			} else {
 				Level matchedLevel;
 				try {
+					// try default locale first
 					matchedLevel = Level.valueOf(levelName.toUpperCase());
-				} catch (IllegalArgumentException e) {
-					throw new IllegalArgumentException("Level '" + levelName + "' was not found", e);
+				} catch (IllegalArgumentException e1) {
+					try {
+						// then try english locale
+						matchedLevel = Level.valueOf(levelName.toUpperCase(Locale.ENGLISH));
+					} catch (IllegalArgumentException e2) {
+						throw new IllegalArgumentException("Level '" + levelName + "' was not found", e2);
+					}
 				}
 				level = matchedLevel;
 			}
@@ -144,10 +163,12 @@ public class LocalLog implements Log {
 				System.err.println(
 						"IO exception reading the log properties file '" + LOCAL_LOG_PROPERTIES_FILE + "': " + e);
 			} finally {
-				try {
-					stream.close();
-				} catch (IOException e) {
-					// ignore close exception
+				if (stream != null) {
+					try {
+						stream.close();
+					} catch (IOException e) {
+						// ignored
+					}
 				}
 			}
 		}
@@ -197,6 +218,33 @@ public class LocalLog implements Log {
 		printStream.println(sb.toString());
 		if (throwable != null) {
 			throwable.printStackTrace(printStream);
+		}
+	}
+
+	/**
+	 * Internal factory for LocalLogBackend instances. This can be used with the
+	 * {@link LoggerFactory#setLogBackendFactory(LogBackendFactory)} method to send all log messages to a file.
+	 */
+	public static class LocalLogBackendFactory implements LogBackendFactory {
+
+		private final AtomicReference<String> queuedWarning = new AtomicReference<String>();
+
+		public LocalLogBackendFactory() {
+		}
+
+		public LocalLogBackendFactory(String queuedWarning) {
+			this.queuedWarning.set(queuedWarning);
+		}
+
+		@Override
+		public LogBackend createLogBackend(String classLabel) {
+			LocalLogBackend backend = new LocalLogBackend(classLabel);
+			String queuedWarning = this.queuedWarning.getAndSet(null);
+			if (queuedWarning != null) {
+				// if we had a queued warning message then emit it the first time we create a backend
+				backend.log(Level.WARNING, queuedWarning);
+			}
+			return backend;
 		}
 	}
 

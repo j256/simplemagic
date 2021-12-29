@@ -1,16 +1,23 @@
-package com.j256.simplemagic.logger;
+package com.j256.simplemagic.logger.backend;
+
+import com.j256.simplemagic.logger.Level;
+import com.j256.simplemagic.logger.LogBackend;
+import com.j256.simplemagic.logger.LogBackendFactory;
 
 /**
- * Class which implements our {@link com.j256.simplemagic.logger.Log} interface by delegating to slf4j.
+ * Log backend that delegates to logback directly. The org.slf4j classes are part of the slf4j-api but not the actual
+ * logger.
  * 
+ * From SimpleLogging: https://github.com/j256/simplelogging
+ *
  * @author graywatson
  */
-public class Slf4jLoggingLog implements Log {
+public class LogbackLogBackend implements LogBackend {
 
 	private final org.slf4j.Logger logger;
 
-	public Slf4jLoggingLog(String className) {
-		this.logger = org.slf4j.LoggerFactory.getLogger(className);
+	public LogbackLogBackend(org.slf4j.Logger logger) {
+		this.logger = logger;
 	}
 
 	@Override
@@ -20,14 +27,14 @@ public class Slf4jLoggingLog implements Log {
 				return logger.isTraceEnabled();
 			case DEBUG:
 				return logger.isDebugEnabled();
-			case INFO:
-				return logger.isInfoEnabled();
+			/* INFO below */
 			case WARNING:
 				return logger.isWarnEnabled();
 			case ERROR:
 				return logger.isErrorEnabled();
 			case FATAL:
 				return logger.isErrorEnabled();
+			case INFO:
 			default:
 				return logger.isInfoEnabled();
 		}
@@ -42,9 +49,7 @@ public class Slf4jLoggingLog implements Log {
 			case DEBUG:
 				logger.debug(msg);
 				break;
-			case INFO:
-				logger.info(msg);
-				break;
+			/* INFO below */
 			case WARNING:
 				logger.warn(msg);
 				break;
@@ -54,6 +59,7 @@ public class Slf4jLoggingLog implements Log {
 			case FATAL:
 				logger.error(msg);
 				break;
+			case INFO:
 			default:
 				logger.info(msg);
 				break;
@@ -69,9 +75,7 @@ public class Slf4jLoggingLog implements Log {
 			case DEBUG:
 				logger.debug(msg, t);
 				break;
-			case INFO:
-				logger.info(msg, t);
-				break;
+			/* INFO below */
 			case WARNING:
 				logger.warn(msg, t);
 				break;
@@ -79,11 +83,30 @@ public class Slf4jLoggingLog implements Log {
 				logger.error(msg, t);
 				break;
 			case FATAL:
+				// no level higher than error
 				logger.error(msg, t);
 				break;
+			case INFO:
 			default:
 				logger.info(msg, t);
 				break;
+		}
+	}
+
+	/**
+	 * Factory for generating LogbackLogBackend instances.
+	 */
+	public static class LogbackLogBackendFactory implements LogBackendFactory {
+
+		private final org.slf4j.ILoggerFactory factory;
+
+		public LogbackLogBackendFactory() {
+			this.factory = org.slf4j.impl.StaticLoggerBinder.getSingleton().getLoggerFactory();
+		}
+
+		@Override
+		public LogBackend createLogBackend(String classLabel) {
+			return new LogbackLogBackend(factory.getLogger(classLabel));
 		}
 	}
 }

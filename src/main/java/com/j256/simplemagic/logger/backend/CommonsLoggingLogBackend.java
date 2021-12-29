@@ -1,15 +1,21 @@
-package com.j256.simplemagic.logger;
+package com.j256.simplemagic.logger.backend;
+
+import com.j256.simplemagic.logger.Level;
+import com.j256.simplemagic.logger.LogBackend;
+import com.j256.simplemagic.logger.LogBackendFactory;
 
 /**
- * Class which implements our Log interface by delegating to the Apache commons logging classes.
+ * Log backend that delegating to the Apache commons logging classes.
  * 
+ * From SimpleLogging: https://github.com/j256/simplelogging
+ *
  * @author graywatson
  */
-public class CommonsLoggingLog implements Log {
+public class CommonsLoggingLogBackend implements LogBackend {
 
 	private final org.apache.commons.logging.Log log;
 
-	public CommonsLoggingLog(String className) {
+	public CommonsLoggingLogBackend(String className) {
 		this.log = org.apache.commons.logging.LogFactory.getLog(className);
 	}
 
@@ -20,14 +26,14 @@ public class CommonsLoggingLog implements Log {
 				return log.isTraceEnabled();
 			case DEBUG:
 				return log.isDebugEnabled();
-			case INFO:
-				return log.isInfoEnabled();
+			/* INFO below */
 			case WARNING:
 				return log.isWarnEnabled();
 			case ERROR:
 				return log.isErrorEnabled();
 			case FATAL:
 				return log.isFatalEnabled();
+			case INFO:
 			default:
 				return log.isInfoEnabled();
 		}
@@ -42,9 +48,7 @@ public class CommonsLoggingLog implements Log {
 			case DEBUG:
 				log.debug(msg);
 				break;
-			case INFO:
-				log.info(msg);
-				break;
+			/* INFO below */
 			case WARNING:
 				log.warn(msg);
 				break;
@@ -54,6 +58,7 @@ public class CommonsLoggingLog implements Log {
 			case FATAL:
 				log.fatal(msg);
 				break;
+			case INFO:
 			default:
 				log.info(msg);
 				break;
@@ -69,9 +74,7 @@ public class CommonsLoggingLog implements Log {
 			case DEBUG:
 				log.debug(msg, t);
 				break;
-			case INFO:
-				log.info(msg, t);
-				break;
+			/* INFO below */
 			case WARNING:
 				log.warn(msg, t);
 				break;
@@ -81,9 +84,20 @@ public class CommonsLoggingLog implements Log {
 			case FATAL:
 				log.fatal(msg, t);
 				break;
+			case INFO:
 			default:
 				log.info(msg, t);
 				break;
+		}
+	}
+
+	/**
+	 * Factory for generating CommonsLoggingLogBackend instances.
+	 */
+	public static class CommonsLoggingLogBackendFactory implements LogBackendFactory {
+		@Override
+		public LogBackend createLogBackend(String classLabel) {
+			return new CommonsLoggingLogBackend(classLabel);
 		}
 	}
 }

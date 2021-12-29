@@ -6512,8 +6512,6 @@
 >126    short   0x4d49  (little endian)
 >>124   leshort x       version 0x%04x
 
-
-
 0		belong		0x1a45dfa3
 >5		beshort		0x4282
 >>8		string		matroska	Matroska data

@@ -1,17 +1,19 @@
-package com.j256.simplemagic.logger;
+package com.j256.simplemagic.logger.backend;
 
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.j256.simplemagic.logger.Log.Level;
+import com.j256.simplemagic.logger.Level;
+import com.j256.simplemagic.logger.LogBackend;
+import com.j256.simplemagic.logger.LogBackendFactory;
 
-public abstract class BaseLogTest {
+public abstract class BaseLogBackendTest {
 
-	private final Log log;
+	private final LogBackend log;
 
-	protected BaseLogTest(Log log) {
-		this.log = log;
+	protected BaseLogBackendTest(LogBackendFactory factory) {
+		this.log = factory.createLogBackend(getClass().getSimpleName());
 	}
 
 	@Test
