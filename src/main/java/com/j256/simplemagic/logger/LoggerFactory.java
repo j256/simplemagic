@@ -11,7 +11,9 @@ import com.j256.simplemagic.logger.backend.LocalLogBackend;
  * <p>
  * To set the logger to a particular type, set the system property ("com.j256.simplelogger.backend") contained in
  * {@link #LOG_TYPE_SYSTEM_PROPERTY} to be name of one of the enumerated types in {@link LogBackendType}. You can also
- * call {@link #setLogBackendType(LogBackendType)} or {@link #setLogBackendFactory(LogBackendFactory)}.
+ * call {@link LoggerFactory#setLogBackendType(LogBackendType)} or
+ * {@link LoggerFactory#setLogBackendFactory(LogBackendFactory)}.
+ * 
  * </p>
  */
 public class LoggerFactory {

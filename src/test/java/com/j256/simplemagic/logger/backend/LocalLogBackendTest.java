@@ -121,10 +121,10 @@ public class LocalLogBackendTest extends BaseLogBackendTest {
 		/*
 		 * This depends on the contents of the simpleLoggingLocalLog.properties file.
 		 */
-		LocalLogBackend backend = new LocalLogBackend("com.j256.simplelogging.Something");
+		LocalLogBackend backend = new LocalLogBackend("some.other.package.Something");
 		assertTrue(backend.isLevelEnabled(Level.DEBUG));
 		assertFalse(backend.isLevelEnabled(Level.TRACE));
-		backend = new LocalLogBackend("com.j256.simplelogging.LocalLogBackendTest");
+		backend = new LocalLogBackend("com.j256.simplemagic.logger.Something");
 		assertTrue(backend.isLevelEnabled(Level.DEBUG));
 		assertTrue(backend.isLevelEnabled(Level.TRACE));
 	}
