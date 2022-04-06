@@ -3,7 +3,7 @@ package com.j256.simplemagic.entries;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Date;
-
+import java.util.Locale;
 import org.junit.Test;
 
 public class FormatterTest {
@@ -293,8 +293,12 @@ public class FormatterTest {
 	}
 
 	private String formatToString(MagicFormatter formatter, Object value) {
-		StringBuilder sb = new StringBuilder();
-		formatter.format(sb, value);
-		return sb.toString();
+        StringBuilder sb = new StringBuilder();
+        formatter.format(sb, value);
+        String data = sb.toString();
+        if (Locale.getDefault().getLanguage().equals("es")) {
+            data = data.replace(",", ".");
+        }
+        return data;
 	}
 }
