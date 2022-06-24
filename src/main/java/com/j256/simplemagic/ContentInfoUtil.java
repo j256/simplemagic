@@ -253,7 +253,7 @@ public class ContentInfoUtil {
 			// move the bytes into a smaller array
 			bytes = Arrays.copyOf(bytes, numRead);
 		}
-		return null;
+		return findMatch(bytes);
 	}
 
 	/**
