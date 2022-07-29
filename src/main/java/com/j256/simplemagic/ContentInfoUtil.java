@@ -260,11 +260,7 @@ public class ContentInfoUtil {
 	 * Return the content type from the associated bytes or null if none of the magic entries matched.
 	 */
 	public ContentInfo findMatch(byte[] bytes) {
-		if (bytes.length == 0) {
-			return ContentInfo.EMPTY_INFO;
-		} else {
-			return magicEntries.findMatch(bytes);
-		}
+		return ContentInfo.EMPTY_INFO;
 	}
 
 	/**
