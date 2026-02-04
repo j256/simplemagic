@@ -1,6 +1,15 @@
 Java Simple Magic
 =================
 
+[![Maven Central](https://img.shields.io/maven-central/v/com.j256.simplemagic/simplemagic?style=flat-square
+)](https://mvnrepository.com/artifact/com.j256.simplemagic/simplemagic/latest)
+[![javadoc](https://javadoc.io/badge2/com.j256.simplemagic/simplemagic/javadoc.svg)](https://javadoc.io/doc/com.j256.simplemagic/simplemagic)
+[![ChangeLog](https://img.shields.io/github/v/release/j256/simplemagic?label=changelog&display_name=release)](https://github.com/j256/simplemagic/blob/master/src/main/javadoc/doc-files/changelog.txt)
+[![Documentation](https://img.shields.io/github/v/release/j256/simplemagic?label=documentation&display_name=release)](https://htmlpreview.github.io/?https://github.com/j256/simplemagic/blob/master/src/main/javadoc/doc-files/simplemagic.html)
+[![CodeCov](https://img.shields.io/codecov/c/github/j256/simplemagic.svg)](https://codecov.io/github/j256/simplemagic/)
+[![CircleCI](https://circleci.com/gh/j256/simplemagic.svg?style=shield)](https://circleci.com/gh/j256/simplemagic)
+[![GitHub License](https://img.shields.io/github/license/j256/simplemagic)](https://github.com/j256/simplemagic/blob/master/LICENSE.txt)
+
 Here's a "magic" number package  which allows content-type (mime-type) determination from files and byte arrays. It makes
 use of the magic(5) Unix content-type files to implement the same functionality as the Unix file(1) command in Java which
 detects the contents of a file. It uses either internal config files or can read ```/etc/magic```,
@@ -8,8 +17,9 @@ detects the contents of a file. It uses either internal config files or can read
 ```byte[]```.
 
 * For more information, visit the [home page](http://256stuff.com/sources/simplemagic/).
-* The source code be found on the [git repository](https://github.com/j256/simplemagic).  [![CircleCI](https://circleci.com/gh/j256/simplemagic.svg?style=svg)](https://circleci.com/gh/j256/simplemagic) [![CodeCov](https://img.shields.io/codecov/c/github/j256/simplemagic.svg)](https://codecov.io/github/j256/simplemagic/)
-* Maven packages are published via [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.j256.simplemagic/simplemagic/badge.svg?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/com.j256.simplemagic/simplemagic/) [![javadoc](https://javadoc.io/badge2/com.j256.simplemagic/simplemagic/javadoc.svg)](https://javadoc.io/doc/com.j256.simplemagic/simplemagic)
+* The source code be found on the [git repository](https://github.com/j256/simplemagic).
+* [Documentation for the library](https://htmlpreview.github.io/?https://github.com/j256/simplemagic/blob/master/src/main/javadoc/doc-files/simplemagic.html).  More on the [home page](https://256stuff.com/sources/simplemagic/).
+* Maven packages are published via [Maven Central](https://mvnrepository.com/artifact/com.j256.simplemagic/simplemagic/latest)
 
 Enjoy.  Gray Watson
 
@@ -52,7 +62,7 @@ For example:
 
 # Maven Configuration
 
-* Maven packages are published via [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.j256.simplemagic/simplemagic/badge.svg?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/com.j256.simplemagic/simplemagic/)
+Maven packages are published via [Maven Central](https://maven-badges.herokuapp.com/maven-central/com.j256.simplemagic/simplemagic/)
 
 ``` xml
 <dependency>
