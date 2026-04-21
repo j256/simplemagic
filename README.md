@@ -1,8 +1,7 @@
 Java Simple Magic
 =================
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.j256.simplemagic/simplemagic?style=flat-square
-)](https://mvnrepository.com/artifact/com.j256.simplemagic/simplemagic/latest)
+[![Maven Central](https://img.shields.io/maven-central/v/com.j256.simplemagic/simplemagic?style=flat-square)](https://mvnrepository.com/artifact/com.j256.simplemagic/simplemagic/latest)
 [![javadoc](https://javadoc.io/badge2/com.j256.simplemagic/simplemagic/javadoc.svg)](https://javadoc.io/doc/com.j256.simplemagic/simplemagic)
 [![ChangeLog](https://img.shields.io/github/v/release/j256/simplemagic?label=changelog&display_name=release)](https://github.com/j256/simplemagic/blob/master/src/main/javadoc/doc-files/changelog.txt)
 [![Documentation](https://img.shields.io/github/v/release/j256/simplemagic?label=documentation&display_name=release)](https://htmlpreview.github.io/?https://github.com/j256/simplemagic/blob/master/src/main/javadoc/doc-files/simplemagic.html)
@@ -62,7 +61,7 @@ For example:
 
 # Maven Configuration
 
-Maven packages are published via [Maven Central](https://maven-badges.herokuapp.com/maven-central/com.j256.simplemagic/simplemagic/)
+Maven packages are published via [Maven Central](https://mvnrepository.com/artifact/com.j256.simplemagic/simplemagic/latest)
 
 ``` xml
 <dependency>
@@ -74,4 +73,4 @@ Maven packages are published via [Maven Central](https://maven-badges.herokuapp.
 
 # ChangeLog Release Notes
 
-See the [ChangeLog.txt file](src/main/javadoc/doc-files/changelog.txt).
+See the [ChangeLog file](src/main/javadoc/doc-files/changelog.txt).

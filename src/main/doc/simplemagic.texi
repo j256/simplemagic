@@ -49,13 +49,13 @@ local ~Unix system configuration.
 
 To get started quickly using SimpleMagic, @pxref{Quick Start}.
 @ifhtml
-There is also a @uref{http://256stuff.com/sources/simplemagic/docs/simplemagic.pdf, PDF version of this documentation}.
+There is also a @uref{https://256stuff.com/sources/simplemagic/docs/simplemagic.pdf, PDF version of this documentation}.
 @end ifhtml
 @iftex
-There is also a @uref{http://256stuff.com/sources/simplemagic/docs/simplemagic.html, HTML version of this documentation}.
+There is also a @uref{https://256stuff.com/sources/simplemagic/docs/simplemagic.html, HTML version of this documentation}.
 @end iftex
 
-Gray Watson @uref{http://256stuff.com/gray/}
+Gray Watson @uref{https://256stuff.com/gray/}
 
 @menu
 * Quick Start::                Start using SimpleMagic quickly.
@@ -76,7 +76,7 @@ To use SimpleMagic you need to do the following steps.  For more information, @p
 
 @enumerate
 
-@item Download SimpleMagic from the @uref{http://256stuff.com/sources/simplemagic/releases/, SimpleMagic release page}.  @xref{Downloading}.
+@item Download SimpleMagic from the @uref{https://256stuff.com/sources/simplemagic/releases/, SimpleMagic release page}.  @xref{Downloading}.
 
 @item Optionally load in the magic entries from local file(s).  By default, if you construct a @code{ContentInfoUtil} instance
 with the default constructor, it will load the internal magic entries file.  @xref{Loading Magic Entries}.
@@ -143,11 +143,11 @@ For somewhat more extensive instructions, @pxref{Using}.
 @cindex how to download the jars
 @cindex downloading the jars
 @cindex where to get new jars
-To get started with SimpleMagic, you will need to download the jar file.  The @uref{http://256stuff.com/sources/simplemagic/releases/, SimpleMagic
-release page} is the default repository but the jars are also available from the @uref{http://repo1.maven.org/maven2/com/j256/simplemagic/,
+To get started with SimpleMagic, you will need to download the jar file.  The @uref{https://256stuff.com/sources/simplemagic/releases/, SimpleMagic
+release page} is the default repository but the jars are also available from the @uref{https://repo1.maven.org/maven2/com/j256/simplemagic/simplemagic/,
 central maven repository}.
 
-The code works with Java 6 or later.
+The code works with Java 8 or later.
 
 @c ----------------------------------------------------------------
 @node Loading Magic Entries, Finding Content Info, Downloading, Using
@@ -233,7 +233,7 @@ ContentInfo info = inputStream.findMatch();
 For the file and stream versions, the first 10 kilobytes of the data is read and processed.
 
 There is also a long internal list of file types copied from the 
-@uref{http://svn.apache.org/viewvc/httpd/httpd/trunk/docs/conf/mime.types?view=co, Apache list}.  Not all of the files
+@uref{https://svn.apache.org/viewvc/httpd/httpd/trunk/docs/conf/mime.types?view=co, Apache list}.  Not all of the files
 in this list have associated magic number information.  However, with the list you can look up mime-types or by
 file-extension and get the associated information. 
 
@@ -331,8 +331,6 @@ ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUT
 DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
 WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
 USE OR PERFORMANCE OF THIS SOFTWARE.
-
-The author may be contacted via the @uref{http://256stuff.com/sources/simplemagic/, SimpleMagic home page}.
 
 @c ----------------------------------------------------------------
 @node Index of Concepts,, License, Top

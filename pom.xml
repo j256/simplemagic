@@ -17,14 +17,12 @@
 			<url>https://opensource.org/licenses/ISC</url>
 		</license>
 	</licenses>
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
-	</parent>
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.compiler.source>8</maven.compiler.source>
+		<maven.compiler.target>8</maven.compiler.target>
 		<!-- optional dependency versions -->
-		<log4j-version>1.2.17</log4j-version>
 		<log4j2-version>2.17.1</log4j2-version>
 		<slf4j-version>1.7.32</slf4j-version>
 		<commons-logging-version>1.2</commons-logging-version>
@@ -52,23 +50,6 @@
 			<timezone>-5</timezone>
 		</developer>
 	</developers>
-	<profiles>
-		<profile>
-			<id>st</id>
-			<distributionManagement>
-				<repository>
-					<id>sonatype-nexus-staging</id>
-					<name>Nexus Release Repository</name>
-					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-				</repository>
-				<snapshotRepository>
-					<id>sonatype-nexus-snapshots</id>
-					<name>Sonatype Nexus Snapshots</name>
-					<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-				</snapshotRepository>
-			</distributionManagement>
-		</profile>
-	</profiles>
 	<build>
 		<finalName>simplemagic</finalName>
 		<!-- Resources -->
@@ -99,8 +80,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.5.1</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -118,28 +99,26 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9.1</version>
+				<version>3.12.0</version>
 				<executions>
 					<execution>
 						<goals>
 							<goal>jar</goal>
 						</goals>
-						<configuration>
-							<showPackage>false</showPackage>
-							<additionalparam>-tag inheritDoc:X -Xdoclint:none</additionalparam>
-						</configuration>
 					</execution>
 				</executions>
 				<configuration>
-					<showPackage>false</showPackage>
+					<source>${maven.compiler.source}</source>
 					<bottom>
-						This content is licensed by Gray Watson under the
+						This documentation content is licensed by Gray Watson
+						under the
 						&lt;a
-						href="https://creativecommons.org/licenses/by-sa/3.0/" &gt;Creative Commons Attribution-Share Alike 3.0 License.
+						href="https://creativecommons.org/licenses/by-sa/3.0/"
+						&gt;Creative Commons Attribution-Share Alike 3.0
+						License.
 						&lt;/a&gt; </bottom>
-					<additionalparam>-tag inheritDoc:X -Xdoclint:none</additionalparam>
-					<excludePackageNames>
-					</excludePackageNames>
+					<doclint>none</doclint>
+					<docfilessubdirs>true</docfilessubdirs>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -220,7 +199,7 @@
 			<plugin>
 				<groupId>com.j256.testcheckpublisher</groupId>
 				<artifactId>test-check-publisher-maven-plugin</artifactId>
-				<version>1.5</version>
+				<version>1.6</version>
 			</plugin>
 		</plugins>
 		<pluginManagement>
@@ -269,12 +248,6 @@
 	<dependencies>
 		<!-- optional dependencies -->
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${log4j-version}</version>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
 			<version>${log4j2-version}</version>
@@ -309,6 +282,18 @@
 			<groupId>org.easymock</groupId>
 			<artifactId>easymock</artifactId>
 			<version>${easymock-version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>${log4j2-version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j2-version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
