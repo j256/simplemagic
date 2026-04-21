@@ -6,7 +6,7 @@ Java Simple Magic
 [![ChangeLog](https://img.shields.io/github/v/release/j256/simplemagic?label=changelog&display_name=release)](https://github.com/j256/simplemagic/blob/master/src/main/javadoc/doc-files/changelog.txt)
 [![Documentation](https://img.shields.io/github/v/release/j256/simplemagic?label=documentation&display_name=release)](https://htmlpreview.github.io/?https://github.com/j256/simplemagic/blob/master/src/main/javadoc/doc-files/simplemagic.html)
 [![CodeCov](https://img.shields.io/codecov/c/github/j256/simplemagic.svg)](https://codecov.io/github/j256/simplemagic/)
-[![CircleCI](https://circleci.com/gh/j256/simplemagic.svg?style=shield)](https://circleci.com/gh/j256/simplemagic)
+[![CI](https://github.com/j256/simplemagic/actions/workflows/main.yml/badge.svg)](https://github.com/j256/simplemagic/actions/workflows/main.yml)
 [![GitHub License](https://img.shields.io/github/license/j256/simplemagic)](https://github.com/j256/simplemagic/blob/master/LICENSE.txt)
 
 Here's a "magic" number package  which allows content-type (mime-type) determination from files and byte arrays. It makes
