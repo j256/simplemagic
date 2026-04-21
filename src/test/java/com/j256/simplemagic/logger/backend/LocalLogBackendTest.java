@@ -4,16 +4,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
 
 import org.junit.Test;
 
 import com.j256.simplemagic.logger.Level;
 import com.j256.simplemagic.logger.LogBackend;
+import com.j256.simplemagic.logger.LoggerConstants;
 import com.j256.simplemagic.logger.backend.LocalLogBackend.LocalLogBackendFactory;
 
 public class LocalLogBackendTest extends BaseLogBackendTest {
@@ -28,22 +25,22 @@ public class LocalLogBackendTest extends BaseLogBackendTest {
 		if (log.isLevelEnabled(Level.TRACE)) {
 			return;
 		}
-		System.setProperty(LocalLogBackend.LOCAL_LOG_LEVEL_PROPERTY, "TRACE");
+		System.setProperty(LoggerConstants.LOCAL_LOG_LEVEL_PROPERTY, "TRACE");
 		try {
 			log = new LocalLogBackend("foo");
 			assertTrue(log.isLevelEnabled(Level.TRACE));
 		} finally {
-			System.clearProperty(LocalLogBackend.LOCAL_LOG_LEVEL_PROPERTY);
+			System.clearProperty(LoggerConstants.LOCAL_LOG_LEVEL_PROPERTY);
 		}
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testInvalidLevelProperty() {
-		System.setProperty(LocalLogBackend.LOCAL_LOG_LEVEL_PROPERTY, "not a valid level");
+		System.setProperty(LoggerConstants.LOCAL_LOG_LEVEL_PROPERTY, "not a valid level");
 		try {
 			new LocalLogBackend("foo");
 		} finally {
-			System.clearProperty(LocalLogBackend.LOCAL_LOG_LEVEL_PROPERTY);
+			System.clearProperty(LoggerConstants.LOCAL_LOG_LEVEL_PROPERTY);
 		}
 	}
 
@@ -97,57 +94,25 @@ public class LocalLogBackendTest extends BaseLogBackendTest {
 	}
 
 	@Test
-	public void testInvalidLevelsFile() {
-		StringWriter stringWriter = new StringWriter();
-		// invalid line
-		stringWriter.write("x\n");
-		// invalid level
-		stringWriter.write("com\\.foo\\.myclass\\.StatementExecutor = INVALID_LEVEL\n");
-		LocalLogBackend.readLevelResourceFile(new ByteArrayInputStream(stringWriter.toString().getBytes()));
-	}
-
-	@Test
-	public void testValidLevelsFile() {
-		StringWriter stringWriter = new StringWriter();
-		// invalid line
-		stringWriter.write("x\n");
-		// invalid level
-		stringWriter.write("com\\.foo\\.myclass\\.StatementExecutor = INFO\n");
-		LocalLogBackend.readLevelResourceFile(new ByteArrayInputStream(stringWriter.toString().getBytes()));
-	}
-
-	@Test
 	public void testMultipleLineMatches() {
 		/*
 		 * This depends on the contents of the simpleLoggingLocalLog.properties file.
 		 */
-		LocalLogBackend backend = new LocalLogBackend("some.other.package.Something");
+		LocalLogBackend backend = new LocalLogBackend("com.j256.simplelogging.Something");
 		assertTrue(backend.isLevelEnabled(Level.DEBUG));
 		assertFalse(backend.isLevelEnabled(Level.TRACE));
-		backend = new LocalLogBackend("com.j256.simplemagic.logger.Something");
+		backend = new LocalLogBackend("com.j256.simplelogging.LocalLogBackendTest");
 		assertTrue(backend.isLevelEnabled(Level.DEBUG));
 		assertTrue(backend.isLevelEnabled(Level.TRACE));
 	}
 
 	@Test
-	public void testIoErrorsReadingLevelFile() {
-		InputStream errorStream = new InputStream() {
-			@Override
-			public int read() throws IOException {
-				throw new IOException("simulated exception");
-			}
-
-			@Override
-			public void close() throws IOException {
-				throw new IOException("simulated exception");
-			}
-		};
-		LocalLogBackend.readLevelResourceFile(errorStream);
+	public void testCoverage() {
+		LocalLogBackend backend = new LocalLogBackend("Foo");
+		assertFalse(backend.isLevelEnabled(Level.TRACE));
+		backend = new LocalLogBackend("Foo.");
+		assertFalse(backend.isLevelEnabled(Level.TRACE));
+		backend = new LocalLogBackend("com.j256.simplelogging.Initial");
+		assertFalse(backend.isLevelEnabled(Level.TRACE));
 	}
-
-	@Test
-	public void testInputStreamNull() {
-		LocalLogBackend.readLevelResourceFile(null);
-	}
-
 }

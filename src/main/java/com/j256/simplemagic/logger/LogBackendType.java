@@ -5,8 +5,8 @@ import com.j256.simplemagic.logger.backend.LocalLogBackend.LocalLogBackendFactor
 import com.j256.simplemagic.logger.backend.NullLogBackend.NullLogBackendFactory;
 
 /**
- * Type of logging backends that are supported. The classes are specified as strings so there is not a direct dependency
- * placed on them since these classes may reference types not on the classpath.
+ * Default logging backends that are supported. The class names are specified as strings in the constructor so there is
+ * not a direct dependency placed on them since these classes may reference types not on the classpath.
  * 
  * From SimpleLogging: https://github.com/j256/simplelogging
  *
@@ -14,25 +14,40 @@ import com.j256.simplemagic.logger.backend.NullLogBackend.NullLogBackendFactory;
  */
 public enum LogBackendType implements LogBackendFactory {
 	/**
-	 * SLF4J which is often paired with logback. See: http://www.slf4j.org/
+	 * Android Log mechanism. See: https://developer.android.com/reference/android/util/Log
+	 * 
+	 * <p>
+	 * WARNING: Android log must be before commons logging since Android provides commons logging but logging messages
+	 * are ignored that are sent there. Grrrrr.
+	 * </p>
 	 */
-	SLF4J("Slf4jLoggingLogBackend$Slf4jLoggingLogBackendFactory"),
+	ANDROID("AndroidLogBackend$AndroidLogBackendFactory"),
 	/**
 	 * Logback direct. See: http://logback.qos.ch/
 	 */
 	LOGBACK("LogbackLogBackend$LogbackLogBackendFactory"),
 	/**
-	 * Apache commons logging. See https://commons.apache.org/proper/commons-logging/
-	 */
-	COMMONS_LOGGING("CommonsLoggingLogBackend$CommonsLoggingLogBackendFactory"),
-	/**
 	 * Version 2 of the log4j package. See https://logging.apache.org/log4j/2.x/
 	 */
 	LOG4J2("Log4j2LogBackend$Log4j2LogBackendFactory"),
 	/**
-	 * Old version of the log4j package. See https://logging.apache.org/log4j/2.x/
+	 * SLF4J which is often paired with logback. See: http://www.slf4j.org/ This should be below logback and log4j2
+	 * since those are typical backends used by slf4j.
+	 */
+	SLF4J("Slf4jLoggingLogBackend$Slf4jLoggingLogBackendFactory"),
+	/**
+	 * Old version of the log4j package accessed through reflection so as to not show up as a dependency. This will only
+	 * be used if the log4j jar is supplied. See https://logging.apache.org/log4j/2.x/
 	 */
 	LOG4J("Log4jLogBackend$Log4jLogBackendFactory"),
+	/**
+	 * Support for the logger available inside AWS lambda SDK.
+	 */
+	LAMBDA("LambdaLoggerLogBackend$LambdaLoggerLogBackendFactory"),
+	/**
+	 * Apache commons logging. See https://commons.apache.org/proper/commons-logging/
+	 */
+	COMMONS_LOGGING("CommonsLoggingLogBackend$CommonsLoggingLogBackendFactory"),
 	/**
 	 * Local simple log backend that writes to a output file.
 	 * 
@@ -54,7 +69,7 @@ public enum LogBackendType implements LogBackendFactory {
 	/**
 	 * Logging backend which ignores all messages. Used to disable all logging. This is never chosen automatically.
 	 */
-	NULL(new NullLogBackendFactory()),
+	NULL(NullLogBackendFactory.getSingleton()),
 	// end
 	;
 
@@ -64,9 +79,15 @@ public enum LogBackendType implements LogBackendFactory {
 		this.factory = factory;
 	}
 
-	private LogBackendType(String factoryClassNameSuffix) {
-		this.factory =
-				detectFactory(LocalLogBackendFactory.class.getPackage().getName() + '.' + factoryClassNameSuffix);
+	private LogBackendType(String factoryClassName) {
+		// is the specified class a full package or is it relative to the location of the LocalLogBackendFactory.class
+		if (factoryClassName.contains(".")) {
+			// NOTE: may not get here but others could add full class names to the above list
+			this.factory = detectFactory(factoryClassName);
+		} else {
+			// the name is a suffix and we tack on the package from the local log factory
+			this.factory = detectFactory(LocalLogBackendFactory.class.getPackage().getName() + '.' + factoryClassName);
+		}
 	}
 
 	@Override
@@ -78,13 +99,38 @@ public enum LogBackendType implements LogBackendFactory {
 	 * Return true if the log class is available. This typically is testing to see if a class is available on the
 	 * classpath.
 	 */
+	@Override
 	public boolean isAvailable() {
-		/*
-		 * If this is LogBackendType.LOCAL then it is always available. LogBackendType.NULL is never available. If it is
-		 * another LogBackendType then we might have defaulted to using the local-log backend if it was not available.
-		 */
-		return (this == LogBackendType.LOCAL
-				|| (this != LogBackendType.NULL && !(factory instanceof LocalLogBackendFactory)));
+		if (this == LogBackendType.LOCAL) {
+			// always available
+			return true;
+		} else if (this == LogBackendType.NULL || !this.factory.isAvailable()) {
+			// LogBackendType.NULL is never available or check the factory availability method
+			return false;
+		} else {
+			// we might have defaulted to using the local-log backend if it was not available
+			return !(factory instanceof LocalLogBackendFactory);
+		}
+	}
+
+	/**
+	 * Return true if the log class is available. This typically is testing to see if a class is available on the
+	 * classpath.
+	 */
+	public static boolean isAvailable(LogBackendFactory logBackendFactory) {
+		if (logBackendFactory instanceof LogBackendType) {
+			return ((LogBackendType) logBackendFactory).isAvailable();
+		}
+		try {
+			if (!logBackendFactory.isAvailable()) {
+				return false;
+			} else {
+				logBackendFactory.createLogBackend("test").isLevelEnabled(Level.INFO);
+				return true;
+			}
+		} catch (Throwable th) {
+			return false;
+		}
 	}
 
 	/**
@@ -96,7 +142,13 @@ public enum LogBackendType implements LogBackendFactory {
 			LogBackendFactory factory = (LogBackendFactory) Class.forName(factoryClassName).newInstance();
 			// we may really need to use the class before we see issues
 			factory.createLogBackend("test").isLevelEnabled(Level.INFO);
-			return factory;
+			if (factory.isAvailable()) {
+				return factory;
+			} else {
+				String queuedWarning = "Factory class " + factoryClassName + " for log type " + this
+						+ ", is not available, using local log";
+				return new LocalLogBackendFactory(queuedWarning);
+			}
 		} catch (Throwable th) {
 			/*
 			 * We catch throwable here because we could get linkage errors. We don't immediately report on this issue

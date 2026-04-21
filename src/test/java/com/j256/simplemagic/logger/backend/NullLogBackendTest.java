@@ -1,5 +1,7 @@
 package com.j256.simplemagic.logger.backend;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.j256.simplemagic.logger.Logger;
@@ -16,6 +18,7 @@ public class NullLogBackendTest extends BaseLogBackendTest {
 	public void testStuff() {
 		LoggerFactory.setLogBackendFactory(new NullLogBackendFactory());
 		Logger logger = LoggerFactory.getLogger(getClass());
+		assertTrue(LoggerFactory.getLogBackendFactory().isAvailable());
 		logger.fatal("shouldn't see this");
 	}
 }

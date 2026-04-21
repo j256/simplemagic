@@ -14,9 +14,9 @@ import com.j256.simplemagic.logger.LogBackendFactory;
  */
 public class LogbackLogBackend implements LogBackend {
 
-	private final org.slf4j.Logger logger;
+	private final ch.qos.logback.classic.Logger logger;
 
-	public LogbackLogBackend(org.slf4j.Logger logger) {
+	public LogbackLogBackend(ch.qos.logback.classic.Logger logger) {
 		this.logger = logger;
 	}
 
@@ -98,15 +98,21 @@ public class LogbackLogBackend implements LogBackend {
 	 */
 	public static class LogbackLogBackendFactory implements LogBackendFactory {
 
-		private final org.slf4j.ILoggerFactory factory;
+		private final ch.qos.logback.classic.LoggerContext loggerContext;
 
 		public LogbackLogBackendFactory() {
-			this.factory = org.slf4j.impl.StaticLoggerBinder.getSingleton().getLoggerFactory();
+			this.loggerContext = new ch.qos.logback.classic.LoggerContext();
+		}
+
+		@Override
+		public boolean isAvailable() {
+			// if we were able to load the classes here then it is available.
+			return true;
 		}
 
 		@Override
 		public LogBackend createLogBackend(String classLabel) {
-			return new LogbackLogBackend(factory.getLogger(classLabel));
+			return new LogbackLogBackend(loggerContext.getLogger(classLabel));
 		}
 	}
 }

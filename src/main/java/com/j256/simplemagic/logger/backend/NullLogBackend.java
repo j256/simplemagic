@@ -3,7 +3,6 @@ package com.j256.simplemagic.logger.backend;
 import com.j256.simplemagic.logger.Level;
 import com.j256.simplemagic.logger.LogBackend;
 import com.j256.simplemagic.logger.LogBackendFactory;
-import com.j256.simplemagic.logger.LoggerFactory;
 
 /**
  * Log backend that ignores all log requests.
@@ -36,15 +35,29 @@ public class NullLogBackend implements LogBackend {
 
 	/**
 	 * Factory for generating NullLogBackend instances. This can be used with the
-	 * {@link LoggerFactory#setLogBackendFactory(LogBackendFactory)} method to completely disable all logging.
+	 * LoggerFactory.setLogBackendFactory(LogBackendFactory) method to completely disable all logging.
 	 */
 	public static class NullLogBackendFactory implements LogBackendFactory {
 
-		private static final NullLogBackend singleton = new NullLogBackend();
+		private static final NullLogBackendFactory singletonFactory = new NullLogBackendFactory();
+		private static final NullLogBackend singletonBackend = new NullLogBackend();
+
+		/**
+		 * Return singleton of our factory.
+		 */
+		public static NullLogBackendFactory getSingleton() {
+			return singletonFactory;
+		}
+
+		@Override
+		public boolean isAvailable() {
+			// always available
+			return true;
+		}
 
 		@Override
 		public LogBackend createLogBackend(String classLabel) {
-			return singleton;
+			return singletonBackend;
 		}
 	}
 }
