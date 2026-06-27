@@ -337,8 +337,12 @@ public class ContentInfoUtil {
 				closeQuietly(reader);
 			}
 		} else if (fileOrDirectory.isDirectory()) {
-			MagicEntries entries = new MagicEntries();
-			for (File subFile : fileOrDirectory.listFiles()) {
+		MagicEntries entries = new MagicEntries();
+		File[] subFiles = fileOrDirectory.listFiles();
+		if (subFiles == null) {
+			return null;
+		}
+		for (File subFile : subFiles) {
 				FileReader fr = new FileReader(subFile);
 				try {
 					readEntries(entries, fr, errorCallBack);
