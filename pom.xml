@@ -169,7 +169,17 @@
 				<version>2.19.1</version>
 				<configuration>
 					<useSystemClassLoader>false</useSystemClassLoader>
+					<argLine>--add-opens java.base/java.lang=ALL-UNNAMED</argLine>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>3.21.2</version>
+				<configuration>
+					<linkXRef>false</linkXRef>
+					<minimumTokens>100</minimumTokens>
+					<targetJdk>1.8</targetJdk> </configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

@@ -290,8 +290,10 @@ public class MagicEntryParser {
 		if (key.equals(MIME_TYPE_LINE)) {
 			previous.setMimeType(value);
 		} else {
-			// unknown extension key
+		if (errorCallBack != null) {
+			errorCallBack.error(line, "unknown special extension key: " + key, null);
 		}
+	}
 	}
 
 	private static int findNonWhitespace(String line, int startPos) {
