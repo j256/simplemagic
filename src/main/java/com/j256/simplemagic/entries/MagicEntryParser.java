@@ -1,5 +1,7 @@
 package com.j256.simplemagic.entries;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,6 +25,48 @@ public class MagicEntryParser {
 	private final static Pattern OFFSET_PATTERN =
 			Pattern.compile("\\(([0-9a-fA-Fx]+)\\.?([bsilBSILm]?)([\\*\\+\\-]?)([0-9a-fA-Fx]*)\\)");
 
+	/**
+	 * Carries the endian converter, byte size, and id3 flag for a single offset type specifier character.
+	 * Used by the lookup map below in place of a large switch block.
+	 */
+	private static class EndianSpec {
+		final EndianConverter converter;
+		final int size;
+		final boolean isId3;
+
+		EndianSpec(EndianConverter converter, int size, boolean isId3) {
+			this.converter = converter;
+			this.size = size;
+			this.isId3 = isId3;
+		}
+	}
+
+	/**
+	 * Maps each offset type specifier character (from the magic(5) indirect offset syntax) to its
+	 * endian converter, byte size, and id3 flag. Replaces the switch block in parseOffset().
+	 *
+	 * Lower-case letters are little-endian; upper-case letters are big-endian; 'm' is middle-endian.
+	 * The character 'i'/'I' uses id3-length encoding (4 bytes, lower 7 bits of each byte).
+	 */
+	private static final Map<Character, EndianSpec> ENDIAN_SPEC_MAP = new HashMap<Character, EndianSpec>();
+	static {
+		// little-endian specifiers (endian doesn't really matter for 1-byte 'b')
+		ENDIAN_SPEC_MAP.put('b', new EndianSpec(EndianType.LITTLE.getConverter(), 1, false));
+		ENDIAN_SPEC_MAP.put('s', new EndianSpec(EndianType.LITTLE.getConverter(), 2, false));
+		ENDIAN_SPEC_MAP.put('i', new EndianSpec(EndianType.LITTLE.getConverter(), 4, true));
+		ENDIAN_SPEC_MAP.put('l', new EndianSpec(EndianType.LITTLE.getConverter(), 4, false));
+		// big-endian specifiers (endian doesn't really matter for 1-byte 'B')
+		ENDIAN_SPEC_MAP.put('B', new EndianSpec(EndianType.BIG.getConverter(), 1, false));
+		ENDIAN_SPEC_MAP.put('S', new EndianSpec(EndianType.BIG.getConverter(), 2, false));
+		ENDIAN_SPEC_MAP.put('I', new EndianSpec(EndianType.BIG.getConverter(), 4, true));
+		ENDIAN_SPEC_MAP.put('L', new EndianSpec(EndianType.BIG.getConverter(), 4, false));
+		// middle-endian (PDP-11)
+		ENDIAN_SPEC_MAP.put('m', new EndianSpec(EndianType.MIDDLE.getConverter(), 4, false));
+	}
+
+	/** Default endian spec used when no type specifier character is present in the offset expression. */
+	private static final EndianSpec DEFAULT_ENDIAN_SPEC =
+			new EndianSpec(EndianType.LITTLE.getConverter(), 4, false);
 	/**
 	 * Parse a line from the magic configuration file into an entry.
 	 */
@@ -366,71 +410,22 @@ public class MagicEntryParser {
 			}
 			return null;
 		}
-		char ch;
+		// resolve endian converter, size, and id3 flag from the type specifier character via lookup map
+		EndianSpec spec;
 		if (matcher.group(2).length() == 1) {
-			ch = matcher.group(2).charAt(0);
+			char ch = matcher.group(2).charAt(0);
+			// look up the specifier; fall back to default (little-endian 4-byte) if not found
+			spec = ENDIAN_SPEC_MAP.get(ch);
+			if (spec == null) {
+				spec = DEFAULT_ENDIAN_SPEC;
+			}
 		} else {
-			// it will use the default
-			ch = '\0';
+			// no type specifier present — use the default (little-endian 4-byte long)
+			spec = DEFAULT_ENDIAN_SPEC;
 		}
-		EndianConverter converter = null;
-		boolean isId3 = false;
-		int size = 0;
-		switch (ch) {
-			// little-endian byte
-			case 'b':
-				// endian doesn't really matter for 1 byte
-				converter = EndianType.LITTLE.getConverter();
-				size = 1;
-				break;
-			// little-endian short
-			case 's':
-				converter = EndianType.LITTLE.getConverter();
-				size = 2;
-				break;
-			// little-endian integer
-			case 'i':
-				converter = EndianType.LITTLE.getConverter();
-				size = 4;
-				isId3 = true;
-				break;
-			// little-endian long (4 byte)
-			case 'l':
-				converter = EndianType.LITTLE.getConverter();
-				size = 4;
-				break;
-			// big-endian byte
-			case 'B':
-				// endian doesn't really matter for 1 byte
-				converter = EndianType.BIG.getConverter();
-				size = 1;
-				break;
-			// big-endian short
-			case 'S':
-				converter = EndianType.BIG.getConverter();
-				size = 2;
-				break;
-			// big-endian integer
-			case 'I':
-				converter = EndianType.BIG.getConverter();
-				size = 4;
-				isId3 = true;
-				break;
-			// big-endian long (4 byte)
-			case 'L':
-				converter = EndianType.BIG.getConverter();
-				size = 4;
-				break;
-			// big-endian integer
-			case 'm':
-				converter = EndianType.MIDDLE.getConverter();
-				size = 4;
-				break;
-			default:
-				converter = EndianType.LITTLE.getConverter();
-				size = 4;
-				break;
-		}
+		EndianConverter converter = spec.converter;
+		boolean isId3 = spec.isId3;
+		int size = spec.size;
 		int add = 0;
 		// the +# section is optional
 		if (matcher.group(4) != null && matcher.group(4).length() > 0) {
