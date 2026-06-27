@@ -73,26 +73,19 @@ public class MagicEntryParser {
 	public static MagicEntry parseLine(MagicEntry previous, String line, ErrorCallBack errorCallBack) {
 		if (line.startsWith("!:")) {
 			if (previous != null) {
-				// we ignore it if there is no previous entry to add it to
 				handleSpecial(previous, line, errorCallBack);
 			}
 			return null;
 		}
 
-		// 0[ ]string[ ]%PDF-[ ]PDF document
-		// !:mime[ ]application/pdf
-		// >5[ ]byte[ ]x[ ]\b, version %c
-		// >7[ ]byte[ ]x[ ]\b.%c
-
-		// unfortunately, we cannot use split or even regex since the whitespace is not reliable (grumble)
 		String[] parts = splitLine(line, errorCallBack);
 		if (parts == null) {
 			return null;
 		}
 
-		// level and offset
-		int level;
+		// ── ① level + offset ─────────────────────────────────────────────
 		int sindex = parts[0].lastIndexOf('>');
+		int level;
 		String offsetString;
 		if (sindex < 0) {
 			level = 0;
@@ -101,17 +94,18 @@ public class MagicEntryParser {
 			level = sindex + 1;
 			offsetString = parts[0].substring(sindex + 1);
 		}
-		String work = offsetString;
 
 		int offset;
 		OffsetInfo offsetInfo;
-		if (work.length() == 0) {
+		boolean addOffset = false;
+		String work = offsetString;
+
+		if (work.isEmpty()) {
 			if (errorCallBack != null) {
 				errorCallBack.error(line, "invalid offset number:" + offsetString, null);
 			}
 			return null;
 		}
-		boolean addOffset = false;
 		if (work.charAt(0) == '&') {
 			if (work.length() == 1) {
 				if (errorCallBack != null) {
@@ -140,13 +134,12 @@ public class MagicEntryParser {
 			}
 		}
 
-		// process the AND (&) part of the type
+		// ── ② type string (AND value + matcher) ──────────────────────────
 		String typeStr = parts[1];
-		sindex = typeStr.indexOf('&');
-		// we use long because of overlaps
 		Long andValue = null;
-		if (sindex >= 0) {
-			String andStr = typeStr.substring(sindex + 1);
+		int andIndex = typeStr.indexOf('&');
+		if (andIndex >= 0) {
+			String andStr = typeStr.substring(andIndex + 1);
 			try {
 				andValue = Long.decode(andStr);
 			} catch (NumberFormatException e) {
@@ -155,16 +148,15 @@ public class MagicEntryParser {
 				}
 				return null;
 			}
-			typeStr = typeStr.substring(0, sindex);
+			typeStr = typeStr.substring(0, andIndex);
 		}
-		if (typeStr.length() == 0) {
+		if (typeStr.isEmpty()) {
 			if (errorCallBack != null) {
 				errorCallBack.error(line, "blank type string", null);
 			}
 			return null;
 		}
 
-		// process the type string
 		boolean unsignedType = false;
 		MagicMatcher matcher = MagicType.matcherfromString(typeStr);
 		if (matcher == null) {
@@ -172,9 +164,9 @@ public class MagicEntryParser {
 				matcher = MagicType.matcherfromString(typeStr.substring(1));
 				unsignedType = true;
 			} else {
-				int index = typeStr.indexOf('/');
-				if (index > 0) {
-					matcher = MagicType.matcherfromString(typeStr.substring(0, index));
+				int slashIndex = typeStr.indexOf('/');
+				if (slashIndex > 0) {
+					matcher = MagicType.matcherfromString(typeStr.substring(0, slashIndex));
 				}
 			}
 			if (matcher == null) {
@@ -185,9 +177,9 @@ public class MagicEntryParser {
 			}
 		}
 
-		// process the test-string
-		Object testValue;
+		// ── ③ test value ─────────────────────────────────────────────────
 		String testStr = parts[2];
+		Object testValue;
 		if (testStr.equals("x")) {
 			testValue = null;
 		} else {
@@ -201,21 +193,21 @@ public class MagicEntryParser {
 			}
 		}
 
+		// ── ④ format string + name ────────────────────────────────────────
 		MagicFormatter formatter;
 		String name;
 		boolean formatSpacePrefix = true;
 		boolean clearFormat = false;
+
 		if (parts.length == 3) {
 			formatter = null;
 			name = UNKNOWN_NAME;
 		} else {
 			String format = parts[3];
-			// a starting \\b or ^H means don't prepend a space when chaining content details
 			if (format.startsWith("\\b")) {
 				format = format.substring(2);
 				formatSpacePrefix = false;
 			} else if (format.startsWith("\010")) {
-				// NOTE: sometimes the \b is expressed as a ^H character (grumble)
 				format = format.substring(1);
 				formatSpacePrefix = false;
 			} else if (format.startsWith("\\r")) {
@@ -231,15 +223,15 @@ public class MagicEntryParser {
 			}
 			if (spaceIndex > 0) {
 				name = trimmedFormat.substring(0, spaceIndex);
-			} else if (trimmedFormat.length() == 0) {
+			} else if (trimmedFormat.isEmpty()) {
 				name = UNKNOWN_NAME;
 			} else {
 				name = trimmedFormat;
 			}
 		}
-		MagicEntry entry = new MagicEntry(name, level, addOffset, offset, offsetInfo, matcher, andValue, unsignedType,
+
+		return new MagicEntry(name, level, addOffset, offset, offsetInfo, matcher, andValue, unsignedType,
 				testValue, formatSpacePrefix, clearFormat, formatter);
-		return entry;
 	}
 
 	private static String[] splitLine(String line, ErrorCallBack errorCallBack) {
