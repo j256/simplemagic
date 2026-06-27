@@ -343,7 +343,9 @@ public class ContentInfoUtil {
 				try {
 					readEntries(entries, fr, errorCallBack);
 				} catch (IOException e) {
-					// ignore the file
+					if (errorCallBack != null) {
+						errorCallBack.error(subFile.getPath(), "could not read magic file: " + e.getMessage(), e);
+					}
 				} finally {
 					closeQuietly(fr);
 				}
