@@ -55,17 +55,17 @@ public class MagicFormatter {
 			return;
 		}
 
-		if (prefixMatch == null || prefixMatch.length() == 0) {
+		if (prefixMatch == null || prefixMatch.isEmpty()) {
 			prefix = null;
 		} else {
 			prefix = prefixMatch;
 		}
-		if (percentMatch == null || percentMatch.length() == 0) {
+		if (percentMatch == null || percentMatch.isEmpty()) {
 			percentExpression = null;
 		} else {
 			percentExpression = new PercentExpression(percentMatch);
 		}
-		if (suffixMatch == null || suffixMatch.length() == 0) {
+		if (suffixMatch == null || suffixMatch.isEmpty()) {
 			suffix = null;
 		} else {
 			suffix = suffixMatch.replace("%%", "%");

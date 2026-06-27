@@ -37,7 +37,7 @@ public class MagicEntries {
 				break;
 			}
 			// skip blanks and comments
-			if (line.length() == 0 || line.charAt(0) == '#') {
+			if (line.isEmpty() || line.charAt(0) == '#') {
 				continue;
 			}
 

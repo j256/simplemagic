@@ -67,7 +67,7 @@ public enum StringOperator {
 	 * </p>
 	 */
 	public static StringOperator fromTest(String testStr) {
-		if (testStr.length() == 0) {
+		if (testStr.isEmpty()) {
 			return null;
 		}
 		char first = testStr.charAt(0);

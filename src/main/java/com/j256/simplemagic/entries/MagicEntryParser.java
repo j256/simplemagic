@@ -420,7 +420,7 @@ public class MagicEntryParser {
 		int size = spec.size;
 		int add = 0;
 		// the +# section is optional
-		if (matcher.group(4) != null && matcher.group(4).length() > 0) {
+		if (matcher.group(4) != null && !matcher.group(4).isEmpty()) {
 			try {
 				add = Integer.decode(matcher.group(4));
 			} catch (NumberFormatException e) {

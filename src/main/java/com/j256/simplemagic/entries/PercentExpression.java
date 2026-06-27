@@ -130,7 +130,7 @@ public class PercentExpression {
 					strValue = Character.toString((char) ((Number) extractedValue).shortValue());
 				} else if (extractedValue instanceof String) {
 					String str = (String) extractedValue;
-					if (str.length() == 0) {
+					if (str.isEmpty()) {
 						strValue = "";
 					} else {
 						strValue = str.substring(0, 1);
@@ -247,7 +247,7 @@ public class PercentExpression {
 	}
 
 	private static int readPrecision(String string, int defaultVal) {
-		if (string == null || string.length() == 0) {
+		if (string == null || string.isEmpty()) {
 			return defaultVal;
 		}
 		try {
