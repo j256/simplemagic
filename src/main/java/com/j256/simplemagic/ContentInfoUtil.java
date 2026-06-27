@@ -50,7 +50,7 @@ public class ContentInfoUtil {
 	public final static int DEFAULT_READ_SIZE = 10 * 1024;
 
 	/** internal entries loaded once if the {@link ContentInfoUtil#MagicUtil()} constructor is used. */
-	private static MagicEntries internalMagicEntries;
+	private static volatile MagicEntries internalMagicEntries;
 
 	private final MagicEntries magicEntries;
 	private int fileReadSize = DEFAULT_READ_SIZE;
@@ -76,14 +76,19 @@ public class ContentInfoUtil {
 	 */
 	public ContentInfoUtil(ErrorCallBack errorCallBack) {
 		if (internalMagicEntries == null) {
-			try {
-				internalMagicEntries = readEntriesFromResource(INTERNAL_MAGIC_FILE, errorCallBack);
-			} catch (IOException e) {
-				throw new IllegalStateException(
-						"Could not load entries from internal magic file: " + INTERNAL_MAGIC_FILE, e);
-			}
-			if (internalMagicEntries == null) {
-				throw new IllegalStateException("Internal magic file not found in class-path: " + INTERNAL_MAGIC_FILE);
+			synchronized (ContentInfoUtil.class) {
+				if (internalMagicEntries == null) {
+					try {
+						internalMagicEntries = readEntriesFromResource(INTERNAL_MAGIC_FILE, errorCallBack);
+					} catch (IOException e) {
+						throw new IllegalStateException(
+								"Could not load entries from internal magic file: " + INTERNAL_MAGIC_FILE, e);
+					}
+					if (internalMagicEntries == null) {
+						throw new IllegalStateException(
+								"Internal magic file not found in class-path: " + INTERNAL_MAGIC_FILE);
+					}
+				}
 			}
 		}
 		this.magicEntries = internalMagicEntries;
