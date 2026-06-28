@@ -163,7 +163,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- build: add PMD Maven plugin for static code analysis -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -182,6 +181,7 @@
 					<minimumTokens>100</minimumTokens>
 					<targetJdk>1.8</targetJdk> </configuration>
 			</plugin>
+			<!-- build: add PMD Maven plugin for static code analysis -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
