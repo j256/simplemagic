@@ -32,12 +32,6 @@ public class IntegerType extends BaseLongType {
 		}
 		int extractedInt = extractedValue.intValue();
 		int testInt = testValue.intValue();
-		if (extractedInt > testInt) {
-			return 1;
-		} else if (extractedInt < testInt) {
-			return -1;
-		} else {
-			return 0;
-		}
+        return Integer.compare(extractedInt, testInt);
 	}
 }

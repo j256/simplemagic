@@ -352,11 +352,7 @@ public class MagicEntryParser {
 				lastEscape = false;
 			} else if (Character.isWhitespace(line.charAt(pos))) {
 				return pos;
-			} else if (ch == '\\') {
-				lastEscape = true;
-			} else {
-				lastEscape = false;
-			}
+			} else lastEscape = ch == '\\';
 		}
 		return -1;
 	}

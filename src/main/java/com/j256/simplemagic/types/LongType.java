@@ -39,12 +39,6 @@ public class LongType extends BaseLongType {
 	public static int staticCompare(Number extractedValue, Number testValue) {
 		long extractedLong = extractedValue.longValue();
 		long testLong = testValue.longValue();
-		if (extractedLong > testLong) {
-			return 1;
-		} else if (extractedLong < testLong) {
-			return -1;
-		} else {
-			return 0;
-		}
+        return Long.compare(extractedLong, testLong);
 	}
 }

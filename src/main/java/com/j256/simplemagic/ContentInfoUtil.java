@@ -333,7 +333,7 @@ public class ContentInfoUtil {
 	}
 
 	private MagicEntries readEntriesFromFile(File fileOrDirectory, ErrorCallBack errorCallBack)
-			throws FileNotFoundException, IOException {
+			throws IOException {
 		if (fileOrDirectory.isFile()) {
 			FileReader reader = new FileReader(fileOrDirectory);
 			try {

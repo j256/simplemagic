@@ -13,6 +13,7 @@ import static org.junit.Assert.fail;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Objects;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -541,14 +542,11 @@ public class LoggerTest {
 
 	private String getNameFromLevel(Level level) {
 		String name;
-		switch (level) {
-			case WARNING:
-				name = "warn";
-				break;
-			default:
-				name = level.name().toLowerCase();
-				break;
-		}
+        if (Objects.requireNonNull(level) == Level.WARNING) {
+            name = "warn";
+        } else {
+            name = level.name().toLowerCase();
+        }
 		return name;
 	}
 

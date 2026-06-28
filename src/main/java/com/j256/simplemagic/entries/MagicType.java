@@ -139,11 +139,6 @@ public enum MagicType {
 	 * Find the associated matcher to the string.
 	 */
 	public static MagicMatcher matcherfromString(String typeString) {
-		MagicMatcher matcher = typeMap.get(typeString);
-		if (matcher == null) {
-			return null;
-		} else {
-			return matcher;
-		}
+        return typeMap.get(typeString);
 	}
 }

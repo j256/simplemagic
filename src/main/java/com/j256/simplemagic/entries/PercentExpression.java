@@ -259,11 +259,7 @@ public class PercentExpression {
 	}
 
 	private static boolean readFlag(String flags, char flagChar) {
-		if (flags != null && flags.indexOf(flagChar) >= 0) {
-			return true;
-		} else {
-			return false;
-		}
+        return flags != null && flags.indexOf(flagChar) >= 0;
 	}
 
 	private void appendHex(StringBuilder sb, boolean upper, Object extractedValue) {
