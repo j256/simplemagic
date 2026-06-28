@@ -912,7 +912,7 @@ public enum ContentType {
 	private final String[] fileExtensions;
 	private final IanaEntry ianaEntry;
 
-	private ContentType(String mimeType, String simpleName, String... fileExtensions) {
+	ContentType(String mimeType, String simpleName, String... fileExtensions) {
 		this.mimeType = mimeType;
 		this.simpleName = simpleName;
 		this.fileExtensions = fileExtensions;

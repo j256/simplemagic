@@ -112,8 +112,9 @@ public class IanaEntries {
 		if (closeable != null) {
 			try {
 				closeable.close();
-			} catch (IOException e) {
-				// ignored
+			} catch (IOException ignored) {
+				// Intentionally ignored because this method is used only for cleanup.
+				// A failure while closing should not affect the main operation.
 			}
 		}
 	}
