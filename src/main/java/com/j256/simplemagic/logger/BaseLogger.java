@@ -244,7 +244,7 @@ public abstract class BaseLogger {
 			sb.append(str);
 		} else {
 			// might as well do the toString here because we know it isn't null
-			sb.append(arg.toString());
+			sb.append(arg);
 		}
 		return true;
 	}

@@ -19,7 +19,7 @@ public enum EndianType {
 	// end
 	;
 
-	private EndianConverter converter;
+	private final EndianConverter converter;
 
 	private EndianType(EndianConverter converter) {
 		this.converter = converter;

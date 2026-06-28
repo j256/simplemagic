@@ -50,7 +50,7 @@ public class ContentInfoUtil {
 	public final static int DEFAULT_READ_SIZE = 10 * 1024;
 
 	/** internal entries loaded once if the {@link ContentInfoUtil#MagicUtil()} constructor is used. */
-	private static MagicEntries internalMagicEntries;
+	private static volatile MagicEntries internalMagicEntries;
 
 	private final MagicEntries magicEntries;
 	private int fileReadSize = DEFAULT_READ_SIZE;
@@ -76,14 +76,19 @@ public class ContentInfoUtil {
 	 */
 	public ContentInfoUtil(ErrorCallBack errorCallBack) {
 		if (internalMagicEntries == null) {
-			try {
-				internalMagicEntries = readEntriesFromResource(INTERNAL_MAGIC_FILE, errorCallBack);
-			} catch (IOException e) {
-				throw new IllegalStateException(
-						"Could not load entries from internal magic file: " + INTERNAL_MAGIC_FILE, e);
-			}
-			if (internalMagicEntries == null) {
-				throw new IllegalStateException("Internal magic file not found in class-path: " + INTERNAL_MAGIC_FILE);
+			synchronized (ContentInfoUtil.class) {
+				if (internalMagicEntries == null) {
+					try {
+						internalMagicEntries = readEntriesFromResource(INTERNAL_MAGIC_FILE, errorCallBack);
+					} catch (IOException e) {
+						throw new IllegalStateException(
+								"Could not load entries from internal magic file: " + INTERNAL_MAGIC_FILE, e);
+					}
+					if (internalMagicEntries == null) {
+						throw new IllegalStateException(
+								"Internal magic file not found in class-path: " + INTERNAL_MAGIC_FILE);
+					}
+				}
 			}
 		}
 		this.magicEntries = internalMagicEntries;
@@ -328,7 +333,7 @@ public class ContentInfoUtil {
 	}
 
 	private MagicEntries readEntriesFromFile(File fileOrDirectory, ErrorCallBack errorCallBack)
-			throws FileNotFoundException, IOException {
+			throws IOException {
 		if (fileOrDirectory.isFile()) {
 			FileReader reader = new FileReader(fileOrDirectory);
 			try {
@@ -337,13 +342,19 @@ public class ContentInfoUtil {
 				closeQuietly(reader);
 			}
 		} else if (fileOrDirectory.isDirectory()) {
-			MagicEntries entries = new MagicEntries();
-			for (File subFile : fileOrDirectory.listFiles()) {
+		MagicEntries entries = new MagicEntries();
+		File[] subFiles = fileOrDirectory.listFiles();
+		if (subFiles == null) {
+			return null;
+		}
+		for (File subFile : subFiles) {
 				FileReader fr = new FileReader(subFile);
 				try {
 					readEntries(entries, fr, errorCallBack);
 				} catch (IOException e) {
-					// ignore the file
+					if (errorCallBack != null) {
+						errorCallBack.error(subFile.getPath(), "could not read magic file: " + e.getMessage(), e);
+					}
 				} finally {
 					closeQuietly(fr);
 				}
@@ -418,6 +429,6 @@ public class ContentInfoUtil {
 		 * @param e
 		 *            Exception that was thrown trying to parse the line or null if none.
 		 */
-		public void error(String line, String details, Exception e);
+		void error(String line, String details, Exception e);
 	}
 }

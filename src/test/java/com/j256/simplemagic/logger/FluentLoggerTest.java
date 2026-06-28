@@ -315,10 +315,9 @@ public class FluentLoggerTest {
 		mockBackend.log(Level.TRACE, msg1 + msg2 + arg1 + msg3 + msg4 + arg2 + msg5);
 		mockBackend.log(Level.TRACE, msg1);
 		replay(mockBackend);
-		String msg = msg1;
-		FluentContext context = fluentLogger.atTrace();
+        FluentContext context = fluentLogger.atTrace();
 
-		context.msg(msg).arg(arg1).arg(arg2);
+		context.msg(msg1).arg(arg1).arg(arg2);
 		context.log();
 
 		context.appendMsg(msg2 + "{}");
@@ -338,7 +337,7 @@ public class FluentLoggerTest {
 
 		// for coverage
 		context = fluentLogger.atTrace();
-		context.appendMsg(msg);
+		context.appendMsg(msg1);
 		context.appendMsg("");
 		context.appendMsg(null);
 		context.log();

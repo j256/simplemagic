@@ -181,13 +181,13 @@ public class PropertyUtils {
 				return Collections.emptyList();
 			}
 		}
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream));) {
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
 			while (true) {
 				String line = reader.readLine();
 				if (line == null) {
 					break;
 				}
-				if (line.length() == 0 || line.charAt(0) == '#') {
+				if (line.isEmpty() || line.charAt(0) == '#') {
 					continue;
 				}
 				String[] parts = line.split("=");

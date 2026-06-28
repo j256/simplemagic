@@ -165,13 +165,13 @@ public class StringType implements MagicMatcher {
 			}
 
 			// maybe it doesn't match because of case insensitive handling and magic-char is lowercase
-			if (info.caseInsensitive && Character.isLowerCase(magicCh)) {
-				if (info.operator.doTest(Character.toLowerCase(targetCh), magicCh, lastChar)) {
-					// matches
-					continue;
-				}
-				// upper-case characters must match
+			if (info.caseInsensitive
+					&& Character.isLowerCase(magicCh)
+					&& info.operator.doTest(Character.toLowerCase(targetCh), magicCh, lastChar)) {
+				// matches
+				continue;
 			}
+			// upper-case characters must match
 
 			return null;
 		}

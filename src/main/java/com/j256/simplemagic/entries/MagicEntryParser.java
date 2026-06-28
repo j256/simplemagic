@@ -1,5 +1,7 @@
 package com.j256.simplemagic.entries;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,31 +26,66 @@ public class MagicEntryParser {
 			Pattern.compile("\\(([0-9a-fA-Fx]+)\\.?([bsilBSILm]?)([\\*\\+\\-]?)([0-9a-fA-Fx]*)\\)");
 
 	/**
+	 * Carries the endian converter, byte size, and id3 flag for a single offset type specifier character.
+	 * Used by the lookup map below in place of a large switch block.
+	 */
+	private static class EndianSpec {
+		final EndianConverter converter;
+		final int size;
+		final boolean isId3;
+
+		EndianSpec(EndianConverter converter, int size, boolean isId3) {
+			this.converter = converter;
+			this.size = size;
+			this.isId3 = isId3;
+		}
+	}
+
+	/**
+	 * Maps each offset type specifier character (from the magic(5) indirect offset syntax) to its
+	 * endian converter, byte size, and id3 flag. Replaces the switch block in parseOffset().
+	 *
+	 * Lower-case letters are little-endian; upper-case letters are big-endian; 'm' is middle-endian.
+	 * The character 'i'/'I' uses id3-length encoding (4 bytes, lower 7 bits of each byte).
+	 */
+	private static final Map<Character, EndianSpec> ENDIAN_SPEC_MAP = new HashMap<Character, EndianSpec>();
+	static {
+		// little-endian specifiers (endian doesn't really matter for 1-byte 'b')
+		ENDIAN_SPEC_MAP.put('b', new EndianSpec(EndianType.LITTLE.getConverter(), 1, false));
+		ENDIAN_SPEC_MAP.put('s', new EndianSpec(EndianType.LITTLE.getConverter(), 2, false));
+		ENDIAN_SPEC_MAP.put('i', new EndianSpec(EndianType.LITTLE.getConverter(), 4, true));
+		ENDIAN_SPEC_MAP.put('l', new EndianSpec(EndianType.LITTLE.getConverter(), 4, false));
+		// big-endian specifiers (endian doesn't really matter for 1-byte 'B')
+		ENDIAN_SPEC_MAP.put('B', new EndianSpec(EndianType.BIG.getConverter(), 1, false));
+		ENDIAN_SPEC_MAP.put('S', new EndianSpec(EndianType.BIG.getConverter(), 2, false));
+		ENDIAN_SPEC_MAP.put('I', new EndianSpec(EndianType.BIG.getConverter(), 4, true));
+		ENDIAN_SPEC_MAP.put('L', new EndianSpec(EndianType.BIG.getConverter(), 4, false));
+		// middle-endian (PDP-11)
+		ENDIAN_SPEC_MAP.put('m', new EndianSpec(EndianType.MIDDLE.getConverter(), 4, false));
+	}
+
+	/** Default endian spec used when no type specifier character is present in the offset expression. */
+	private static final EndianSpec DEFAULT_ENDIAN_SPEC =
+			new EndianSpec(EndianType.LITTLE.getConverter(), 4, false);
+	/**
 	 * Parse a line from the magic configuration file into an entry.
 	 */
 	public static MagicEntry parseLine(MagicEntry previous, String line, ErrorCallBack errorCallBack) {
 		if (line.startsWith("!:")) {
 			if (previous != null) {
-				// we ignore it if there is no previous entry to add it to
 				handleSpecial(previous, line, errorCallBack);
 			}
 			return null;
 		}
 
-		// 0[ ]string[ ]%PDF-[ ]PDF document
-		// !:mime[ ]application/pdf
-		// >5[ ]byte[ ]x[ ]\b, version %c
-		// >7[ ]byte[ ]x[ ]\b.%c
-
-		// unfortunately, we cannot use split or even regex since the whitespace is not reliable (grumble)
 		String[] parts = splitLine(line, errorCallBack);
 		if (parts == null) {
 			return null;
 		}
 
-		// level and offset
-		int level;
+		// ── ① level + offset ─────────────────────────────────────────────
 		int sindex = parts[0].lastIndexOf('>');
+		int level;
 		String offsetString;
 		if (sindex < 0) {
 			level = 0;
@@ -57,17 +94,18 @@ public class MagicEntryParser {
 			level = sindex + 1;
 			offsetString = parts[0].substring(sindex + 1);
 		}
-		String work = offsetString;
 
 		int offset;
 		OffsetInfo offsetInfo;
-		if (work.length() == 0) {
+		boolean addOffset = false;
+		String work = offsetString;
+
+		if (work.isEmpty()) {
 			if (errorCallBack != null) {
 				errorCallBack.error(line, "invalid offset number:" + offsetString, null);
 			}
 			return null;
 		}
-		boolean addOffset = false;
 		if (work.charAt(0) == '&') {
 			if (work.length() == 1) {
 				if (errorCallBack != null) {
@@ -96,13 +134,12 @@ public class MagicEntryParser {
 			}
 		}
 
-		// process the AND (&) part of the type
+		// ── ② type string (AND value + matcher) ──────────────────────────
 		String typeStr = parts[1];
-		sindex = typeStr.indexOf('&');
-		// we use long because of overlaps
 		Long andValue = null;
-		if (sindex >= 0) {
-			String andStr = typeStr.substring(sindex + 1);
+		int andIndex = typeStr.indexOf('&');
+		if (andIndex >= 0) {
+			String andStr = typeStr.substring(andIndex + 1);
 			try {
 				andValue = Long.decode(andStr);
 			} catch (NumberFormatException e) {
@@ -111,16 +148,15 @@ public class MagicEntryParser {
 				}
 				return null;
 			}
-			typeStr = typeStr.substring(0, sindex);
+			typeStr = typeStr.substring(0, andIndex);
 		}
-		if (typeStr.length() == 0) {
+		if (typeStr.isEmpty()) {
 			if (errorCallBack != null) {
 				errorCallBack.error(line, "blank type string", null);
 			}
 			return null;
 		}
 
-		// process the type string
 		boolean unsignedType = false;
 		MagicMatcher matcher = MagicType.matcherfromString(typeStr);
 		if (matcher == null) {
@@ -128,9 +164,9 @@ public class MagicEntryParser {
 				matcher = MagicType.matcherfromString(typeStr.substring(1));
 				unsignedType = true;
 			} else {
-				int index = typeStr.indexOf('/');
-				if (index > 0) {
-					matcher = MagicType.matcherfromString(typeStr.substring(0, index));
+				int slashIndex = typeStr.indexOf('/');
+				if (slashIndex > 0) {
+					matcher = MagicType.matcherfromString(typeStr.substring(0, slashIndex));
 				}
 			}
 			if (matcher == null) {
@@ -141,9 +177,9 @@ public class MagicEntryParser {
 			}
 		}
 
-		// process the test-string
-		Object testValue;
+		// ── ③ test value ─────────────────────────────────────────────────
 		String testStr = parts[2];
+		Object testValue;
 		if (testStr.equals("x")) {
 			testValue = null;
 		} else {
@@ -157,21 +193,21 @@ public class MagicEntryParser {
 			}
 		}
 
+		// ── ④ format string + name ────────────────────────────────────────
 		MagicFormatter formatter;
 		String name;
 		boolean formatSpacePrefix = true;
 		boolean clearFormat = false;
+
 		if (parts.length == 3) {
 			formatter = null;
 			name = UNKNOWN_NAME;
 		} else {
 			String format = parts[3];
-			// a starting \\b or ^H means don't prepend a space when chaining content details
 			if (format.startsWith("\\b")) {
 				format = format.substring(2);
 				formatSpacePrefix = false;
 			} else if (format.startsWith("\010")) {
-				// NOTE: sometimes the \b is expressed as a ^H character (grumble)
 				format = format.substring(1);
 				formatSpacePrefix = false;
 			} else if (format.startsWith("\\r")) {
@@ -187,15 +223,15 @@ public class MagicEntryParser {
 			}
 			if (spaceIndex > 0) {
 				name = trimmedFormat.substring(0, spaceIndex);
-			} else if (trimmedFormat.length() == 0) {
+			} else if (trimmedFormat.isEmpty()) {
 				name = UNKNOWN_NAME;
 			} else {
 				name = trimmedFormat;
 			}
 		}
-		MagicEntry entry = new MagicEntry(name, level, addOffset, offset, offsetInfo, matcher, andValue, unsignedType,
+
+		return new MagicEntry(name, level, addOffset, offset, offsetInfo, matcher, andValue, unsignedType,
 				testValue, formatSpacePrefix, clearFormat, formatter);
-		return entry;
 	}
 
 	private static String[] splitLine(String line, ErrorCallBack errorCallBack) {
@@ -290,8 +326,10 @@ public class MagicEntryParser {
 		if (key.equals(MIME_TYPE_LINE)) {
 			previous.setMimeType(value);
 		} else {
-			// unknown extension key
+		if (errorCallBack != null) {
+			errorCallBack.error(line, "unknown special extension key: " + key, null);
 		}
+	}
 	}
 
 	private static int findNonWhitespace(String line, int startPos) {
@@ -314,11 +352,7 @@ public class MagicEntryParser {
 				lastEscape = false;
 			} else if (Character.isWhitespace(line.charAt(pos))) {
 				return pos;
-			} else if (ch == '\\') {
-				lastEscape = true;
-			} else {
-				lastEscape = false;
-			}
+			} else lastEscape = ch == '\\';
 		}
 		return -1;
 	}
@@ -364,74 +398,25 @@ public class MagicEntryParser {
 			}
 			return null;
 		}
-		char ch;
+		// resolve endian converter, size, and id3 flag from the type specifier character via lookup map
+		EndianSpec spec;
 		if (matcher.group(2).length() == 1) {
-			ch = matcher.group(2).charAt(0);
+			char ch = matcher.group(2).charAt(0);
+			// look up the specifier; fall back to default (little-endian 4-byte) if not found
+			spec = ENDIAN_SPEC_MAP.get(ch);
+			if (spec == null) {
+				spec = DEFAULT_ENDIAN_SPEC;
+			}
 		} else {
-			// it will use the default
-			ch = '\0';
+			// no type specifier present — use the default (little-endian 4-byte long)
+			spec = DEFAULT_ENDIAN_SPEC;
 		}
-		EndianConverter converter = null;
-		boolean isId3 = false;
-		int size = 0;
-		switch (ch) {
-			// little-endian byte
-			case 'b':
-				// endian doesn't really matter for 1 byte
-				converter = EndianType.LITTLE.getConverter();
-				size = 1;
-				break;
-			// little-endian short
-			case 's':
-				converter = EndianType.LITTLE.getConverter();
-				size = 2;
-				break;
-			// little-endian integer
-			case 'i':
-				converter = EndianType.LITTLE.getConverter();
-				size = 4;
-				isId3 = true;
-				break;
-			// little-endian long (4 byte)
-			case 'l':
-				converter = EndianType.LITTLE.getConverter();
-				size = 4;
-				break;
-			// big-endian byte
-			case 'B':
-				// endian doesn't really matter for 1 byte
-				converter = EndianType.BIG.getConverter();
-				size = 1;
-				break;
-			// big-endian short
-			case 'S':
-				converter = EndianType.BIG.getConverter();
-				size = 2;
-				break;
-			// big-endian integer
-			case 'I':
-				converter = EndianType.BIG.getConverter();
-				size = 4;
-				isId3 = true;
-				break;
-			// big-endian long (4 byte)
-			case 'L':
-				converter = EndianType.BIG.getConverter();
-				size = 4;
-				break;
-			// big-endian integer
-			case 'm':
-				converter = EndianType.MIDDLE.getConverter();
-				size = 4;
-				break;
-			default:
-				converter = EndianType.LITTLE.getConverter();
-				size = 4;
-				break;
-		}
+		EndianConverter converter = spec.converter;
+		boolean isId3 = spec.isId3;
+		int size = spec.size;
 		int add = 0;
 		// the +# section is optional
-		if (matcher.group(4) != null && matcher.group(4).length() > 0) {
+		if (matcher.group(4) != null && !matcher.group(4).isEmpty()) {
 			try {
 				add = Integer.decode(matcher.group(4));
 			} catch (NumberFormatException e) {

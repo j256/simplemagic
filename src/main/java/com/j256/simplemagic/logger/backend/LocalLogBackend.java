@@ -152,7 +152,7 @@ public class LocalLogBackend implements LogBackend {
 		sb.append(" [").append(level.name()).append("] ");
 		sb.append(className).append(' ');
 		sb.append(message);
-		printStream.println(sb.toString());
+		printStream.println(sb);
 		if (throwable != null) {
 			throwable.printStackTrace(printStream);
 		}

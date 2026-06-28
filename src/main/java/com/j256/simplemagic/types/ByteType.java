@@ -31,12 +31,6 @@ public class ByteType extends BaseLongType {
 		}
 		byte extractedByte = extractedValue.byteValue();
 		byte testByte = testValue.byteValue();
-		if (extractedByte > testByte) {
-			return 1;
-		} else if (extractedByte < testByte) {
-			return -1;
-		} else {
-			return 0;
-		}
+        return Byte.compare(extractedByte, testByte);
 	}
 }

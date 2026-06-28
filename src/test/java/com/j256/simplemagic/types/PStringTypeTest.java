@@ -32,7 +32,7 @@ public class PStringTypeTest extends BaseMagicTypeTest {
 			sb.append('a');
 		}
 		String match = "matched";
-		String magic = "0 pstring =" + sb.toString() + " " + match;
+		String magic = "0 pstring =" + sb + " " + match;
 		testOutput(magic, baos.toByteArray(), match);
 	}
 }

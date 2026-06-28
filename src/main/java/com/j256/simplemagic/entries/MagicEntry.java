@@ -63,7 +63,7 @@ public class MagicEntry {
 	 */
 	ContentInfo matchBytes(byte[] bytes) {
 		ContentData data = matchBytes(bytes, 0, 0, null);
-		if (data == null || data.name == MagicEntryParser.UNKNOWN_NAME) {
+		if (data == null || MagicEntryParser.UNKNOWN_NAME.equals(data.name)) {
 			return null;
 		} else {
 			return new ContentInfo(data.name, data.mimeType, data.sb.toString(), data.partial);
@@ -197,7 +197,7 @@ public class MagicEntry {
 		 * NOTE: the children will have the first opportunity to set this which makes sense since they are the most
 		 * specific.
 		 */
-		if (name != MagicEntryParser.UNKNOWN_NAME && contentData.name == MagicEntryParser.UNKNOWN_NAME) {
+		if (!MagicEntryParser.UNKNOWN_NAME.equals(name) && MagicEntryParser.UNKNOWN_NAME.equals(contentData.name)) {
 			contentData.name = name;
 		}
 		/*
@@ -216,11 +216,21 @@ public class MagicEntry {
 	 * Internal processing data about the content.
 	 */
 	static class ContentData {
-		String name;
-		boolean partial;
-		String mimeType;
-		int mimeTypeLevel;
+		private String name;
+		private boolean partial;
+		private String mimeType;
+		private int mimeTypeLevel;
 		final StringBuilder sb = new StringBuilder();
+
+		// add package-private getters/setters used within the entries package
+		String getName() { return name; }
+		void setName(String name) { this.name = name; }
+		boolean isPartial() { return partial; }
+		void setPartial(boolean partial) { this.partial = partial; }
+		String getMimeType() { return mimeType; }
+		void setMimeType(String mimeType) { this.mimeType = mimeType; }
+		int getMimeTypeLevel() { return mimeTypeLevel; }
+		void setMimeTypeLevel(int level) { this.mimeTypeLevel = level; }
 
 		private ContentData(String name, String mimeType, int mimeTypeLevel) {
 			this.name = name;

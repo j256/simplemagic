@@ -26,7 +26,7 @@ public class MiddleEndianConverter implements EndianConverter {
 		if (size == 4) {
 			// BADC again
 			return new byte[] { (byte) ((value >> 16) & 0XFF), (byte) ((value >> 24) & 0XFF),
-					(byte) ((value >> 0) & 0XFF), (byte) ((value >> 8) & 0XFF) };
+					(byte) ((value) & 0XFF), (byte) ((value >> 8) & 0XFF) };
 		} else {
 			return null;
 		}

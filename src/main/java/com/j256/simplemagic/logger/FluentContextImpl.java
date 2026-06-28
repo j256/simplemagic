@@ -142,9 +142,9 @@ public class FluentContextImpl implements FluentContext {
 			// extend the array if necessary
 			int needed = argCount + addArgs.length;
 			maybeGrowArgs(needed, needed);
-			for (int i = 0; i < addArgs.length; i++) {
-				args[argCount++] = addArgs[i];
-			}
+            for (Object addArg : addArgs) {
+                args[argCount++] = addArg;
+            }
 		}
 		return this;
 	}
