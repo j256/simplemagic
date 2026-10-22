@@ -1,7 +1,9 @@
 package com.j256.simplemagic.entries;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.Format;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -357,6 +359,7 @@ public class PercentExpression {
 		} else {
 			format = new DecimalFormat("###0.###");
 		}
+		format.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ROOT));
 		return format;
 	}
 
@@ -373,6 +376,7 @@ public class PercentExpression {
 		} else {
 			format = new DecimalFormat("0.###E0");
 		}
+		format.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ROOT));
 		return format;
 	}
 }

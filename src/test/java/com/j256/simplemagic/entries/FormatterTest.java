@@ -3,6 +3,7 @@ package com.j256.simplemagic.entries;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Date;
+import java.util.Locale;
 
 import org.junit.Test;
 
@@ -290,6 +291,42 @@ public class FormatterTest {
 	@Test
 	public void testCoverage() {
 		formatToString(new MagicFormatter("%1000s"), "wow");
+	}
+
+	@Test
+	public void testFloatSpanishLocale() {
+		assertFloatFormats(Locale.forLanguageTag("es-ES"));
+	}
+
+	@Test
+	public void testFloatGermanLocale() {
+		assertFloatFormats(Locale.GERMANY);
+	}
+
+	@Test
+	public void testFloatArabicLocale() {
+		assertFloatFormats(Locale.forLanguageTag("ar-EG"));
+	}
+
+	private void assertFloatFormats(Locale locale) {
+		Locale previous = Locale.getDefault(Locale.Category.FORMAT);
+		try {
+			Locale.setDefault(Locale.Category.FORMAT, locale);
+			for (String conversion : new String[] { "f", "F", "g", "G" }) {
+				assertEquals("1.25", formatToString(new MagicFormatter("%" + conversion), 1.25));
+				assertEquals("1", formatToString(new MagicFormatter("%.0" + conversion), 1.25));
+				assertEquals("1.25", formatToString(new MagicFormatter("%.2" + conversion), 1.25));
+			}
+			for (String conversion : new String[] { "e", "E" }) {
+				assertEquals("1.25E3", formatToString(new MagicFormatter("%" + conversion), 1250));
+				assertEquals("1E3", formatToString(new MagicFormatter("%.0" + conversion), 1250));
+				assertEquals("1.25E3", formatToString(new MagicFormatter("%.2" + conversion), 1250));
+			}
+			assertEquals("1E6", formatToString(new MagicFormatter("%g"), 1000000));
+			assertEquals("1E6", formatToString(new MagicFormatter("%G"), 1000000));
+		} finally {
+			Locale.setDefault(Locale.Category.FORMAT, previous);
+		}
 	}
 
 	private String formatToString(MagicFormatter formatter, Object value) {
