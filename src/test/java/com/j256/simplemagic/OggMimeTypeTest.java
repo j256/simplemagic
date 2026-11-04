@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 
 import org.junit.Test;
@@ -25,7 +26,7 @@ public class OggMimeTypeTest {
 
 	@Test
 	public void plainTextRulesUseAudioMimeType() throws IOException {
-		assertVorbis(new ContentInfoUtil("/magic").findMatch(vorbisHeader()));
+		assertVorbis(new ContentInfoUtil(new File("src/test/resources/magic")).findMatch(vorbisHeader()));
 	}
 
 	@Test
