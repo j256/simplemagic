@@ -121,6 +121,8 @@ public enum ContentType {
 	NAWK("text/x-nawk", "nawk", "nawk"),
 	/** Network news message */
 	NEWS("message/news", "news"),
+	/** OGG audio */
+	OGA("audio/ogg", "oga", "oga", "ogg", "spx"),
 	/** OGG file container */
 	OGG("application/ogg", "ogg", "ogg", "oga", "spx"),
 	/** PBM image */

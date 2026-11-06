@@ -9939,6 +9939,7 @@
 >>>37		string/c	dx50		(DivX 5)
 >>>37		string/c	xvid		(XviD)
 >>28		string		\x01vorbis	\b, Vorbis audio,
+!:mime		audio/ogg
 >>>35		lelong		!0		UNKNOWN VERSION %lu,
 >>>35		lelong		0
 >>>>39		ubyte		1		mono,
